@@ -1,0 +1,201 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<RML>
+  <History/>
+  <ModelingTimes/>
+  <Sequences>
+    <Sequence>
+      <Commands>
+        <Command Comment=";" Name=""/>
+        <Command Comment="; This is a demonstration of how tts_seq_viewer can work for a simple earth orbiting mission." Name=""/>
+        <Command Comment="; The details of this sequence don't matter much, but for context, this is a toy example" Name=""/>
+        <Command Comment="; of a sun syncronous LEO spacecraft that does 4 different science activities, (one each for the" Name=""/>
+        <Command Comment="; northern and southern hemisphere on each of the day and night side) and one calibration" Name=""/>
+        <Command Comment="; per orbit. On orbit 903, it also has a ground station contact with Wallops. It also yaws" Name=""/>
+        <Command Comment="; 180 degrees to keep its solar panels sufficiently on the sun at the equator on the day side" Name=""/>
+        <Command Comment="; " Name=""/>
+        <Command Comment="; This example is only meant to be realistic enough to illustrate sequence viewing and navigation" Name=""/>
+        <Command Comment="; with regex-driven syntax highlighting and linking." Name=""/>
+        <Command Comment=";" Name=""/>
+        <Command Comment="; In particular, not that RUN_SEQ is meant to represent a sequenced command that calls another" Name=""/>
+        <Command Comment="; sequence. Note that the sequence that is called is highlighted in a separate color from the" Name=""/>
+        <Command Comment="; rest of the sequence so users will immediately see that there is something different about it" Name=""/>
+        <Command Comment="; and will be able to discover that it is a link" Name=""/>
+        <Command Comment=";" Name=""/>
+        <Command Comment="; In a real sequence, one might expect metatdata to also go here." Name=""/>
+        <Command Comment=";------------------------------------------------------------------------------------------------" Name=""/>
+        <Command Comment="" Name=""/>
+        <Command Comment=";Begin orbit 903" Name=""/>
+        <Command Comment=";North Pole, heading South                                 2023-033T14:00:00.000000" Name=""/>
+        <Command Comment="           ;2 minutes after N pole" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="N_HEMI"/>
+            <Argument Name="day_night" Value="DAY"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;3 minutes before WGS session" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="         ;2 minutes before WGS session" Name="RUN_SEQ">
+          <Arguments>
+            <Argument Name="seq_id" Value="WGS_XBAND_SETUP"/>
+          </Arguments>
+        </Command>
+        <Command Comment=";AOS at WGS                                                2023-033T14:10:00.000000" Name=""/>
+        <Command Comment=";LOS at WGS                                                2023-033T14:20:00.000000" Name=""/>
+        <Command Comment="         ;30s after LOS at WGS" Name="RUN_SEQ">
+          <Arguments>
+            <Argument Name="seq_id" Value="BREAK_DOWN_COMM"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;1 minute before Desc Eq Crossing" Name="ADCS_YAW">
+          <Arguments>
+            <Argument Name="roll_angle" Value="180"/>
+          </Arguments>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";Descending Equator Crossing                               2023-033T14:22:30.000000" Name=""/>
+        <Command Comment="           ;2 minutes after Desc Eq Crossing" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="S_HEMI"/>
+            <Argument Name="day_night" Value="DAY"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;2 minutes before S pole" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";South Pole, heading North                                 2023-033T14:45:00.000000" Name=""/>
+        <Command Comment="         ;2 minutes after S pole" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="S_HEMI"/>
+            <Argument Name="day_night" Value="NIGHT"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;10 minutes before Asc Eq Crossing" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="           ;7.5 minutes before Asc Eq Crossing" Name="DARK_SIDE_CALIBRATION">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";Ascending Equator Crossing                                2023-033T15:07:30.000000    " Name=""/>
+        <Command Comment="         ;7.5 minutes after Asc Eq Crossing" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="N_HEMI"/>
+            <Argument Name="day_night" Value="NIGHT"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;2 minutes N pole" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";Begin orbit 904" Name=""/>
+        <Command Comment=";North Pole, heading South                                 2023-033T15:30:00.000000" Name=""/>
+        <Command Comment="           ;2 minutes after N pole" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="N_HEMI"/>
+            <Argument Name="day_night" Value="DAY"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;3 minutes before Desc Eq Crossing" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="                    ;2 minutes before Desc Eq Crossing" Name="ADCS_YAW">
+          <Arguments>
+            <Argument Name="roll_angle" Value="180"/>
+          </Arguments>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";Descending Equator Crossing                               2023-033T15:52:30.000000" Name=""/>
+        <Command Comment="           ;2 minutes after Desc Eq Crossing" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="S_HEMI"/>
+            <Argument Name="day_night" Value="DAY"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;2 minutes before S pole" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";South Pole, heading North                                 2023-033T16:15:00.000000" Name=""/>
+        <Command Comment="         ;2 minutes after S pole" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="S_HEMI"/>
+            <Argument Name="day_night" Value="NIGHT"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;10 minutes before Asc Eq Crossing" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="           ;7.5 minutes before Asc Eq Crossing" Name="DARK_SIDE_CALIBRATION">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";Ascending Equator Crossing                                2023-033T16:37:30.000000    " Name=""/>
+        <Command Comment="         ;7.5 minutes after Asc Eq Crossing" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="N_HEMI"/>
+            <Argument Name="day_night" Value="NIGHT"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;2 minutes N pole" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";Begin orbit 905" Name=""/>
+        <Command Comment=";North Pole, heading South                                 2023-033T17:00:00.000000" Name=""/>
+        <Command Comment="           ;2 minutes after N pole" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="N_HEMI"/>
+            <Argument Name="day_night" Value="DAY"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;3 minutes before Desc Eq Crossing" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="                    ;2 minutes before Desc Eq Crossing" Name="ADCS_YAW">
+          <Arguments>
+            <Argument Name="roll_angle" Value="180"/>
+          </Arguments>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";Descending Equator Crossing                               2023-033T17:22:30.000000            " Name=""/>
+        <Command Comment="           ;2 minutes after Desc Eq Crossing" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="S_HEMI"/>
+            <Argument Name="day_night" Value="DAY"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;2 minutes before S pole" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";South Pole, heading North                                 2023-033T17:45:00.000000" Name=""/>
+        <Command Comment="         ;2 minutes after S pole" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="S_HEMI"/>
+            <Argument Name="day_night" Value="NIGHT"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;10 minutes before Asc Eq Crossing" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="           ;7.5 minutes before Asc Eq Crossing" Name="DARK_SIDE_CALIBRATION">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name=""/>
+        <Command Comment=";Ascending Equator Crossing                                2023-033T18:07:30.000000    " Name=""/>
+        <Command Comment="         ;7.5 minutes after Asc Eq Crossing" Name="DO_SCIENCE">
+          <Arguments>
+            <Argument Name="hemisphere" Value="N_HEMI"/>
+            <Argument Name="day_night" Value="NIGHT"/>
+          </Arguments>
+        </Command>
+        <Command Comment="                    ;2 minutes N pole" Name="STOP_SCIENCE">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name=""/>
+      </Commands>
+    </Sequence>
+  </Sequences>
+</RML>

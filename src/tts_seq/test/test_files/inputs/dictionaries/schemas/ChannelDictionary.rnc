@@ -1,0 +1,441 @@
+#
+# ProjectXYZ telemetry channel dictionary schema
+#     
+# This schema defines a common, multi-mission format for expression of the 
+# channelized telemetry portion of the flight-ground telemetry dictionary. 
+# This dictionary essentially defines the types of discrete telemetry values 
+# exchanged between flight and ground software, and the telemetry values 
+# derived by ground software from flight data.
+#
+# This xml is focused on the processing and display of the measurements. 
+# Some meta-data about the measurements have been found to be useful in the past 
+# and is included by name in the dictionary. Other meta-data that is mission specific
+# or of lesser use is stored using a generic keyword/value system.
+#
+# Numeric data to be extracted from channel packets must be placed into packets
+# in big-endian order, i.e., the most significant byte has the smallest offset.
+# For 4 byte floating-point values, the bits must represent of a floating-point  
+# value according to the IEEE 754 floating-point "single format" bit layout. For 
+# 8 byte floating-point values, the bits must represent of a floating-point 
+# value according to the IEEE 754 floating-point "double format" bit layout. 
+#
+# String data must be placed into packets such that the first character 
+# in the string has the smallest offset in the packet. All characters should 
+# be in the ASCII printable range (hexadecimal values 0x20 through 0x7E). 
+# The GDS will replace carriage returns (0x0D), line feeds (0x0A), and all 
+# other characters outside of the printable range by space characters (0x20).  
+# The byte length of string fields must correspond to the length of 
+# the string in the packet. The C NULL (0x00) character has no meaning to the 
+# GDS and will not be recognized as a string terminator.
+#
+# Copyright (c) 2013-2015 California Institute of Technology, All Rights Reserved
+# JPL Proprietary Information
+#
+# Authors:     C.Swan
+# History:     
+#              
+
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+# Include common dictionary XML definitions
+include "CommonDictionary.rnc"
+
+# Start XML document here
+start = telemetry-dictionary-def
+
+# Top-level element for the telemetry dictionary
+telemetry-dictionary-def = element telemetry_dictionary {
+    
+    # Standard dictionary version header and general change log 
+    header-def,
+    
+    # Define 0 or more enumeration tables for use by STATUS channels
+    element enum_definitions { 
+        enum-table-def* 
+    }?,
+      
+    # Define 0 or more derivations used to compute engineering unit and ground 
+    # derived telemetry values. 
+    element derivation_definitions { 
+        derivation-def* 
+    }?,
+
+    # Define 0 or more telemetry groups that are collected and downlinked together.
+    # Note that groups may only contain FSW channels without any derivation
+    element telemetry_groups {
+        groups-def*
+    }?,
+
+    # Define 0 or more telemetry channels 
+    element telemetry_definitions { 
+        telemetry-definition-def* 
+    }
+}
+
+# Defines a single telemetry channel
+telemetry-definition-def = element telemetry {
+
+    # The short string identifier for this telemetry channel. Consists of 1 letters, 
+    # 0-3 letters or digits, a dash, and 4 digits. All telemetry channel abbreviations 
+    # must be unique. This is the primary key for the channel in the ground system.
+    # In all dictionaries that reference or use "channel ID" elements, it is this 
+    # abbreviation that must be used.
+    
+    # Helix Implementation: Validate for uniqueness
+    # Helix Implementation: Autonumber based on the following formula:
+    # <OPS_CAT>-<NUMBER>
+    # Number Range - 0000-4999 channel_derivation == None
+    #                5000-9999 channel_derivation == "bit_extract" or "algorithm"
+
+    # Helix Implementation: Numeric channel ID must be generated to match position in measurement id range.
+    # Helix Implementation: This impacts validation and id generation
+    # Examples: SFP-0000 = measurement id 40001,  TEL-1200 = measurement id 45201
+    attribute abbreviation { channel-id-def },
+    
+    # This is a field added to the schema to simplify the complicated parsing and rules
+    # that govern the channel validation (between flight to ground derivation)
+    
+    # Helix Implementation: Filter out from AMPCS export.
+    attribute channel_derivation {"None" | "bit_extract" | "algorithm"},
+    
+    # The dictionary name for this telemetry channel.  Allowed characters are limited 
+    # to letters, numbers, -, or _ for ease of processing. All telemetry channel names 
+    # should be unique for usability sake, but the name is not used as the primary key 
+    # for the channel in the ground system because it is too long to be efficient and 
+    # is too often truncated by display software.
+    
+    # Helix Implementation: Validate for uniqueness    
+    attribute name { name-def } ,
+    
+    # The data type of the telemetry value. The size is given in byte_length. At this 
+    # time, measurements are only primitive data types. 
+    #
+    # 1. Time channels must contain spacecraft clock values.
+    # 2. Boolean channels may take any values, but will be interpreted on the ground 
+    #    as FALSE if the unsigned value is 0, and TRUE if the unsigned value is non-0.
+    # 3. Enum channels must have a corresponding enum-table-def, and are interpreted 
+    #    by the  ground as signed values, not unsigned, as with legacy STATUS 
+    #    channels.
+    # 4. Channels with source "bit_extract" can have type integer, unsigned, enum, or 
+    #    boolean.
+    
+    # Helix Implementation: if source == "flight"
+    # Helix Implementation: if channel_derivation == "bit_extract"
+    # Helix Implementation: type must be in ["integer", "unsigned", "enum","boolean"]
+    attribute type { channel-type-def },
+     
+     
+    # The source of the telemetry value: flight, simulation/support equipment, or 
+    # receiving station.  
+    attribute source { channel-source-def },
+    
+    # Byte length of the telemetry value. Integer, unsigned, enum, and boolean values 
+    # may be 1, 2, or 4 bytes in length. Float values may be 4 or 8 bytes. Data 
+    # length for time values must match the project SCLK length.  String values may 
+    # be 1 to 40 data bytes in length.
+    
+    # Helix Implementation: Valid this against channel-type-def (Float must be 4/8 bytes,
+    # Helix Implementation: ENUM/UINT/BOOL/INT can be 1/2/4 bytes
+    # Helix Implementation: String values can be from 1-40)
+    attribute byte_length { unsigned-8-def },
+                
+    # Measurement ID (channel index) of the telemetry value. Required only for 
+    # telemetry values with source "flight" or "simulation". This is a 16 bit value 
+    # used to identify telemetry items in pre-channelized packets, and must be unique.
+    
+    # Helix Implementation: IF source in ["flight","simulation"] AND channel_derivation == None
+    # Helix Implementation: THEN REQUIRED - ELSE FORBIDDEN
+    # Helix Implementation: Must be unique across all flight or all simulation channels (where it is required)
+    # Helix Implementation: Autogenerate this value and validate existing values following this algorithm
+    # Helix Implementation: <Ops_Cat Range Start> + <numeric portion of channel abbreviation>
+    # Helix Implementation: Example: ACM-0100 - measurement id = 0+100=100
+    # Helix Implementation: Example: SFP-2310 - measurement id = 2310 + 41000 = 43310
+    # 0-999                  "ACM" # Activity Constraint Manager (1000)
+    # 1000-4999              "ACS"   # Cruise attitude estimation, control, & EDL GNC and AMAN (4000)
+    # 5000-5999              "AVS"   # Avionics (1000)
+    # 6000-6999              "BCTL"  # 1553 Bus Controller (1000)
+    # 7000-7999              "CBM"   # Comm Behavior Manager (1000)
+    # 8000-8999              "CMD"   # Uplink and Command (1000)
+    # 9000-9999              "CTB"   # Cruise Timeline Behavior (1000)
+    # 62000-62999            "DDM"   # Downlink and Data Management Legacy (1000)
+    # 10000-12999            "DMX"   # Data Management & Transmission (3000)
+    # 13000-13999            "DWN"   # Downlink (1000)
+    # 14000-14999            "EDL"   # Entry Descent and Landing (1000)
+    # 15000-15999            "FSW"   # Flight Software Boot, Load, Patch, CE, Intercomm (1000)
+    # 16000-16999            "HDW"   # Hardware Commands (1000)
+    # 17000-17999            "IMG"   # Engineering camera imaging (1000)
+    # 18000-20999            "LMC"   # LMC, Actuators and Motor Control (3000)
+    # 21000-22999            "LPCE"  # Compute element specific items (2000)
+    # 23000-23999            "MDLI"  # MEDLI3 (1000)
+    # 24000-27999            "MLS"   # MLS related functions (4000)
+    # 28000-28999            "PRM"   # Parameter management (1000)
+    # 29000-33999            "PWR"   # Power (5000)
+    # 34000-34999            "PYRO"  # Pyro (1000)
+    # 35000-35999            "REU"   # Remote Engineering Unit (1000)
+    # 36000-36999            "RSB"   # RSB Functionality (1000)
+    # 37000-37999            "SAM"   # Surface Activity Manager (1000)
+    # 38000-38999            "SAPP"  # Surface Attitude Position Propagator (1000)
+    # 39000-39999            "SDEP"  # Surface Deployments Behaviors (includes Vector) (1000)
+    # 40000-40999            "SEQ"   # Sequencing (1000)
+    # 41000-44999            "SFP"   # System Fault Protection (4000)
+    # 45000-45999            "SMC"   # Spacecraft Modes and Configuration (1000)
+    # 46000-46999            "SPW"   # Spacewire specific items (1000)
+    # 47000-47999            "SRH"   # SRH related functions (1000)
+    # 48000-50999            "STS"   # Sample Transfer functions (3000)
+    # 51000-52999            "TEL"   # Telecom (2000)
+    # 53000-57999            "THRM"  # Thermal (5000)
+    # 58000-58999            "TIME"  # Time (1000)
+    # 59000-59999            "UPL"   # Uplink (1000)
+    # 60000-60999            "VCE"   # VGNC Compute Element (1000)
+    # 61000-61999            "WAKE"  # Wakeup and Shutdown (1000)
+
+    element measurement_id { unsigned-16-def }?,
+    
+    # Derivation ID of the derivation that produces the telemetry value, if the source 
+    # of this channel is "derived" and the derivation is algorithmic. Each 
+    # derivation instance must have a unique derivation ID, which ties together 
+    # all the parents and children for a single derivation and links this child 
+    # channel to a specific algorithmic derivation defined above.
+    
+    # Helix Implementation: Validate that the derivation exists
+    # Helix Implementation: Provide autocomplete against existing derivations
+    # Helix Implementation: If channel_derivation == "algorithm" this field is required otherwise forbidden
+    element source_derivation_id { name-def }?,
+    
+    # A long description for this channel. May contain line feeds. White space will
+    # be preserved.
+    element description {xsd:string}, 
+    
+    # Format specifier for display of the telemetry value on the ground.
+    # Boolean telemetry values should use boolean-format-def. Status channels 
+    # should use enum-format-def. All other channels should use plain-format-def.
+    
+    # Helix Implementation: If type == "bool" only boolean-format is valid, (and is required)
+    # Helix Implementation: If type == "enum" only enum-format-def is valid (and is required),
+    # Helix Implementation: Else - only plain-format-def is valid (is optional)        
+    (plain-format-def | boolean-format-def | enum-format-def )?, 
+    
+    # Units to be displayed with the raw (data number) telemetry value on the ground.
+    # Note that units for engineering value are separate and contained within
+    # the raw_to_eng element below. Both this element and the eng_units element
+    # may be specified for the same channel.
+    element raw_units { xsd:token }?,
+    
+    # Definition of function used to map raw (data number) telemetry value to
+    # engineering value on the ground.
+    element raw_to_eng {
+    
+        # Defines how the engineering value is created from the raw value.
+        # Four types of functions are allowed: polynomial expansion, 
+        # table interpolation, and custom algorithm. Simple algorithms have
+        # been deprecated and should not be used in new dictionaries.
+        # A parameterized EU algorithm accepts channel value as a Java Object 
+        # and a hash map of named parameter values.
+        #
+        (poly-def | table-lookup-def | parameterized-algorithm-def ),
+        
+        # Format specifier for display of the engineering unit telemetry value on 
+        # the ground. Format specifiers embedded in this string must adhere to the
+        # C printf standard for format strings, excluding the %p formatter and use of 
+        # the "#" or "*" width specifiers. %SCLK, %SCET, and %LMST formatters may be 
+        # used for time values. Use two percents (%%) to represent a single percent 
+        # sign in the output. Do not use carriage returns or line feeds in format 
+        # text. 
+        plain-format-def?,
+       
+        # Units to be displayed with the engineering unit telemetry value on the 
+        # ground.
+        #
+        # It is highly recommended that all engineering values have valid units. 
+        # This has caused major misunderstandings in past missions.
+        element eng_units { xsd:token }
+    }?,
+    
+    # Definition of bit extraction used to produce this telemetry value, if the source
+    # of the channel is "bit_extract".
+    
+    # Helix Implementation: If channel_derivation == "bit_extract" this field is required otherwise it is forbidden
+    element bit_extract {
+        
+        # Parent telemetry channel identifier. This is the telemetry value used as
+        # the source for this channel's value.
+        # Helix Implementation: Provide Auto Complete
+        # Helix Implementation: Validate that the parent_id is a valid channel in the dictionary with channel_derivation="None"
+        element parent_id { channel-id-def } ,
+        
+        # Definition of bit ranges to extract from the parent value. Multiple
+        # bit ranges will be appended together to produce the resulting child
+        # value.
+        element bits {
+            
+            # Helix Implementation: Validate the length and offset against the size of the parent channel
+            # Helix Implementation: So offset+length <= bit size of parent
+            
+            # Bit offset of the bit range in the parent channel. Whether the bit 
+            # numbered 0 is on the left or the right is defined by the endianness 
+            # attribute.
+            attribute offset { offset-64-def },
+            
+            # Length of the bit range in the parent channel, inclusive of the 
+            # bit at the starting offset. In other words to select two bits, 
+            # the value is 2, not 1. 
+            
+            # Helix Implementation: Validate that the sum of all defined lengths <= channel byte-length *8            
+            attribute length { offset-64-def }
+        }+
+    }?,
+    
+    # This is used to categorize different measurements into groups. Possible 
+    # category names are "module", "ops category", "subsystem", ...
+    # It is possible that there are multiple ways of organizing groups of 
+    # measurements, so that there may be more than one category entry for a 
+    # measurement.
+
+    # Helix Implementation: Item in categories-def
+    # Helix Implementation: ops_category is required
+    # Helix Implementation: If source == "flight" AND channel_derivation == "None" module is required.
+    # Helix Implementation: If source =! "flight" OR channel_derviation != "None" module is forbidden
+    categories-def,
+
+    # A set of inputs required for FSW
+    # Helix Implementation: If source == "flight" AND channel_derivation == "None"  required.
+    # Helix Implementation: If source =! "flight" OR channel_derviation != "None" forbidden
+    fsw-specification-def?
+}
+
+# Format specifier for display of a raw non-enum/boolean telemetry value on the 
+# ground. Format specifiers embedded in this string must adhere to the
+# C printf standard for format strings, excluding the %p formatter and use of 
+# the "#" and "*" width specifiers. %SCLK, %SCET, and %LMST formatters may be used 
+# for time values. Use two percents (%%) to represent a single percent sign in the
+# output. Do not use carriage returns or line feeds in format text. 
+#
+# Default for floating point channels is %16.9e. There are no other defaults.
+plain-format-def = element format { xsd:normalizedString }
+
+# Format specifier for display of a boolean telemetry value on the ground.
+# Default in the ground system is to display TRUE for non-zero channel values,
+# and FALSE for zero channel values.  This element allows different
+# values, such as ON and OFF, to be displayed instead. It also allows the
+# formatters for both the numeric and string values to be specified.
+boolean-format-def = element boolean_format { 
+ 
+   # Value to display as status for TRUE boolean values
+   attribute true_str { symbol-def }, 
+    
+   # Value to display as status for FALSE boolean values
+   attribute false_str { symbol-def },
+   
+   # This specifier is used to format the raw numeric value.
+   element numeric_format { xsd:normalizedString }?,
+    
+   # This specifier is used to format the symbolic status value.
+   element string_format { xsd:normalizedString }?
+}
+  
+# Format specifier for display of an enumeration, or status, telemetry value 
+# on the ground. This element specifies the enumeration table name, and
+# formatters for both the numeric and string values.
+enum-format-def = element enum_format {
+
+    # Name of the enum-table-def to use for mapping numeric raw value to symbolic 
+    # string value, for telemetry channels with type "enum".
+    # Helix Implementation: Validate that the enum_name exists in enum_definitions
+    attribute enum_name { name-def },
+    
+    # This specifier is used to format the raw numeric value.
+    element numeric_format { xsd:normalizedString }?,
+    
+    # This specifier is used to format the symbolic status value.
+    element string_format { xsd:normalizedString }?
+}
+    
+# Defines a custom channel derivation, including algorithm, trigger channels, 
+derivation-def = element derivation {
+
+     # Each derivation must have a unique ID, which ties together all the parents 
+     # and children for a single derivation.
+     # Helix Implementation: Validate that the derivation is unique
+     attribute derivation_id { name-def },
+     
+     # The definition of the algorithm to use to compute the child channels.
+     # Return-type of the algorithm must be "channel_list". This algorithm may 
+     # take parameters
+     parameterized-algorithm-def,
+     
+     # Channel ids of channels that provide input values to this derivation.
+     # Must be at least one.
+     # Helix Implementation: Provide Auto Complete
+     # Helix Implementation: Validate that the parent_id(s) are valid channels in the dictionary with channel_derivation="None"
+     element parent_id { channel-id-def }+,
+     
+     # IDs of the parent channels which trigger execution of the algorithm.
+     # Algorithm will be triggered whenever any of the listed trigger values are 
+     # received, but not when non-listed parent values are received.
+     #
+     # If omitted, algorithm will be triggered when any parent value is received.
+     # Helix Implementation: Provide Auto Complete
+     # Helix Implementation: Validate that the trigger_id is a valid channel in the dictionary with channel_derivation="None"
+     element trigger_id { channel-id-def }?
+}*
+
+groups-def = element group {
+    # Each group must have a unique name
+    # Helix Implementation: Validate that each group_name is unique
+    attribute group_name {fsw-name-def},
+    
+    # Each group must have a description that communicates the purpose of the channels and why they are grouped.
+    attribute group_desc {xsd:string},
+    
+    # List of channels that compose this group.
+    # Helix Implementation: There must be between 2-10 channels in the group (inclusive)
+    # Helix Implementation: Only Flight Channels (source=="flight", channel_derivation == "None") allowed
+    # Helix Implementation: Channels within each group must have the same catagories:module
+    # Helix Implementation: Validate that each channel is mapped to a single group, a single time (no repeats)
+    element group_channel {channel-id-def}+
+}
+
+fsw-specification-def = element fsw_specification {
+    # The depth (number of measurements) of the SBS buffer for this paticular channel.
+    attribute sbs_buffer_depth {xsd:positiveInteger { minInclusive = "2" } },
+    # Mapping to a specific REU and MUX ID
+    # Note that this only supports a 1 to 1 mapping of EHA to REU/MUX ID
+    # Aggregated channels (e.g. like PRT averages etc. will not have a direct REU/MUX map)
+    reu-mux-mapping-def*
+}
+
+# The data type of the telemetry value. The size is given in byte_length. At this 
+# time, measurements are only primitive data types. 
+#
+# 1. Time channels must contain coarse spacecraft clock values (SCLK coarse) ONLY.
+#    The bit size of these channels should not exceed the bit size of the project
+#    coarse SCLK. The value of the channel will be interpreted as an unsigned integer.
+# 2. Boolean channels may take any values, but will be interpreted on the ground 
+#    as FALSE if the unsigned value is 0, and TRUE if the unsigned value is non-0.
+# 3. Enum channels must have a corresponding enum-table-def, and are interpreted by 
+#    the ground as signed values, not unsigned, as with legacy STATUS channels.
+# 4. Channels with source "bit_extract" can have type integer, unsigned, enum, or 
+#    boolean.
+channel-type-def =  "integer" | "unsigned" | "float" | "enum" | "string" | "time" 
+    | "boolean"
+
+# The possible sources of a telemetry value:
+#
+# 1. "flight" implies the telemetry value is computed on board the spacecraft
+# 
+channel-source-def = "flight" 
+
+reu-mux-mapping-def = element reu_mux_mapping {
+    # The source REU
+    attribute reu {reus-def},
+    attribute side {reu-side-def},
+    attribute mux_id {hex-only-int-16},
+    attribute length {offset-64-def},
+    # Our longest extended telemetry is 16 words long, which means we could be
+    # indexing into a measurement as long as 256 bits.
+    attribute offset {xsd:nonNegativeInteger { maxInclusive="255" }}
+}
+    
+reus-def = "CRUISE_REU" | "ENTRY_REU" | "LANDER_REU"
+reu-side-def = "A" | "B" | "PRIME" | "BACKUP"

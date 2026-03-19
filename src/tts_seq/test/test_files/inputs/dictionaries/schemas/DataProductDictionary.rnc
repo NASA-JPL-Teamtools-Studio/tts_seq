@@ -1,0 +1,274 @@
+# ProjectXYZ data product dictionary schema
+#     
+# This schema defines a common, multi-mission format for expression of the 
+# contents of a data product.  It can be used to detail the structure of
+# a science or engineering data product to the extent that each data value
+# in the product is described.  The primary purpose is to allow automatted
+# decommutation of the data product content. Each XML instance defines the 
+# content of one type of data product.
+#
+# Copyright (c) 2013-2015 California Institute of Technology, All Rights Reserved
+# JPL Proprietary Information
+#
+# Authors:     C.Swan
+# History:     
+#             
+
+
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+# Include common dictionary XML definitions
+include "CommonDictionary.rnc"
+
+# Start XML document here
+start = data-product-def
+
+# Defines a single data product
+data-product-def =
+    element data_product {
+     
+        # Standard dictionary version header 
+        header-def,
+        
+        # The table contains the actual structure of the data product.  This 
+        # includes high level information about the data product (meta data), 
+        # the actual data types and values that will be in the data product 
+        # and information about how to  process the values once they have been 
+        # received.
+        table-def
+    }
+
+# Table that defines the metadata and structure of the data product
+table-def =
+    element table {
+    
+        # Identification of the data product
+        element name {
+        
+            # The APID of the data product
+            # Helix Implementation: Validate that this APID exists in the Dictionary
+            # Helix Implementation: Validate that the apid format="DATA_PRODUCT" OR format="CFDP_DATA"           
+            attribute id { apid-range-def },
+            
+            # A textual description that identifies the product to the FSW developers
+            # Note AMPCS Schema lists this as optional but AMPCS treats it as required (11/21/2018)
+            attribute fsw_id { token-64-def },
+
+            # A textual description used to document any other identifying information
+            # for the data product
+            # Helix Implementation: Validate that this matches the corresponding APID name
+            attribute title { name-def },
+            
+            # A systems level description. May be multi-line. White space will be 
+            # preserved as is.
+            element sysdesc { xsd:string },
+            
+            # This is used to category different commands into groups. 
+            # Helix Implementation: Categories must contain module (FSW element)
+            categories-def
+        },
+        
+        # The data product version and where it is in its development.
+        # Version tied to overall cmd/tlm dictionary version
+        # Note that this is not used but AMPCS treats this as required (even though it is optional in the schema)
+        element versioninfo {
+            # Version number of the Data Product.
+            # This is always zero as the data products are revised with the overall dictionary
+            attribute ver_num { "0" }
+        },
+
+        
+        # The mnemonic that was used to command this data product if applicable. 
+        # Some data products are autonomously generated, in which case this would 
+        # not apply.
+        # Helix Implementation: Validate that is command exists in the command dictionary
+        element command { stem-def }?,
+        
+
+        # Data product viewer information. If the viewer is the default AMPCS DP 
+        # viewer then the viewer element can be omitted entirely. 
+        product-viewer-def?,
+        
+        # The data fields in the product
+        fields-def
+    }
+    
+# Specifies a series of data product fields. Repeat block fields
+# may come only at the end of the data product.
+fields-def =
+    element fields {
+        ((array-def | field-def | dynamic-array-def)+, repeat-block-def?)
+        | repeat-block-def
+    }
+    
+# Definition of a single primitive field in a data product.
+field-def =
+    element field {
+    
+        # Name of the variable of this field recognized by the flight software.
+        attribute fsw_name { name-def },
+        
+        # Primitive data type associated with the field.
+        attribute datatype { dp-data-types-def },
+        
+        # Length of the field in bytes. No limit because 
+        # strings can be unlimited in length
+        attribute length { xsd:positiveInteger },
+        
+        # Optional: A standard C format string to represent the output of this field 
+        # in AMPCS viewing tools.
+        # Examples: "0x%4.4X" or "%d" or "Elvis sighted %d times today
+        attribute format { c-format-string-def }?,
+        
+        # A systems level description of the field. May be multi-line. White space
+        # will be preserved.
+        element sysdesc { xsd:string },
+        
+        # Optional polynomial expansion for dn-eu conversion. The value extracted
+        # from the data product is considered the DN.
+        
+        # Helix Implementation: Only valid if datatype in ['UNSIGNED_INT','SIGNED_INT','FLOAT']
+        poly-def?,
+        
+        # Ground derived look up values (for enumerations)
+        # Helix Implementation: Only valid if datatype in ['UNSIGNED_INT','SIGNED_INT']
+        # Helix Implementation: Not valid if poly-def defined for this field
+        lookup-def?,
+        
+        # Units associated with the field.  
+        element units { xsd:token }?
+    }
+    
+# This lookup functionality has two capabilities with respect
+# to data products.  The first capability is called states 
+# and allows values in the data product to be enumerated 
+# in the ground processing software.  The _enumerated_ value  
+# in the data product will be an integer and the dict_value  
+# is the corresponding state that will be displayed in 
+# AMPCS. 
+lookup-def =
+    element lookup {
+         # Defines a mapping table of integer value to state
+         # value.
+         element states {
+            
+         # The integer value extracted form the data product
+         attribute enumerated_value { xsd:integer },
+             
+         # The string display value, or state, it maps to
+                attribute dict_value { name-def }
+            }+
+    }
+    
+# Describes a fixed-length array of fields in the data product, or an
+# array with a variable number of elements, but which occupies the remainder
+# of the product data.
+#
+# The array elements may be primitive values, or they may be structures, such 
+# as a struct in the FSW.  
+array-def =
+    element array {
+    
+        # Name of the array.
+        attribute fsw_name { name-def },
+        
+        # The number of elements in the fixed-length array.AMPCS will expect this many 
+        # array elements in the data product.
+        attribute num_items { fixed-array-length-def },
+        
+        # An optional output format specifier for array elements. If the array
+        # element is primitive, this format specifier can consist of a series
+        # of primitive format specifiers, and output will be grouped to match. For 
+        # instance, if each array element is an integer, then an output_format of
+        # "%x %x %x %x" will cause the array elements to be displayed as 4 hex 
+        # values per line of output. If each array element is a structure, then
+        # the output_format may contain multiple format specifiers, and the
+        # fields in the structure will be matched to them. For instance, if each 
+        # array element consists of a string field, an integer field, and a float 
+        # field, then an output_format of "%s = (%d, %f)" would output each element
+        # as one line, with the string value being placed where the %s is, the 
+        # integer value being placed where the %d is, and the float value
+        # being placed where the %f is.
+        #
+        # This capability is limited. Arrays of arrays of structures, for instance,
+        # may be too complex for AMPCS to map to an output_format. Results may
+        # be unpredictable.  This capability is best used for arrays of primitives,
+        # and arrays of simple structures.
+        attribute output_format { xsd:string }?,
+        
+        # A systems level description of the field. May be multi-line. White space
+        # will be preserved.
+        element sysdesc { xsd:string },
+        
+        # A fixed array element may contain one or more other fixed arrays and 
+        # primitive fields. 
+        (array-def | field-def)+
+    }
+
+# Describes a variable-length array of fields in the data product, in which the 
+# actual length of the array is extracted from a data field that occurs earlier 
+# than the array in the product data.
+
+# The array elements may be primitive values, or they may be structures, such 
+# as a struct in the FSW. The length of the array is taken from a previous 
+# primitive field, whose name must be specified using the variable tag. 
+dynamic-array-def =
+    element dynamic_array {
+    
+        # Name of the array.
+        attribute fsw_name { name-def },
+        
+        # Name of the previous primitive field which contains the
+        # array length. Much match the fsw_name of a previously-defined
+        # primitive field.
+        # Helix Implementation: Validate that this field is:
+        # Helix Implementation: 1. Defined in a field prior to this
+        # Helix Implementation: 2. And of datatype UNSIGNED_INT
+        attribute variable { name-def },
+        
+        # An optional output format specifier for array elements. If the array
+        # element is primitive, this format specifier can consist of a series
+        # of primitive format specifiers, and output will be grouped to match. For 
+        # instance, if each array element is an integer, then an output_format of
+        # "%x %x %x %x" will cause the array elements to be displayed as 4 hex 
+        # values per line of output. If each array element is a structure, then
+        # the output_format may contain multiple format specifiers, and the
+        # fields in the structure will be matched to them. For instance, if each 
+        # array element consists of a string field, an integer field, and a float
+        # field, then an output_format of "%s = (%d, %f)" would output each element
+        # as one line, with the string value being placed where the %s is, the 
+        # integer value being placed where the %d is, and the float value
+        # being placed where the %f is.
+        #
+        # This capability is limited. Arrays of arrays of structures, for instance,
+        # may be too complex for AMPCS to map to an output_format. Results may
+        # be unpredictable.  This capability is best used for arrays of primitives,
+        # and arrays of simple structures.
+        attribute output_format { xsd:string }?,
+        
+        # A systems level description of the field. May be multi-line. White space
+        # will be preserved.
+        element sysdesc { xsd:string },
+        
+        # A dynamic array element may contain one or more other fixed arrays,
+        # dynamic arrays, and primitive fields. 
+        (array-def | field-def | dynamic-array-def)+
+    }
+    
+# A repeat block is an anonymous array that may only be used once in a data product 
+# and indicates that the remainder of the product data is composed of a repeating 
+# pattern of data. Within the repeat block the data product may contain 
+# fixed-length arrays, dynamic arrays, and primitive fields.
+repeat-block-def =
+
+    # A repeat block element may contain one or more other fixed arrays,
+    # dynamic arrays, and primitive fields. 
+    element repeat_block { (array-def | field-def | dynamic-array-def)+ }
+    
+# Data types for primitive product fields 
+dp-data-types-def = ( "UNSIGNED_INT" | "SIGNED_INT" | "FLOAT" | "ASCII" | 
+     "FILL" )
+
+# Valid range for number of items in a fixed array
+fixed-array-length-def = ( xsd:nonNegativeInteger )

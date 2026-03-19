@@ -1,0 +1,426 @@
+#
+# ProjectXYZ flight command dictionary schema.
+#     
+# This schema defines a common, multi-mission format for expression of the 
+# command portion of the flight-ground dictionary. 
+# Refer to the CCSDS Packet Telemetry Standard for bit and byte ordering of values. 
+# All values that are inserted to the command stream are assumed to be in 
+# Global Data Representation (GDR) format with the most significant element first.
+#
+# Copyright (c) 2015 California Institute of Technology, All Rights Reserved
+# JPL Proprietary Information
+#
+# Authors:     C.Swan
+# History:     
+#              
+
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+# Include common dictionary XML definitions
+include "CommonDictionary.rnc"
+
+# Start XML Document here
+start = command-dictionary-def
+
+# Top-level element for the command dictionary. This contains a common header, 
+# any enumeration definitions for command arguments, and the list of command 
+# definitions.
+command-dictionary-def = element command_dictionary {
+
+    # Standard dictionary version header and general change log 
+	header-def,
+	
+    # Uplink file type definitions. 
+	file-types-def ,
+
+	# Define 0 or more enumeration tables for use by command arguments
+	
+	# Helix Implementation: Validate that enumeration names (within command enumerations) are unique
+	element enum_definitions { enum-table-def* }?,
+	
+	# Define 0 or more commands
+	element command_definitions { command-definition-def* }
+}
+
+# Uplink file types indicate the types of files that can be
+# uplinked by the current mission. The type is identified 
+# in the encoded file load.
+file-types-def = element uplink_file_types {
+    # Defines a single file type
+    element file_type {
+    
+         # The name of this file type, for user interfaces 
+         attribute name { symbol-def-32 },
+         
+         # The numeric ID of this file type, for encoding in
+         # the binary file load.
+         # Helix Implementation: File type id must be unique
+         attribute id {xsd:nonNegativeInteger},
+
+        # The file extension that defines this file type.
+         # Helix Implementation: File extension must be unique
+         attribute extension {xsd:token { pattern="[a-z][a-z0-9]{1,4}" }},
+
+        # Pointer to file file format documentation
+        attribute file_format_spec {xsd:token}               
+    }+
+}
+         
+# A command definition can be a FSW command or a hardware command
+command-definition-def = fsw-command-def | hw-command-def
+
+# Defines a flight software command. These types of commands have
+# arguments.
+fsw-command-def = element fsw_command {
+
+    # The opcode is an unsigned integer occupying 16 bits, represented as hex. 
+    # Must be unique.
+    # Helix Implementation: Auto assign
+    # Helix Implementation: Validate that opcodes are unique across all commands
+    attribute opcode { hex-only-int-16 }, 
+    
+    # The unique name of the command. This is how the command will be 
+    # represented on displays.
+    # Helix Implementation: Validate that all stems are unique across all commands
+	attribute stem { stem-def },
+	
+	# Class of command distinguishes between a "sequence" directive which is only valid in a 
+	# sequence vs. a fsw command valid as an immediate command and a sequence. 
+	attribute class { fsw-command-class-def },
+	
+	# Zero or more command arguments.
+	# Helix Implementation: Validate that each command can have a maximum of 3 repeat args (no more)
+    element arguments {
+        ( enum-argument-def | var-string-argument-def |  
+        repeat-argument-def | int-argument-def | 
+        unsigned-argument-def | float-argument-def )+
+    }?,
+  
+    # This is used to category different commands into groups. 
+    # Helix Implementation: Categories must contain module (FSW element)
+    categories-def,
+    
+    # The long description of the command.
+    element description { xsd:string },
+    
+    # A description of when the command is considered "complete" by FSW
+    element completion {xsd:string},
+    
+    # Flight software specific information
+    fsw-specification-def,
+
+    # Restricted Modes
+    restricted-modes-def
+}
+
+# Defines a flight hardware command. Hardware commands are unique in
+# that they do not have arguments.
+hw-command-def = element hw_command {
+
+
+    # The opcode is an unsigned integer represented as hex. Must be 
+    # unique.
+    # Helix Implementation: Auto assign
+    # Helix Implementation: Validate that opcodes are unique across all commands    
+    attribute opcode { hex-only-int-16 }, 
+    
+    # The unique name of the command. This is how the command will be 
+    # represented on displays.
+    # Helix Implementation: Validate that all stems are unique across all commands    
+	attribute stem { stem-def },
+  
+    # This is used to category different commands into groups.
+    
+    # Helix Implementation: Categories must not contain module (not FSW element)
+    categories-def,
+    
+    # The long description of the command.
+    element description { xsd:string }
+}
+
+
+# Defines a single signed integer command argument.
+int-argument-def = element integer_arg {
+
+    # The name of the argument. This name must be unique within a command. 
+    # It can be used for name=value argument replacement in the command 
+    # systems that allow such a construct.
+    # Helix Implementation: This name must be unique within the arguments of the individual command
+    attribute name { name-def },
+    
+    # The length of the argument in bits. 
+    attribute bit_length { integer-arg-length-def },
+    
+    # The units of the command argument. Units are required on numeric 
+    # command arguments for spacecraft safety.
+    attribute units { xsd:token },
+    
+    # The valid ranges of the argument value. For numeric arguments, 
+    # comparison to valid range is a numeric comparison.  
+    int-arg-range-def?,
+    
+    # The long description of the command argument
+    element description { xsd:string }
+}
+
+# Defines a single unsigned integer command argument.
+unsigned-argument-def = element unsigned_arg {
+
+    # The name of the argument. This name must be unique within a command. 
+    # It can be used for name=value argument replacement in the command 
+    # systems that allow such a construct.
+    # Helix Implementation: This name must be unique within the arguments of the individual command    
+    attribute name { name-def },
+    
+    # The length of the argument in bits. 
+    attribute bit_length { integer-arg-length-def },
+    
+    # The units of the command argument. Units are required on numeric 
+    # command arguments for spacecraft safety.
+    attribute units { xsd:token },
+    
+    # The valid ranges of the argument value. For numeric arguments, 
+    # comparison to valid range is a numeric comparison.  
+    unsigned-arg-range-def?,
+    
+    # The long description of the command argument
+    element description { xsd:string }
+}
+
+# Defines a single floating point command argument.
+float-argument-def = element float_arg {
+
+    # The name of the argument. This name must be unique within a command. 
+    # It can be used for name=value argument replacement in the command 
+    # systems that allow such a construct.
+    # Helix Implementation: This name must be unique within the arguments of the individual command       
+    attribute name { name-def },
+    
+    # The length of the argument in bits. Float must be either 32 or 64. 
+    attribute bit_length { float-arg-length-def },
+
+    # The units of the command argument. Units are required on numeric 
+    # command arguments for spacecraft safety.
+    attribute units { xsd:token },
+
+    # The valid ranges of the argument value. For numeric arguments, 
+    # comparison to valid range is a numeric comparison.  
+    float-arg-range-def?,
+    
+    # The long description of the command argument
+    element description { xsd:string }
+}
+
+# Defines a single enumerated command argument. Enumerated arguments have 
+# both an ordinal representation, and a symbolic representation, where the 
+# ordinal maps to the symbol.
+enum-argument-def = element enum_arg {
+
+    # The name of the argument. This name must be unique within a command. 
+    # It can be used for name=value argument replacement in the command 
+    # systems that allow such a construct.
+    # Helix Implementation: This name must be unique within the arguments of the individual command   
+    attribute name { name-def },
+    
+    # The length of the numeric/ordinal argument in bits. Does not define 
+    # or effect the length of the symbols defined by the enumeration.
+    # Helix Implementation: Validate that the bit_length (as signed int) is large enough to  
+    # Helix Implementation: accomodate all enumeration values defined in the enum_name referenced value (see numeric attribute in enum-def)
+    attribute bit_length { enum-arg-length-def },
+    
+    # This is the name of the enumeration table for argument values. Required.
+    # Helix Implementation: Provide autocomplete against enumerations defined in the command dictionary
+    # Helix Implementation: Validate the enumeration exists (enum_definitions:enum_table:name
+    attribute enum_name { name-def },
+
+    # The valid ranges of the argument value.  For enum arguments, comparison 
+    # to valid range is based upon the ordinal (numeric value) of the 
+    # corresponding enum symbolic values.
+    arg-range-def?,
+    
+    # The long description of the command argument
+    element description { xsd:string }
+}
+
+# Defines a single variable length string command argument.
+var-string-argument-def = element var_string_arg {
+
+    # The name of the argument. This name must be unique within a command. 
+    # It can be used for name=value argument replacement in the command systems 
+    # that allow such a construct.
+    # Helix Implementation: This name must be unique within the arguments of the individual command      
+    attribute name { name-def },
+    
+    # This is the length of the prefix that precedes the string,
+    # where the value of this prefix states the actual length of the 
+    # string at runtime. 
+    attribute prefix_bit_length { prefix-length-def },
+    
+    # This is the maximum allowed bit length of the string, which
+    # defaults to 8152 (1019 bytes). Note that since 
+    # telecommand frames generally contain opcodes, the 1019 maximum may not
+    # apply to the current mission. The actual character limit is 1019 
+    # less the opcode byte length.
+    attribute max_bit_length { string-arg-length-def },
+    
+    # CS Item Type (for dynamic sequence content)
+    # Do not use if not requested by GDS
+    attribute cts_item_type {"dynamic_arg"}?,
+    
+    # Valid regular expression for string arguments. If this expression 
+    # is present, the argument string will be validated against the given 
+    # Posix regular expression. If it matches, it is a valid argument.
+    element valid_regex { xsd:normalizedString}?,
+    
+    # The long description of the command argument
+    element description { xsd:string }
+}
+
+
+# Defines a command argument that is a repeating block of other arguments. A
+# prefix in the resulting encoded data indicates how many times the arguments
+# in the block are repeated in the following data block.
+repeat-argument-def = element repeat_arg {
+
+    # The name of the argument. This name must be unique within a command. 
+    # It can be used for name=value argument replacement in the command systems 
+    # that allow such a construct.
+    # Helix Implementation: This name must be unique within the arguments of the individual command      
+    attribute name { name-def },
+    
+    # The length of the prefix argument in bits. The prefix is assumed to be
+    # an unsigned integer.
+    attribute prefix_bit_length { prefix-length-def },
+    
+    # CTS specific encoding (for dynamic sequence content)
+    # Do not use if not requested by GDS
+    attribute cts_encoding {"chunked_hexed"}?,
+    
+    # The long description of the command argument
+    element description { xsd:string },
+    
+    # The definition of which arguments are to be repeated in the
+    # repeat block and how many times.
+    element repeat {
+    
+         # The minimum number of times the argument block MUST repeat
+         attribute min { xsd:nonNegativeInteger },
+    
+         # The maximum number of times the argument block CAN repeat.
+         # Must be greater than or equal to min.
+         # Helix Implementation: Max must be greater than or equal to min
+         attribute max { xsd:positiveInteger },
+
+         # The sub-arguments in the repeat block. Can be any argument type
+         # other than another repeat argument.
+         element arguments {
+                (enum-argument-def | var-string-argument-def | 
+                  float-argument-def | int-argument-def | 
+                 unsigned-argument-def )+ 
+         }
+    }
+}
+
+# Valid range for bit length of an integer or unsigned argument.
+integer-arg-length-def = "8" | "16" | "32" | "64"
+
+# Valid range for bit length of a floating point argument.
+float-arg-length-def = "32" | "64"
+
+# Valid range for an enum argument bit length
+enum-arg-length-def = "8" | "16" | "32"
+
+# Valid bit length range for fixed string arguments and 
+# maximum length for variable string arguments. This is 1024 bits (128 bytes)
+# for FSW
+string-arg-length-def = xsd:nonNegativeInteger { maxInclusive = "1024"}
+
+# Valid bit lengths for repeat argument and variable string prefixes 
+prefix-length-def = ( "8" )
+
+# Element used to define valid argument ranges.
+arg-range-def =  element range_of_values {
+    # The value is valid if it is within this range. 
+    # Helix Implementation: Look up the associated enum for the command arg and confirm min and mix correspond to an enum
+    # Helix Implementation: Look up the numeric associated with each and confirm that max > min
+    element include { 
+    
+         attribute min { xsd:normalizedString }, 
+         attribute max { xsd:normalizedString }
+    }
+}
+
+# Element used to define valid argument ranges for signed integers.
+int-arg-range-def =  element range_of_values {
+    # The value is valid if it is within this range.
+    # Helix Implementation: Validate that max > min
+    element include { 
+         attribute min { xsd:integer }, 
+         attribute max { xsd:integer }
+    }
+}
+
+# Element used to define valid argument ranges for signed integers.
+unsigned-arg-range-def =  element range_of_values {
+    # The value is valid if it is within this range. 
+    # Helix Implementation: Validate that max > min
+    element include { 
+         attribute min { xsd:nonNegativeInteger }, 
+         attribute max { xsd:nonNegativeInteger }
+    }
+}
+
+# Element used to define valid argument ranges for floating point
+# numbers.
+float-arg-range-def =  element range_of_values {
+    # The value is valid if it is within this range.
+    # Helix Implementation: Validate that max > min
+    element include { 
+         attribute min { xsd:double }, 
+         attribute max { xsd:double }
+    }
+}
+
+# Binary integer pattern
+bin-int = xsd:token { pattern = "0b[01]+" }
+
+
+# Different command classes may be encoded using different
+# virtual channels, or have other encoding differences.
+#
+# FSW - A standard flight software command
+# SEQ - A sequence directive/command. used for managing execution of
+#       commands in sequence files
+fsw-command-class-def = ("FSW" | "SEQ")
+
+fsw-specification-def =
+    # Provides information that controls specifics on how FSW treats or implements the commands
+    element fsw_specification {
+       # Requires custom validation?
+	   # This is used by FSW to flag commands that have more involved command validation
+	   attribute custom_validation_required {"Yes" | "No"},
+
+	   # Specification of custom validation
+	   # Helix Implementation: Required if custom_validation_required == "Yes"
+	   attribute custom_validation_description {text}?
+    }
+
+restricted-modes-def =
+    # Indicates if a given command is not allowed to execute in certain system modes or states.
+    element restricted_modes {
+        element mode {
+            # System mode or state that is restricted
+            # Helix Implementation: Validate that you can only restrict each mode once 
+            attribute mode_name {system-mode-def},
+            # Reason for the mode restriction
+            attribute reason {text}
+        }*,
+        element prime_string_restriction {
+            # Indicates if the command is restricted to the prime string
+            # If true the FSW will reject the command if is not executing on the prime string
+            attribute prime_string_only {"Yes" | "No"},
+            # Optional field to indicate why the restriction exists
+            attribute prime_string_restrict_reason {text}?
+        }
+    }

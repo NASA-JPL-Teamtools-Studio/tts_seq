@@ -1,0 +1,209 @@
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+
+# ProjectXYZ Dictionary MetaData Definition XML
+# In RelaxNG Compact Format
+# 
+# Authors:     C.Swan
+# History:     
+#              
+# 
+# Copyright (c) 2005 California Institute of Technology, All Rights Reserved
+# JPL Proprietary Information
+# 
+# This document is the XML schema for the V&V and meta information that the ProjectXYZ Helix System
+# System will track on each dictionary element. 
+# 
+
+
+include "CommonDictionary.rnc" {}
+
+start = dictionary-meta-data-def
+dictionary-meta-data-def =
+    element dictionary_meta_data {
+        # The header section names the project and the date the V&V snap shot was generated
+        meta-data-header-def,
+        # This section cover dictionary meta information   
+        dictionary-meta-def*,
+        # This section includes records for VI for each release             
+        vi-tracking-def*
+    }
+    
+meta-data-header-def =
+    element meta_data_header {
+        # Name of the project/mission generating or using the dictionary
+        attribute mission_name { "ProjectXYZ" }       
+    }
+
+dictionary-meta-def =
+    element dictionary_meta { 
+        # Dictionary Element Type
+        attribute element_type {dictionary-elements-def},
+        # Dictionary Element ID - The unique id for each dictionary element
+        # Helix Implementation: Auto complete based on the element_type
+        # Helix Implementation: Auto fill based on element_name/element_type 
+        attribute element_id {text},
+        # Dictionary Element Name - The canonical name for each dictionary element
+        # Helix Implementation: Auto complete based on the element_type
+        # Helix Implementation: Auto fill based on element_id/element_type 
+        attribute element_name {text},
+        # Attribute indicating if this element is a flight or a ground only construct (ground only would be SSE/ground derived channel/alarm/etc)
+        attribute flight_ground {"Flight" | "Ground"},
+        # Name of the Flight System Point of Contact 
+        attribute flight_system_poc {text},   
+        # Name of the FSW developer
+        attribute fsw_developer {text}?,
+        # V&V Planning
+        element vnv_planning {
+            # Whether formal V&V is planned for this element
+            attribute vnv_planned {"true_explicit" | "true_data_review" | "discovery" | "unplanned"},
+            # Verification Activity Collection (VAC) element is assigned to
+            attribute system_vac {xsd:token}?,
+            # Verification Activity (VA) element is assigned to  
+            attribute system_va {xsd:token}?,
+            # DNG ID of the VA
+            attribute system_va_id {xsd:token}?,
+            # Test Case element is tested under
+            attribute test_case  {xsd:token}?,
+            # V&V Plannning Notes
+            attribute planning_notes {xsd:token}?,
+            # L3-L4 V&V Owner (va owner)           
+            attribute l3_l4_vnv_owner {text}?,                 
+            # L5 V&V Owner
+            attribute l5_vnv_owner {text}?,
+            # Expected Release for System Testing
+            attribute sys_test_release {text}?,
+            # Expected Release for FSW I&T Testing
+            attribute fit_test_release {text}?,
+            # Whether the dictionary element needs explicit testing to be ATLO safe 
+            attribute atlo_safety {"Yes" | "No"}?
+        }?,
+        element dictionary_information {
+        # Operational Category
+        attribute ops_category {xsd:token}?,
+        # FSW Module
+        attribute module {xsd:token}?,
+        # Dictionary Element Description
+        attribute system_description {xsd:string}?
+        }?
+    }
+
+# One of these records could exist for each level of testing for each release
+vi-tracking-def = 
+    element vi_tracking {   
+        # If possible can we auto-populate this information once type and id/name are included in UI and on import?
+        element dictionary_item_summary {
+            # Dictionary Element Type
+            attribute element_type {dictionary-elements-def},
+            # Dictionary Element ID - The unique id for each dictionary element (auto-look up)
+            attribute element_id {text},
+            # Dictionary Element Name - The canonical name for each dictionary element (auto-look up)       
+            attribute element_name {text}           
+            },           
+        element release {
+             # Level of testing
+             attribute level {"FSW I&T"|"Avionics System I&T"|"System I&T"},
+             # Flight Software Release
+             attribute fsw_version {text},
+             # Dictionary Version
+             # Helix Implementation: Provide look up/drop down against versions in Helix
+             attribute dictionary_version {text},
+             # SSE Version Used
+             attribute sse_version {text}?,
+             # GDS Version Used 
+             attribute gds_version {text}?
+        },     
+        element results {
+            # Test Date (Calendar look up)
+            attribute test_date {xsd:date},
+            # The results are based on a combination of analyses and tests
+            (test-method-def | analysis-inspect-method-def)+,
+            # Results
+            attribute status {"PASS"|"FAIL"|"PARTIAL"|"PARTIAL_DEFAULT"},                     
+            # Anomalies 
+            # Helix Implementation: IF status == FAIL at least one  anomaly explanation is required
+            (dpfr-pfr-def | other-def | jira-def)*,
+            # V&V Run for Record
+            attribute run_for_record {"Yes" | "No"}?,
+            # Notes
+            # Helix Implementation: ID status == PARTIAL || PARTIAL_DEFAULT - notes is required
+            attribute notes {text}? 
+        },
+        element atlo_ready {
+            # ATLO Approval
+            attribute atlo_approval {"APPROVED" | "NOT_APPROVED" | "LIMITED_USE"},
+            # Limited Use Description
+            # Helix Implementation: Required if atlo_approval == "LIMITED_USE", else optional
+            attribute limited_use {text}?
+        }?,
+        element review {
+          # VNV Reviewer 
+          attribute vnv_reviewer {text},
+          # Review Notes
+          attribute vnv_review_notes {text}?                     
+        }*
+    }
+
+dictionary-elements-def = "APID"         |
+                          "CHANNEL"      |
+                          "COMMAND"      |
+                          "DATA PRODUCT" |
+                          "EVR"
+
+test-method-def =
+    element test_method {
+        # Activity Report or Analysis (provide link)
+        attribute activity_report {text},            
+        # Machine Name 
+        attribute machine {text},           
+        # MPCS Session ID
+        attribute session_id {text},
+        # Test Conductor
+        attribute test_conductor {text}?,
+        # Link to Data Review 
+        attribute data_review {text}?,
+        # Test Procedure
+        attribute test_procedure {text},
+        # FP injection / error description
+        # Helix Implementation: Required if element_type = "FP MONITOR"
+        attribute fp_injection {text}?        
+    }
+    
+analysis-inspect-method-def =
+    element analysis_inspect_method {(ext-docs-def | short-report-def)+}
+    
+ext-docs-def =
+   element ext_docs {
+        attribute description {text},
+        attribute http_link {text}
+   }
+
+short-report-def =
+    element short_report {
+        attribute report {text}
+    }
+        
+dpfr-pfr-def =
+    element dpfr_pfr {
+        # DPFR - PFR 
+        attribute prs_id {xsd:token { pattern = "[0-9]+" }},
+        # Link to PRS
+        attribute prs_link {xsd:token},
+        # Description of issue
+        attribute description {text}
+        }      
+        
+other-def =
+    element other_anom {
+        # Description of issue
+        attribute description {text}
+        }         
+
+jira-def =
+    element jira {
+        # JIRA Issue ID
+        attribute jira_issue {text},
+        # Link to JIRA Issue
+        attribute jira_link {text},      
+        # Description of the issue
+        attribute description {text}
+    }

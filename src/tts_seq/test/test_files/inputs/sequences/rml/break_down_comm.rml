@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<RML>
+  <History/>
+  <ModelingTimes/>
+  <Sequences>
+    <Sequence>
+      <Commands>
+        <Command Comment=";" Name=""/>
+        <Command Comment=";" Name=""/>
+        <Command Comment="; This is a demonstration of how tts_seq_viewer can work for a simple earth orbiting mission." Name=""/>
+        <Command Comment="; The details of this sequence don't matter much, but for context, it is meant to represent" Name=""/>
+        <Command Comment="; a simple spacecraft breaking down comm after an arbitrary contact on an X or S band station." Name=""/>
+        <Command Comment=";" Name=""/>
+        <Command Comment="; This is a realtively timed sequence because it could be used at any given time depending on" Name=""/>
+        <Command Comment="; the exact geometries and view periods to the station." Name=""/>
+        <Command Comment=";" Name=""/>
+        <Command Comment="; In a real sequence, one might expect metatdata to also go here." Name=""/>
+        <Command Comment=";------------------------------------------------------------------------------------------------" Name=""/>
+        <Command Comment="" Name=""/>
+        <Command Comment="" Name="STOP_PLAYBACK">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name="SET_TLM_PROD_RATE">
+          <Arguments>
+            <Argument Name="prod_rate" Value="NOMINAL_SCI"/>
+          </Arguments>
+        </Command>
+        <Command Comment="" Name="TX_POWER">
+          <Arguments>
+            <Argument Name="on_off" Value="OFF"/>
+            <Argument Name="freq_band" Value="XBAND"/>
+          </Arguments>
+        </Command>
+        <Command Comment="" Name="TX_POWER">
+          <Arguments>
+            <Argument Name="on_off" Value="OFF"/>
+            <Argument Name="freq_band" Value="SBAND"/>
+          </Arguments>
+        </Command>
+      </Commands>
+    </Sequence>
+  </Sequences>
+</RML>

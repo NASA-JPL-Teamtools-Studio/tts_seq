@@ -1,0 +1,497 @@
+# ProjectXYZ common dictionary schema.
+#     
+# Defines XML structures shared by the multi-mission command and
+# telemetry dictionaries.
+#
+# Copyright (c) 2013-2015 California Institute of Technology, All Rights Reserved
+# JPL Proprietary Information
+#
+# Change Log:
+#   V1.0   03/29/17  C.Swan Initial Version (based on AMPCS V3.1 08/18/16)
+
+#
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+# General definition of data type used for names. Since names may be stored in 
+# databases or searchable as text, the allowed character set is limited to 
+# letters, numbers, underscores, and dashes, and length is restricted to 64.
+name-def = xsd:token { pattern="[A-Za-z0-9_\-]{1,64}" }
+
+# Helix Implementation: FSW Name must not be any one of the 32 reserved words in C
+# auto       double   int          struct
+# break     else        long       switch
+# case       enum     register typedef
+# char       extern   return    union
+# const     float      short      unsigned
+# continue              for          signed   void
+# default  goto      sizeof    volatile
+# do          if             static     while
+fsw-name-def=xsd:token { pattern="[a-z0-9_]{1,32}" }
+
+fsw-name-64-def=xsd:token { pattern="[a-z0-9_]{1,64}" }
+
+sys-name-32-def=xsd:token { pattern="[A-Z0-9_]{1,32}" }
+
+sys-name-64-def=xsd:token { pattern="[A-Z0-9_]{1,64}" }
+
+sys-name-128-def=xsd:token { pattern="[A-Z0-9_]{1,128}" }
+
+# General definition of data type used for long names. Since names may be 
+# stored in databases or searchable as text, the allowed character set is limited 
+# to letters, numbers, underscores, and dashes, and length is restricted to 128.
+name-128-def = xsd:token { pattern="[A-Za-z0-9_\-]{1,128}" }
+
+# General definition of data type used for short names. Since names may be 
+# stored in databases or searchable as text, the allowed character set is limited 
+# to letters, numbers, underscores, and dashes, and length is restricted to 16.
+name-16-def = xsd:token { pattern="[A-Za-z0-9_\-]{1,16}" }
+
+# General definition of an enumeration symbol or short name. Limited
+# to 64 characters in length.
+symbol-def = xsd:token { maxLength="64"} 
+
+# General definition of an enumeration symbol or short name. Limited
+# to 32 characters in length.
+symbol-def-32 = xsd:token { maxLength="32"} 
+
+# signed-64-pos-def
+signed-64-pos-def = xsd:nonNegativeInteger
+
+# General definition for 32 bit unsigned values. Range is limited to 4294967295.
+unsigned-32-def = xsd:nonNegativeInteger { maxInclusive="4294967295"}
+
+# General definition for 16 bit unsigned values. Range is limited to 65535.
+unsigned-16-def = xsd:nonNegativeInteger { maxInclusive="65535"}
+
+# General definition for 16 bit unsigned positive values. Range is limited to 65535.
+unsigned-16-pos-def = xsd:positiveInteger { maxInclusive="65535"}
+
+# General definition for 8 bit unsigned values. Range is limited to 255.
+unsigned-8-def = xsd:nonNegativeInteger { maxInclusive="255"}
+
+# General definition for 8 bit unsigned positive values. Range is limited to 255.
+unsigned-8-pos-def = xsd:positiveInteger { maxInclusive="255"}
+
+# General definition for 0-63 bit offset values.
+offset-64-def = xsd:nonNegativeInteger { maxInclusive="63"}
+
+# General definition for a 400 character-length string.
+string-400-def = xsd:normalizedString  {maxLength="400"}
+
+# General definition for a 512 character-length string.
+string-512-def = xsd:normalizedString  {maxLength="512"}
+
+# General definition for a non-empty token field
+non-empty-token-def = xsd:token { minLength="1" }
+
+# General definition for a 64-character token field
+token-64-def = xsd:token { maxLength="64" }
+
+# A standard C format string to represent the output of this field
+c-format-string-def = xsd:token { pattern="[^%]*%{0,1}[^%]+" }
+
+# Type of string value. fixed_length implies the string argument occupies 
+# the entire data length in the received packet. length_prefixed implies 
+# that an actual data length field precedes the actual variable 
+# length string data. This length must be an unsigned value
+# in the data.
+#
+
+string-type-def = attribute type { "fixed_length" | "length_prefixed" }
+
+# Common dictionary header, to be included in all dictionaries.
+header-def = element header {
+
+    # Name of the project/mission generating or using the dictionary
+    attribute mission_name { "ProjectXYZ" },
+    
+    # Numeric ID of the spacecraft the dictionary applies to.
+    
+    # SCID is not always known at time of XML generation, and
+    # the same XML May be used for multiple spacecraft. A value
+    # of 0 can also be used to indicate that SCID is unknown
+    # or unused.
+    element spacecraft_ids {
+        element spacecraft_id { attribute value {xsd:nonNegativeInteger } }+
+    }?,
+    
+    # Version of the dictionary
+    attribute version { xsd:token },
+    
+    # version of the schema upon which the dictionary is based
+    attribute schema_version { xsd:token }
+   
+}
+
+# General enumeration value element. Used to map a string symbol to numeric value 
+# or vice-versa. In most cases, the numeric value is used and transmitted by the 
+# flight software. The symbolic value is mapped to numeric value on the ground.
+enum-def = element enum {
+
+    # Symbolic value. Length restricted for display and storage purposes.
+    # Helix Implementation: Symbol must be unique within the parent enum_table
+    attribute symbol { sys-name-64-def },
+    
+    # Numeric value corresponding to the symbol. Note that the value can be signed.
+    # Helix Implementation: Numeric must be unique within the parent enum_table    
+    attribute numeric { xsd:int }
+}
+
+# General enumeration table, which provides a named list of 0 or more 
+# enumeration value elements
+enum-table-def = element enum_table {
+
+    # Name of the enumeration table. Enum table names are restricted
+    # to the character set allowed by a name token and limited in length for
+    # ease of processing and display purposes.
+    
+    # Helix Implementation: Each name must be unique within the dictionary that they exist in
+    attribute name { name-def } ,
+    
+    # Special field for sequence processing (for dynamic sequence content)
+    # Do not use if not requested by GDS
+    attribute export {"yes"}?,
+    
+    # Enumeration values in the table
+    element values {
+        enum-def+
+    }
+}
+
+# General algorithm definition for algorithms that may take parameters and 
+# specify a return type. Such algorithms are used to compute custom telemetry 
+# or product values on the ground.  
+parameterized-algorithm-def = element parameterized_algorithm {
+
+    # Name of the algorithm. The name must be unique to each algorithm, but 
+    # the same algorithm may be employed in more than one location.
+    attribute name { xsd:token },
+    
+    # Optional parameters to algorithm. Algorithms must know the data types 
+    # of the parameters since all parameter values are defined as strings here. 
+    # Parameter names are restricted
+    # to the character set allowed by a name token and limited in length.
+    algorithm-parameter-def*
+}
+
+# Defines a parameter to an algorithm. Note that all parameters are strings, 
+# so the algorithm developer must know the data types expected.
+algorithm-parameter-def = element parameter {
+
+    # Name for the parameter.   
+    attribute name { name-def },
+    
+    # Value of the parameter.
+    xsd:string 
+}
+
+ # This is used to categorize items into groups. Possible category names 
+ # are "module", "ops category", "subsystem", ...
+ # It is possible that there are multiple ways of organizing groups of 
+ # elements, so that there may be more than one category entry for a given 
+ # item.
+categories-def = element categories {
+     (
+        # Mission-specific flight or simulation module.
+        element module { mission-module-def }?,
+
+        # Mission-specific flight or simulation category
+        element ops_category { mission-ops-category-def }
+
+     )
+}
+
+# List of System Modes used on ProjectXYZ (Source System Mode FDD)
+system-mode-def = "TEST" | "PRE-LAUNCH" | "LAUNCH" | "CRUISE" | "EDL APPROACH" | "EDL MAIN" | "SURFACE NOMINAL" | "SURFACE STANDBY" 
+
+# Mission-specific flight/simulation module pattern. Specific
+
+# missions may copy this schema and make this a list.
+
+mission-module-def =   
+
+"aclk_mgr"      |                  # (0x0027)
+"acm_svc"       |                  # (0x0111)
+"acs_ctl"       |                  # (0x0042)
+"adc_svc"       |                  # (0x0183)
+"adl_svc"       |                  # (0x0005)
+"aman_ctl"      |                  # (0x0043)
+"ant_mgr"       |                  # (0x0028)
+"app_exe"       |                  # (0x0003)
+"app_svc"       |                  # (0x0143)
+"arm_ctl"       |                  # (0x011b)
+"asia_drv"      |                  # (0x001b)
+"asiadis_drv"   |                  # (0x001c)
+"asiadis_mgr"   |                  # (0x0029)
+"atif_drv"      |                  # (0x001d)
+"atifdis_drv"   |                  # (0x001e)
+"atifdis_mgr"   |                  # (0x002a)
+"bc_drv"        |                  # (0x001f)
+"bc_mgr"        |                  # (0x002b)
+"cbm_ctl"       |                  # (0x00c7)
+"cfdp_svc"      |                  # (0x00ae)
+"cic_drv"       |                  # (0x0101)
+"cmd_svc"       |                  # (0x0083)
+"cmod_svc"      |                  # (0x0112)
+"coll_svc"      |                  # (0x0113)
+"comm_mgr"      |                  # (0x00c6)
+"comp_svc"      |                  # (0x00af)
+"cpu_drv"       |                  # (0x0020)
+"crc_drv"       |                  # (0x0021)
+"crc_mgr"       |                  # (0x002d)
+"cstr_mgr"      |                  # (0x002e)
+"data_app"      |                  # (0x00a0)
+"dimu_drv"      |                  # (0x0022)
+"dimu_mgr"      |                  # (0x002f)
+"dm_mgr"        |                  # (0x0106)
+"dma_drv"       |                  # (0x0023)
+"dpc_svc"       |                  # (0x00ad)
+"dpm_svc"       |                  # (0x00ab)
+"dpt_svc"       |                  # (0x00ac)
+"dsa_mgr"       |                  # (0x0030)
+"dwn_app"       |                  # (0x0060)
+"dwn_drv"       |                  # (0x0062)
+"dwn_mgr"       |                  # (0x0063)
+"ecam_mgr"      |                  # (0x0107)
+"edl_ctl"       |                  # (0x0044)
+"edlbg_svc"     |                  # (0x0006)
+"edlcam_mgr"    |                  # (0x0108)
+"edlcomm_svc"   |                  # (0x0007)
+"edlgnc"        |                  # (0x0041)
+"eha_svc"       |                  # (0x0061)
+"enet_drv"      |                  # (0x0024)
+"evr_svc"       |                  # (0x0174)
+"file_svc"      |                  # (0x00a9)
+"fpm_svc"       |                  # (0x00c1)
+"frame_mgr"     |                  # (0x0109)
+"fv_svc"        |                  # (0x00aa)
+"gate_svc"      |                  # (0x0008)
+"gid_mgr"       |                  # (0x0031)
+"grip_ctl"      |                  # (0x011c)
+"health_svc"    |                  # (0x0009)
+"helo_mgr"      |                  # (0x010a)
+"hsm_svc"       |                  # (0x000b)
+"hst_svc"       |                  # (0x000c)
+"hsuart_drv"    |                  # (0x0102)
+"iccitc_drv"    |                  # (0x0103)
+"imf_svc"       |                  # (0x0115)
+"iml_svc"       |                  # (0x0115)
+"ivp_svc"       |                  # (0x000d)
+"kd_svc"        |                  # (0x0116)
+"lander_exe"    |                  # (0x00c5)
+"lap_svc"       |                  # (0x00b0)
+"launch_ctl"    |                  # (0x00c8)
+"lic_drv"       |                  # (0x0025)
+"lmc_mgr"       |                  # (0x0032)
+"lvs_mgr"       |                  # (0x0033)
+"mat3_svc"      |                  # (0x0117)
+"mathf_svc"     |                  # (0x000e)
+"matrix_svc"    |                  # (0x0118)
+"mav_mgr"       |                  # (0x010b)
+"mc_mgr"        |                  # (0x0034)
+"mech_mgr"      |                  # (0x010c)
+"mem_svc"       |                  # (0x000f)
+"mot_svc"       |                  # (0x0119)
+"msg_svc"       |                  # (0x0010)
+"nand_mgr"      |                  # (0x00a2)
+"nor_mgr"       |                  # (0x00a3)
+"nvds_svc"      |                  # (0x00a4)
+"nvfs_svc"      |                  # (0x00a5)
+"nvm_drv"       |                  # (0x00a1)
+"osal_svc"      |                  # (0x0011)
+"param_svc"     |                  # (0x00a7)
+"plat_mgr"      |                  # (0x0036)
+"pwr_mgr"       |                  # (0x0037)
+"pyro_mgr"      |                  # (0x0038)
+"rac_ctl"       |                  # (0x011d)
+"ramfs_svc"     |                  # (0x00a8)
+"rdo_mgr"       |                  # (0x0064)
+"rec_svc"       |                  # (0x00a6)
+"reu_mgr"       |                  # (0x0039)
+"rm_ctl"        |                  # (0x0045)
+"rt_drv"        |                  # (0x0026)
+"rt_mgr"        |                  # (0x003a)
+"rt_svc"       |                  # (0x0012)
+"rts_svc"       |                  # (0x0013)
+"sarb_svc"      |                  # (0x0014)
+"sbs_svc"       |                  # (0x0154)
+"sfp_exe"       |                  # (0x00c2)
+"sc_app"        |                  # (0x0004)
+"scfg_svc"      |                  # (0x00c4)
+"scu_ctl"       |                  # (0x011e)
+"scu_mgr"       |                  # (0x010d)
+"seq_svc"       |                  # (0x0084)
+"sfp_exe"       |                  # (0x00c2)
+"shell_app"     |                  # (0x00f0)
+"shell_ctl"     |                  # (0x00f1)
+"shell_svc"     |                  # (0x0138)
+"smm_exe"       |                  # (0x00c3)
+"spw_drv"       |                  # (0x0104)
+"sr_svc"        |                  # (0x0016)
+"ssa_mgr"       |                  # (0x003b)
+"sspa_mgr"      |                  # (0x003c)
+"stacam_mgr"    |                  # (0x010f)
+"starid_svc"    |                  # (0x0015)
+"surf_app"      |                  # (0x0100)
+"sys_app"       |                  # (0x00c0)
+"thrm_mgr"      |                  # (0x003d)
+"thruster_mgr"  |                  # (0x003e)
+"time_svc"      |                  # (0x0017)
+"twta_mgr"      |                  # (0x003f)
+"types_svc"     |                  # (0x0019)
+"uart_drv"      |                  # (0x0105)
+"upl_app"       |                  # (0x0080)
+"upl_drv"       |                  # (0x0081)
+"upl_mgr"       |                  # (0x0082)
+"ust_mgr"       |                  # (0x0040)
+"utils_svc"     |                  # (0x001a)
+"vce_mgr"       |                  # (0x0110)
+"vis_ctl"       |                  # (0x011f)
+"vislib_svc"    |                  # (0x011a)
+"zfit_app"      |                  # (0x00e0)
+"zfit_uth"      |                  # (0x00e1)
+"zfit_worker"                      # (0x00e2)
+
+# NOTE: Last hex is "adc_svc" (0x0183), modules are sorted alphabetically
+
+
+# Mission-specific flight/simulation OPS category pattern. Specific
+# missions may copy this schema and make this a list.  
+mission-ops-category-def = "ACM"    |   # Activity Constraint Manager
+                           "ACS"    |   # Cruise attitude estimation, control, EDL GNC and AMAN
+                           "AVS"    |   # Avionics
+                           "BCTL"   |   # 1553 Bus Controller                      
+                           "CBM"    |   # Comm Behavior Manager
+                           "CMD"    |   # Uplink and Command
+                           "CTB"    |   # Cruise Timeline Behavior
+                           "DDM"    |   # Downlink and Data Management (Legacy)
+                           "DMX"    |   # Data Management & Transmission
+                           "DWN"    |   # Downlink
+                           "EDL"    |   # Entry Descent and Landing
+                           "FSW"    |   # Flight Software Boot, Load, Patch, CE, Intercomm
+                           "HDW"    |   # Hardware Commands
+                           "IMG"    |   # Engineering camera imaging
+                           "LMC"    |   # LMC, Actuators and Motor Control      
+                           "LPCE"   |   # Compute element specific items      
+                           "MDLI"   |   # MEDLI3
+                           "MLS"    |   # MLS related functions     
+                           "PRM"    |   # Parameter management                
+                           "PWR"    |   # Power      
+                           "PYRO"   |   # Pyro   
+                           "REU"    |   # Remote Engineering Unit      
+                           "RSB"    |   # RSB Functionality         
+                           "SAM"    |   # Surface Activity Manager    
+                           "SAPP"   |   # Surface Attitude Position Propagator        
+                           "SDEP"   |   # Surface Deployments Behaviors (includes Vector)         
+                           "SEQ"    |   # Sequencing
+                           "SFP"    |   # System Fault Protection
+                           "SMC"    |   # Spacecraft Modes and Configuration      
+                           "SPW"    |   # Spacewire specific items       
+                           "SRH"    |   # SRH related functions   
+                           "STS"    |   # Sample Transfer functions  
+                           "TEL"    |   # Telecom
+                           "THRM"   |   # Thermal
+                           "TIME"   |   # Time
+                           "UPL"    |   # Uplink
+                           "VCE"    |   # VGNC Compute Element
+                           "WAKE"       # Wakeup and Shutdown      
+
+# Mission-specific operational phase of the mission. Specific
+# missions may copy this schema and make this a list.  
+mission_phase = "LAUNCH"
+
+# Defines the allowed pattern for forming telemetry channel IDs
+channel-id-def = xsd:token {  pattern="[A-Z]{1}[A-Z0-9]{0,3}-[0-9]{4}" } 
+
+# Hex integer pattern 
+hex-only-int = xsd:token { pattern = "[0-9A-F]+" }
+
+# Hex integer pattern exclusively (no decimal) up to 16 bits
+hex-only-int-16 = xsd:token { pattern = "0[x][0-9A-F]+" length="6" }
+
+# Hex integer pattern exclusively (no decimal) up to 32 bits
+hex-only-int-32 = xsd:token { pattern = "0[x][0-9A-F]+" length="10" }
+
+# Hex or decimal integer pattern
+hex-int = xsd:token { pattern = "[0-9]+|0x[0-9A-F]+" }
+
+# Valid packet APID range
+apid-range-def = xsd:nonNegativeInteger { maxExclusive="2047" }
+
+# Acceptable pattern for command stems
+stem-def = xsd:token { pattern="[A-Z][A-Z0-9_]{1,32}" }
+
+icmd-stem-def = xsd:token { pattern="[A-Z][A-Z0-9_]{1,64}" }
+
+# Range for the index in a DN-to-EU polynomial specification
+poly-index-range-def = xsd:nonNegativeInteger { maxInclusive = "7" }
+
+# Data product viewer identification. If the viewer is the default AMPCS DP 
+# viewer then the viewer element can be omitted entirely. Otherwise, the 
+# viewer script path should be specified using the name attribute.
+#
+# The viewer must be a script or application that takes at least one command 
+# line argument: the full path to the product data file. It is up to the 
+# individual project to decide whether the full path to the viewer is placed 
+# here, or whether the viewer script name is supplied without path, in which 
+# case the user's executable PATH must include the viewer directory in order 
+# for AMPCS to launch the viewer. 
+#
+# If additional command line arguments are required 
+# by the viewer, they should be supplied as the text value of the viewer
+# element, exactly as they should be supplied on the viewer command line. 
+# When the viewer is launched, the command line will consist of the viewer
+# name, the text value of this element (the viewer command line arguments),
+# followed by the full path to the data product file.
+product-viewer-def = element viewer {
+     # The viewer script name, with or without directory path
+     attribute name { text },
+            
+     # Arguments to the script, if any
+     (empty | text)
+}
+
+
+# Defines a table interpolation for computing an engineering unit value.
+# Each raw telemetry value in the table maps to an engineering value. 
+# Order of the points matter; it is assumed that the raw values are in increasing 
+# order. The engineering value is a linear estimate between two points in the table.
+# If the value is less than the first raw value, then the engineering value 
+# is created by using a linear interpolation from the slope of the next two 
+# values and the engineering value of the first value.
+# If the value is greater than the last raw value, then the engineering 
+# value is created by a linear evaluation from the slope of the last 
+# two values and the value of the last engineering value.
+table-lookup-def =  element table_lookup { 
+     # Defines one raw/eng pair in the interpolation table
+     # Helix Implementation: Validate that at least two points have been defined
+     element point { 
+     
+         # Raw value for this interpolation point
+         attribute raw { xsd:float },
+     
+         # Eng value for this interpolation point
+         attribute eng { xsd:float }
+     }*
+}
+
+# Defines a polynomial expansion for computing an engineering unit value.
+# This is defined as an iteratively computed value: eng = (eng * raw) + factor[i], 
+# where i is the factor number from N to 0.
+poly-def = element polynomial_expansion {
+
+    # Defines factors for the polynomial. Factors will be used in order, with the
+    # first being factor 0, the second factor 1, and the last factor N. The number
+    # of factors is limited to 8. Indices must be continuous. One cannot specify
+    # index 0 and index 2 without specifying index 1.
+    element factor { 
+    
+        # The polynomial index
+        # Helix Implementation: Validate that the index starts at 0 and monotonically increases
+        attribute index { poly-index-range-def },
+        
+        # The polynomial coefficient
+        attribute coeff { xsd:float } 
+    }+
+}

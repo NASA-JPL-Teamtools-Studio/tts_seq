@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:simpleType name="name-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Za-z0-9_\-]{1,64}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="fsw-name-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[a-z0-9_]{1,32}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="fsw-name-64-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[a-z0-9_]{1,64}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="sys-name-32-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Z0-9_]{1,32}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="sys-name-64-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Z0-9_]{1,64}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="sys-name-128-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Z0-9_]{1,128}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="name-128-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Za-z0-9_\-]{1,128}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="name-16-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Za-z0-9_\-]{1,16}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="symbol-def">
+    <xs:restriction base="xs:token">
+      <xs:maxLength value="64"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="symbol-def-32">
+    <xs:restriction base="xs:token">
+      <xs:maxLength value="32"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="signed-64-pos-def">
+    <xs:restriction base="xs:nonNegativeInteger"/>
+  </xs:simpleType>
+  <xs:simpleType name="unsigned-32-def">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="4294967295"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="unsigned-16-def">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="65535"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="unsigned-16-pos-def">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:maxInclusive value="65535"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="unsigned-8-def">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="unsigned-8-pos-def">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:maxInclusive value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="offset-64-def">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="63"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string-400-def">
+    <xs:restriction base="xs:normalizedString">
+      <xs:maxLength value="400"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string-512-def">
+    <xs:restriction base="xs:normalizedString">
+      <xs:maxLength value="512"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="non-empty-token-def">
+    <xs:restriction base="xs:token">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="token-64-def">
+    <xs:restriction base="xs:token">
+      <xs:maxLength value="64"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="c-format-string-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[^%]*%{0,1}[^%]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:attributeGroup name="string-type-def">
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="fixed_length"/>
+          <xs:enumeration value="length_prefixed"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:element name="header">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="spacecraft_ids"/>
+      </xs:sequence>
+      <xs:attribute name="mission_name" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="ProjectXYZ"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="version" use="required" type="xs:token"/>
+      <xs:attribute name="schema_version" use="required" type="xs:token"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="spacecraft_ids">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="spacecraft_id"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="spacecraft_id">
+    <xs:complexType>
+      <xs:attribute name="value" use="required" type="xs:nonNegativeInteger"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="enum">
+    <xs:complexType>
+      <xs:attribute name="symbol" use="required" type="sys-name-64-def"/>
+      <xs:attribute name="numeric" use="required" type="xs:int"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="enum_table">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="values"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="name-def"/>
+      <xs:attribute name="export">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="yes"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="values">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="enum"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="parameterized_algorithm">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:token"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="parameter">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="name" use="required" type="name-def"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="categories">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="module"/>
+        <xs:element ref="ops_category"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="module" type="mission-module-def"/>
+  <xs:element name="ops_category" type="mission-ops-category-def"/>
+  <xs:simpleType name="system-mode-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="TEST"/>
+      <xs:enumeration value="PRE-LAUNCH"/>
+      <xs:enumeration value="LAUNCH"/>
+      <xs:enumeration value="CRUISE"/>
+      <xs:enumeration value="EDL APPROACH"/>
+      <xs:enumeration value="EDL MAIN"/>
+      <xs:enumeration value="SURFACE NOMINAL"/>
+      <xs:enumeration value="SURFACE STANDBY"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="mission-module-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="aclk_mgr"/>
+      <xs:enumeration value="acm_svc"/>
+      <xs:enumeration value="acs_ctl"/>
+      <xs:enumeration value="adc_svc"/>
+      <xs:enumeration value="adl_svc"/>
+      <xs:enumeration value="aman_ctl"/>
+      <xs:enumeration value="ant_mgr"/>
+      <xs:enumeration value="app_exe"/>
+      <xs:enumeration value="app_svc"/>
+      <xs:enumeration value="arm_ctl"/>
+      <xs:enumeration value="asia_drv"/>
+      <xs:enumeration value="asiadis_drv"/>
+      <xs:enumeration value="asiadis_mgr"/>
+      <xs:enumeration value="atif_drv"/>
+      <xs:enumeration value="atifdis_drv"/>
+      <xs:enumeration value="atifdis_mgr"/>
+      <xs:enumeration value="bc_drv"/>
+      <xs:enumeration value="bc_mgr"/>
+      <xs:enumeration value="cbm_ctl"/>
+      <xs:enumeration value="cfdp_svc"/>
+      <xs:enumeration value="cic_drv"/>
+      <xs:enumeration value="cmd_svc"/>
+      <xs:enumeration value="cmod_svc"/>
+      <xs:enumeration value="coll_svc"/>
+      <xs:enumeration value="comm_mgr"/>
+      <xs:enumeration value="comp_svc"/>
+      <xs:enumeration value="cpu_drv"/>
+      <xs:enumeration value="crc_drv"/>
+      <xs:enumeration value="crc_mgr"/>
+      <xs:enumeration value="cstr_mgr"/>
+      <xs:enumeration value="data_app"/>
+      <xs:enumeration value="dimu_drv"/>
+      <xs:enumeration value="dimu_mgr"/>
+      <xs:enumeration value="dm_mgr"/>
+      <xs:enumeration value="dma_drv"/>
+      <xs:enumeration value="dpc_svc"/>
+      <xs:enumeration value="dpm_svc"/>
+      <xs:enumeration value="dpt_svc"/>
+      <xs:enumeration value="dsa_mgr"/>
+      <xs:enumeration value="dwn_app"/>
+      <xs:enumeration value="dwn_drv"/>
+      <xs:enumeration value="dwn_mgr"/>
+      <xs:enumeration value="ecam_mgr"/>
+      <xs:enumeration value="edl_ctl"/>
+      <xs:enumeration value="edlbg_svc"/>
+      <xs:enumeration value="edlcam_mgr"/>
+      <xs:enumeration value="edlcomm_svc"/>
+      <xs:enumeration value="edlgnc"/>
+      <xs:enumeration value="eha_svc"/>
+      <xs:enumeration value="enet_drv"/>
+      <xs:enumeration value="evr_svc"/>
+      <xs:enumeration value="file_svc"/>
+      <xs:enumeration value="fpm_svc"/>
+      <xs:enumeration value="frame_mgr"/>
+      <xs:enumeration value="fv_svc"/>
+      <xs:enumeration value="gate_svc"/>
+      <xs:enumeration value="gid_mgr"/>
+      <xs:enumeration value="grip_ctl"/>
+      <xs:enumeration value="health_svc"/>
+      <xs:enumeration value="helo_mgr"/>
+      <xs:enumeration value="hsm_svc"/>
+      <xs:enumeration value="hst_svc"/>
+      <xs:enumeration value="hsuart_drv"/>
+      <xs:enumeration value="iccitc_drv"/>
+      <xs:enumeration value="imf_svc"/>
+      <xs:enumeration value="iml_svc"/>
+      <xs:enumeration value="ivp_svc"/>
+      <xs:enumeration value="kd_svc"/>
+      <xs:enumeration value="lander_exe"/>
+      <xs:enumeration value="lap_svc"/>
+      <xs:enumeration value="launch_ctl"/>
+      <xs:enumeration value="lic_drv"/>
+      <xs:enumeration value="lmc_mgr"/>
+      <xs:enumeration value="lvs_mgr"/>
+      <xs:enumeration value="mat3_svc"/>
+      <xs:enumeration value="mathf_svc"/>
+      <xs:enumeration value="matrix_svc"/>
+      <xs:enumeration value="mav_mgr"/>
+      <xs:enumeration value="mc_mgr"/>
+      <xs:enumeration value="mech_mgr"/>
+      <xs:enumeration value="mem_svc"/>
+      <xs:enumeration value="mot_svc"/>
+      <xs:enumeration value="msg_svc"/>
+      <xs:enumeration value="nand_mgr"/>
+      <xs:enumeration value="nor_mgr"/>
+      <xs:enumeration value="nvds_svc"/>
+      <xs:enumeration value="nvfs_svc"/>
+      <xs:enumeration value="nvm_drv"/>
+      <xs:enumeration value="osal_svc"/>
+      <xs:enumeration value="param_svc"/>
+      <xs:enumeration value="plat_mgr"/>
+      <xs:enumeration value="pwr_mgr"/>
+      <xs:enumeration value="pyro_mgr"/>
+      <xs:enumeration value="rac_ctl"/>
+      <xs:enumeration value="ramfs_svc"/>
+      <xs:enumeration value="rdo_mgr"/>
+      <xs:enumeration value="rec_svc"/>
+      <xs:enumeration value="reu_mgr"/>
+      <xs:enumeration value="rm_ctl"/>
+      <xs:enumeration value="rt_drv"/>
+      <xs:enumeration value="rt_mgr"/>
+      <xs:enumeration value="rt_svc"/>
+      <xs:enumeration value="rts_svc"/>
+      <xs:enumeration value="sarb_svc"/>
+      <xs:enumeration value="sbs_svc"/>
+      <xs:enumeration value="sfp_exe"/>
+      <xs:enumeration value="sc_app"/>
+      <xs:enumeration value="scfg_svc"/>
+      <xs:enumeration value="scu_ctl"/>
+      <xs:enumeration value="scu_mgr"/>
+      <xs:enumeration value="seq_svc"/>
+      <xs:enumeration value="sfp_exe"/>
+      <xs:enumeration value="shell_app"/>
+      <xs:enumeration value="shell_ctl"/>
+      <xs:enumeration value="shell_svc"/>
+      <xs:enumeration value="smm_exe"/>
+      <xs:enumeration value="spw_drv"/>
+      <xs:enumeration value="sr_svc"/>
+      <xs:enumeration value="ssa_mgr"/>
+      <xs:enumeration value="sspa_mgr"/>
+      <xs:enumeration value="stacam_mgr"/>
+      <xs:enumeration value="starid_svc"/>
+      <xs:enumeration value="surf_app"/>
+      <xs:enumeration value="sys_app"/>
+      <xs:enumeration value="thrm_mgr"/>
+      <xs:enumeration value="thruster_mgr"/>
+      <xs:enumeration value="time_svc"/>
+      <xs:enumeration value="twta_mgr"/>
+      <xs:enumeration value="types_svc"/>
+      <xs:enumeration value="uart_drv"/>
+      <xs:enumeration value="upl_app"/>
+      <xs:enumeration value="upl_drv"/>
+      <xs:enumeration value="upl_mgr"/>
+      <xs:enumeration value="ust_mgr"/>
+      <xs:enumeration value="utils_svc"/>
+      <xs:enumeration value="vce_mgr"/>
+      <xs:enumeration value="vis_ctl"/>
+      <xs:enumeration value="vislib_svc"/>
+      <xs:enumeration value="zfit_app"/>
+      <xs:enumeration value="zfit_uth"/>
+      <xs:enumeration value="zfit_worker"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="mission-ops-category-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="ACM"/>
+      <xs:enumeration value="ACS"/>
+      <xs:enumeration value="AVS"/>
+      <xs:enumeration value="BCTL"/>
+      <xs:enumeration value="CBM"/>
+      <xs:enumeration value="CMD"/>
+      <xs:enumeration value="CTB"/>
+      <xs:enumeration value="DDM"/>
+      <xs:enumeration value="DMX"/>
+      <xs:enumeration value="DWN"/>
+      <xs:enumeration value="EDL"/>
+      <xs:enumeration value="FSW"/>
+      <xs:enumeration value="HDW"/>
+      <xs:enumeration value="IMG"/>
+      <xs:enumeration value="LMC"/>
+      <xs:enumeration value="LPCE"/>
+      <xs:enumeration value="MDLI"/>
+      <xs:enumeration value="MLS"/>
+      <xs:enumeration value="PRM"/>
+      <xs:enumeration value="PWR"/>
+      <xs:enumeration value="PYRO"/>
+      <xs:enumeration value="REU"/>
+      <xs:enumeration value="RSB"/>
+      <xs:enumeration value="SAM"/>
+      <xs:enumeration value="SAPP"/>
+      <xs:enumeration value="SDEP"/>
+      <xs:enumeration value="SEQ"/>
+      <xs:enumeration value="SFP"/>
+      <xs:enumeration value="SMC"/>
+      <xs:enumeration value="SPW"/>
+      <xs:enumeration value="SRH"/>
+      <xs:enumeration value="STS"/>
+      <xs:enumeration value="TEL"/>
+      <xs:enumeration value="THRM"/>
+      <xs:enumeration value="TIME"/>
+      <xs:enumeration value="UPL"/>
+      <xs:enumeration value="VCE"/>
+      <xs:enumeration value="WAKE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="mission_phase">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="LAUNCH"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="channel-id-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Z]{1}[A-Z0-9]{0,3}-[0-9]{4}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="hex-only-int">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[0-9A-F]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="hex-only-int-16">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="0[x][0-9A-F]+"/>
+      <xs:length value="6"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="hex-only-int-32">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="0[x][0-9A-F]+"/>
+      <xs:length value="10"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="hex-int">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[0-9]+|0x[0-9A-F]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="apid-range-def">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxExclusive value="2047"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="stem-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Z][A-Z0-9_]{1,32}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="icmd-stem-def">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="[A-Z][A-Z0-9_]{1,64}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="poly-index-range-def">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="7"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="viewer">
+    <xs:complexType mixed="true">
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="table_lookup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="point"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="point">
+    <xs:complexType>
+      <xs:attribute name="raw" use="required" type="xs:float"/>
+      <xs:attribute name="eng" use="required" type="xs:float"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="polynomial_expansion">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="factor"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="factor">
+    <xs:complexType>
+      <xs:attribute name="index" use="required" type="poly-index-range-def"/>
+      <xs:attribute name="coeff" use="required" type="xs:float"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="data_product">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="header"/>
+        <xs:element ref="table"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="table">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="versioninfo"/>
+        <xs:element minOccurs="0" ref="command"/>
+        <xs:element minOccurs="0" ref="viewer"/>
+        <xs:element ref="fields"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="name">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sysdesc"/>
+        <xs:element ref="categories"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="apid-range-def"/>
+      <xs:attribute name="fsw_id" use="required" type="token-64-def"/>
+      <xs:attribute name="title" use="required" type="name-def"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sysdesc" type="xs:string"/>
+  <xs:element name="versioninfo">
+    <xs:complexType>
+      <xs:attribute name="ver_num" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="command" type="stem-def"/>
+  <xs:element name="fields">
+    <xs:complexType>
+      <xs:choice>
+        <xs:sequence>
+          <xs:choice maxOccurs="unbounded">
+            <xs:element ref="array"/>
+            <xs:element ref="field"/>
+            <xs:element ref="dynamic_array"/>
+          </xs:choice>
+          <xs:element minOccurs="0" ref="repeat_block"/>
+        </xs:sequence>
+        <xs:element ref="repeat_block"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="field">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sysdesc"/>
+        <xs:element minOccurs="0" ref="polynomial_expansion"/>
+        <xs:element minOccurs="0" ref="lookup"/>
+        <xs:element minOccurs="0" ref="units"/>
+      </xs:sequence>
+      <xs:attribute name="fsw_name" use="required" type="name-def"/>
+      <xs:attribute name="datatype" use="required" type="dp-data-types-def"/>
+      <xs:attribute name="length" use="required" type="xs:positiveInteger"/>
+      <xs:attribute name="format" type="c-format-string-def"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="units" type="xs:token"/>
+  <xs:element name="lookup">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="states"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="states">
+    <xs:complexType>
+      <xs:attribute name="enumerated_value" use="required" type="xs:integer"/>
+      <xs:attribute name="dict_value" use="required" type="name-def"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="array">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sysdesc"/>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="array"/>
+          <xs:element ref="field"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="fsw_name" use="required" type="name-def"/>
+      <xs:attribute name="num_items" use="required" type="fixed-array-length-def"/>
+      <xs:attribute name="output_format" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dynamic_array">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="sysdesc"/>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="array"/>
+          <xs:element ref="field"/>
+          <xs:element ref="dynamic_array"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="fsw_name" use="required" type="name-def"/>
+      <xs:attribute name="variable" use="required" type="name-def"/>
+      <xs:attribute name="output_format" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="repeat_block">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="array"/>
+        <xs:element ref="field"/>
+        <xs:element ref="dynamic_array"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="dp-data-types-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="UNSIGNED_INT"/>
+      <xs:enumeration value="SIGNED_INT"/>
+      <xs:enumeration value="FLOAT"/>
+      <xs:enumeration value="ASCII"/>
+      <xs:enumeration value="FILL"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="fixed-array-length-def">
+    <xs:restriction base="xs:nonNegativeInteger"/>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,270 @@
+# ProjectXYZ EVR dictionary schema.
+#     
+# The EVR dictionary defines a common, multi-mission format for expression 
+# of spacecraft Event Verification Records (EVRs) sent by flight software. 
+# It does not define the binary format of EVR packets, but rather how the ground 
+# system should interpret those packet contents in order to generate human-usable 
+# EVR messages from the flight-supplied data.
+#
+# Numeric data to be extracted from EVR packets must be placed into packets
+# in big-endian order, i.e., the most significant byte has the smallest offset.
+# For 4 byte floating-point values, the bits must represent of a floating-point  
+# value according to the IEEE 754 floating-point "single format" bit layout. For 
+# 8 byte floating-point values, the bits must represent of a floating-point 
+# value according to the IEEE 754 floating-point "double format" bit layout. 
+#
+# String data must be placed into packets such that the first character 
+# in the string has the smallest offset in the packet. All characters should 
+# be in the ASCII printable range (hexadecimal values 0x20 through 0x7E). 
+# AMPCS will replace carriage returns (0x0D), line feeds (0x0A), and all 
+# other characters outside of the printable range by space characters (0x20).  
+# The byte length of string values must correspond to the length of 
+# the string in the packet. The C NULL (0x00) character has no meaning to  
+# AMPCS and will not be recognized as a string terminator.
+#
+# Copyright (c) 2013 California Institute of Technology, All Rights Reserved
+# JPL Proprietary Information
+#
+# Authors:     C.Swan
+# History:     
+#              
+
+
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+# Include common dictionary XML definitions
+include "CommonDictionary.rnc"
+
+# Start XML document here
+start = evr-dictionary-def
+
+# Top-level element for the EVR dictionary 
+evr-dictionary-def = element evr_dictionary {
+
+    # Standard dictionary version header and general change log 
+    header-def,
+    
+    # Define 0 or more enumeration tables for enumerations used as EVR arguments.
+	# Helix Implementation: Validate that enumeration names (within evr enumerations) are unique    
+    element enum_definitions { 
+        enum-table-def* 
+    }?,
+     
+    # Define 0 or more EVRs. 
+    element evrs {
+        evr-def*
+    }
+}
+
+# XML element that defines a single type of EVR expected from the flight software. 
+evr-def = element evr {
+
+    # Unique numeric identifier for this EVR. Must be a 32 bit unsigned number. FSW 
+    # and SSE/GSE EVR identifiers should NOT overlap. This is the primary dictionary  
+    # key for the EVR, and serves as the only means for mapping the binary EVR in a 
+    # packet to its dictionary definition on the ground.
+    
+    # Helix Implementation: Validate that id are unique across all evrs
+    # Helix Implementation: Autogenerate (but do not validate) using the following algorithm
+    # Upper 16 bits = <module_id> lower 16 bits <per module counter between 0xE000-0xFFFF>
+    # Using the module id in the module list    
+    attribute id { hex-only-int-32 },
+    
+    # Display name for the EVR. Will be used on ground system displays, and in 
+    # some reports and queries. Limited to 128 characters to limit display space and 
+    # storage requirements.
+    attribute name { name-128-def },
+    
+    # Level of the EVR, e.g., ERROR, WARNING, DIAGNOSTIC. Must be chosen from 
+    # pre-established levels for the current flight project. Limited to 16 
+    # characters to limit display space and storage requirements.  Allowed characters 
+    # are limited to letters, numbers, -, or _ for ease of processing.
+    attribute level { evr-level },  
+     
+    # The source of EVR: flight or simulation/support equipment.
+    attribute source { evr-source-def },
+    
+    # This is used to categorize EVRs into groups. Possible category names 
+    # are "module", "operational category", "subsystem", ...
+    # It is possible that there are multiple ways of organizing groups of elements, so
+    # that there may be more than one category entry for a given item. 
+    
+    # Helix Implementation: if source == "flight" then ops_category and module are required
+    # Helix Implementation: if source == "simulation" then ops_category is required (module forbidden)
+    categories-def,
+ 
+    # A description of the EVR and of the cirumstances that cause it to be generated
+    # I.e. "This EVR is generated when..."
+    element description { xsd:string }?,
+ 
+    # Actual EVR message, including format specifiers to be replaced by EVR arguments
+    # in the ground system.  Format specifiers embedded in this string must adhere to 
+    # the C printf standard for format strings, excluding the %p formatter and use 
+    # of the "#" or "*" width specifiers. Number of format specifiers should match 
+    # the value for the <number_of_arguments> tag above. %SCLK, %SCET, and %LST 
+    # formatters may be used for time arguments. Use two percents (%%) to represent 
+    # a single percent sign in the output. Do not use carriage returns or line feeds 
+    # in the message text. If included, they will be stripped by the ground system.
+    #     
+    # Example: "RCE A Bus reset %d occurred at time %SCLK, power-on voltage %4.2f 
+    # volts". 
+    #
+    # The maximum length of an EVR message that AMPCS can store is 400 characters.  
+    #
+    # It is recommended that the content of this element be enclosed in a CDATA block.
+    # If double quotes are included around the format text, they will be stripped by
+    # AMPCS during EVR processing.
+    element format_message { string-400-def },
+        
+    # Number of arguments (parameters) delivered in the EVR packet.  Maximum number 
+    # of arguments supported by AMPCS is 255. If using the JPL-specific EVR format 
+    # documented in D-00150 (AMPCS Event Report (EVR) Binary Format SIS) then the 
+    # maximum number of arguments supported is 11.
+    
+    # Helix Implementation: number_of_arguments must match the number of defined args
+    element number_of_arguments { xsd:nonNegativeInteger { minInclusive = "0" maxInclusive = "11" } },
+    
+    # List of argument values to expect in the EVR packet. Omit if none.
+    element args {
+    
+       # EVR arguments may be strings, enumeration values,
+       # integer/unsigned values, float value, OPCODEs, or command 
+       # sequence numbers.
+       (string-arg-def | enum-arg-def | opcode-arg-def | 
+       seqid-arg-def | int-arg-def | unsigned-arg-def | float-arg-def )+
+
+    }?   
+}
+
+# Definition of a string argument in an EVR. Length of string will be taken from
+# the EVR packet and may not exceed 80.
+string-arg-def = element string_arg {
+    # Name of the EVR argument. Limited to the character set of name token and to 64
+    # characters for ease of processing and display purposes. Optional, because
+    # argument names are not used by AMPCS.
+    attribute name { name-def }
+    }
+
+# Definition of an enumerated argument in an EVR. Data type is assumed to be
+# signed integer.  enum_name must match the name on a previously defined enumeration 
+# table.  At runtime, AMPCS will replace the numeric value in the EVR packet with
+# the string it matches in the enumeration table.
+enum-arg-def = element enum_arg {
+
+    # Name of the EVR argument. Limited to the character set of name token and to 64
+    # characters for ease of processing and display purposes. Optional, because
+    # argument names are not used by AMPCS.
+   attribute name {name-def },
+   
+   # Length in bytes of the numeric argument value in the EVR packet. Data type
+   # is assumed to be integer.
+   
+   # Helix Implementation: Validate that the byte_length (integer) is large enough to handle
+   # Helix Implementation: the referenced enumeration (enum_name) numerics
+   # Helix Implementation: (i.e. 1 byte integer doesn't work with numeric of 10000)  
+   attribute byte_length { enum-argument-length-def },
+   
+   # Name of the enumeration table that is used for mapping argument value. Must
+   # match the "name" attribute on an enum_table element specified earlier in the
+   # dictionary.
+   
+   # Helix Implementation: Provide autocomplete
+   # Helix Implementation: Validate against enum_table:name in this dictionary
+   attribute enum_name { name-def } 
+   }
+
+# Definition of a plain signed integer argument in an EVR.
+int-arg-def = element integer_arg {
+    # Name of the EVR argument. Limited to the character set of name token and to 64
+    # characters for ease of processing and display purposes. Optional, because
+    # argument names are not used by AMPCS.
+    attribute name { name-def },
+    
+    # Byte length of this integer argument in the EVR packet.
+    attribute byte_length { integer-argument-length-def }
+    }
+
+# Definition of a plain signed integer argument in an EVR.
+unsigned-arg-def = element unsigned_arg {
+    # Name of the EVR argument. Limited to the character set of name token and to 64
+    # characters for ease of processing and display purposes. Optional, because
+    # argument names are not used by AMPCS.
+    attribute name { name-def },
+    
+    # Byte length of this unsigned argument in the EVR packet.
+    attribute byte_length { integer-argument-length-def }
+    }
+    
+# Definition of a plain floating point argument in an EVR.
+float-arg-def = element float_arg {
+    # Name of the EVR argument. Limited to the character set of name token and to 64
+    # characters for ease of processing and display purposes. Optional, because
+    # argument names are not used by AMPCS.
+    attribute name { name-def },
+    
+    # Byte length of this float argument in the EVR packet.
+    attribute byte_length { float-argument-length-def }
+    }
+    
+# Definition of an OPCODE argument in an EVR. Data type is assumed to be unsigned.
+# At runtime, AMPCS will attempt to replace the numeric opcode received in the
+# EVR packet with a command stem in the command dictionary.
+opcode-arg-def = element opcode_arg {
+
+    # Name of the EVR argument. Limited to the character set of name token and to 64
+    # characters for ease of processing and display purposes. Optional, because
+    # argument names are not used by AMPCS.
+    attribute name { name-def },
+    
+    # Byte length of this opcode argument in the EVR packet. Data type is assumed to
+    # be unsigned.
+    attribute byte_length { opcode-argument-length-def }
+    }
+    
+# Definition of a SEQID argument in an EVR. Data type is assumed to be unsigned.
+# At runtime, AMPCS will attempt to replace the numeric sequence received in the
+# EVR packet with a sequence ID/category string from the sequence configuration file.    
+seqid-arg-def = element seqid_arg {
+
+    # Name of the EVR argument. Limited to the character set of name token and to 64
+    # characters for ease of processing and display purposes. Optional, because
+    # argument names are not used by AMPCS.
+    attribute name { name-def },
+    
+    # Byte length of this seqid argument in the EVR packet. Data type is assumed to be 
+    # unsigned.
+    attribute byte_length { seqid-argument-length-def }
+    }
+   
+
+# Valid range for byte length of an integer or unsigned EVR argument.
+integer-argument-length-def =  "1" | "2" | "4" 
+
+# Valid range for byte length of a floating point EVR argument.
+float-argument-length-def = "8"
+
+# Valid range for byte length of a OPCODE EVR argument.
+opcode-argument-length-def = "2"  
+
+# Valid range for byte length of a SEQID EVR argument.
+seqid-argument-length-def = "2" | "4"
+
+# Valid values for byte length of a ENUM EVR argument. 
+enum-argument-length-def  =  "2" | "4"
+
+# The possible sources of an EVR:
+# 1. "flight" implies the telemetry value is computed on board the spacecraft
+# 2. "simulation" implies the telemetry value is computed by the ground simulation 
+#     support equipment or by flight simulation software.
+evr-source-def = "flight" | "simulation"
+
+evr-level = (
+      "FATAL"
+    | "COMMAND"
+    | "WARNING_HI"
+    | "WARNING_LO"
+    | "ACTIVITY_HI"
+    | "ACTIVITY_LO"
+    | "DIAGNOSTIC" )
+

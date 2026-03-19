@@ -1,0 +1,131 @@
+# ProjectXYZ Application Packet Identifier (APID) dictionary schema. 
+#      
+# This schema defines a common, multi-mission format for description of 
+# telemetry Application Packet Identifiers (APIDs). The APID dictionary 
+# essentially  defines the types of application packets exchanged between 
+# flight and ground software. The APID of a packet is used for routing 
+# packets through the proper processing sequence on the ground.
+#
+# Copyright (c) 2013-2015 California Institute of Technology, All Rights Reserved
+# JPL Proprietary Information
+#
+# Authors:     C.Swan
+# History:     
+#              
+#
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+# Include common dictionary XML definitions
+include "CommonDictionary.rnc"
+
+# Start XML document here
+start = apid-dictionary-def
+
+# Top-level element for the APID dictionary 
+apid-dictionary-def = element apid_dictionary {
+
+    # Standard dictionary version header and general change log 
+    header-def,
+    
+    # Define 0 or more packet APIDs
+    element apids {
+        apid-def*
+    }
+}
+
+# XML element that defines a single Application Packet Identifier expected 
+# from the flight software
+apid-def = element apid_definition {
+
+    # The APID number. This is the primary identifier and must match the 
+    # APID value in packet headers. All apid numbers must be unique. 
+    # Apid 2047 is reserved for fill packets.
+    
+    # Helix Implementation: Validate for uniqueness across all APIDS
+    attribute apid { apid-range-def },
+    
+    # The basic format/type of data contained in packets with this APID
+    attribute format { apid-format-def },
+    
+    # Indicates whether packets with this APID contain recorded flight data.
+    # If true, data will be marked as recorded by AMPCS if (and only if) 
+    # the recorded marking strategy is BY_APID.  If attribute is false,
+    # the data will not be marked as recorded. For most flight-generated data, 
+    # this implies the data is probably real-time, but all this flag really 
+    # indicates is whether the project wants the ground system to mark data 
+    # extracted from this packet type as recorded. This attribute should be 
+    # omitted when the AMPCS recorded marking strategy is not BY_APID.
+    attribute recorded { xsd:boolean }?, 
+    
+    # The dictionary name for this apid.  Allowed characters are limited to 
+    # letters, numbers, -, or _ for ease of processing. All apid names must 
+    # be unique.
+    
+    # Helix Implementation: Validate for uniqueness across all APIDs
+    element name { name-def },
+    
+    # A descriptive title for this APID, used for display purposes. 
+    element title { token-64-def },
+    
+    # A free-form description of this APID. May be multi-line. White space 
+    # will be preserved.
+    element description { xsd:string },
+    
+    # Categorical information for this dictionary element. 
+    categories-def,
+    
+    # Helix Implementation: Required if "format" = DATA_PRODUCT OR CFDP_DATA
+    # Helix Implementation: Forbidden if "format" != DATA_PRODUCT OR CFDP_DATA
+    element downlink_info {
+        # Specifies if this is a native data product in the file system or a linked data product in the BDS
+        attribute product_type {"Data Product"},
+        # Note that linked data products are only subject to auto delete if they are migrated to the file system
+        attribute auto_delete {"Yes" | "No"},
+        # Note that linked data products are only compressed if they are migrated to the file system
+        attribute compress {"Yes" | "No"},
+        # Defines the default priority of the product 
+        attribute default_priority {data-priority-def},        
+        # Continuous data product can be generated for long peroids of time and FSW will need automously close/reopen them
+        # at specific intervals. FSW can utilize any combination of these limits.
+        element continuous_dp_limits {
+            # Sets a maximum size in bytes for a continuous dp before it is automously closed
+            # Once the data product has exceeded this size it will be closed          
+            # Note that there is no need to specify this if the maximum size corresponds to the overall max data product size.
+            attribute continuous_dp_max_size {unsigned-32-def}?,
+            # Sets a maximum time in seconds a continuous dp can be open for writing before it is automously closed
+            # If the product contains any data and this time has been exceed (from first write) it will be closed
+            attribute continuous_dp_max_time {unsigned-32-def}?,
+            # Sets a maximum number of writes to a continuous dp before it is automously closed
+            # Please note that a "write" may have a slightly different meaning between fsw modules and should be worked with the fsw developer
+            attribute continuous_dp_max_writes {unsigned-16-def}?,
+            # Defines if continuous DP is automatically restarted if DP is closed via FP or the DDM_CLOSE_REOPEN_SELECT_DP command
+            attribute restartable {"Yes" | "No"}?
+        }?
+    }?
+    
+}
+
+# Allowed values for APID format:
+#
+# FILL is reserved for packets that contain data that should not be processed
+# TIME CORRELATION packets contain flight software time correlation
+# information.
+# EVR packets contain individual event records to be processed 
+# into EVR messages by the ground system.
+# PRE_CHANNELIZED indicates packets that contain telemetry channels
+# packed into a standard pre-channelized format.
+# DATA_PRODUCT packets contain science or engineering data file content,
+# spanning multiple packets.
+# DECOM_FROM_MAP packets contain telemetry channels or other engineering
+# data that must be decommutated on the ground using a specific decommutation
+# map.
+# Both CFDP_DATA and CFDP_PROTOCOL indicate packets that contain standard CFDP PDUs as the content.
+# Functionally, ground CFDP processing will not treat the two differently.
+# A dictionary owner may choose to use these to indicate when a data product dictionary should accompany the APID
+# OTHER packets contain custom data that is possibly not recognized or
+# processable by the ground system.
+apid-format-def = "FILL" | "TIME_CORRELATION" | "EVR" | "PRE_CHANNELIZED" | 
+   "DATA_PRODUCT" | "DECOM_FROM_MAP" | "CFDP_DATA" | "CFDP_PROTOCOL" | "OTHER"    
+
+data-priority-def = xsd:nonNegativeInteger {minInclusive="1" maxInclusive="100"}

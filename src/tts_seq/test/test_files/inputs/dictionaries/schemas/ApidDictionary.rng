@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         xmlns:rng="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <define name="name-def">
+    <data type="token">
+      <param name="pattern">[A-Za-z0-9_\-]{1,64}</param>
+    </data>
+  </define>
+  <define name="fsw-name-def">
+    <data type="token">
+      <param name="pattern">[a-z0-9_]{1,32}</param>
+    </data>
+  </define>
+  <define name="fsw-name-64-def">
+    <data type="token">
+      <param name="pattern">[a-z0-9_]{1,64}</param>
+    </data>
+  </define>
+  <define name="sys-name-32-def">
+    <data type="token">
+      <param name="pattern">[A-Z0-9_]{1,32}</param>
+    </data>
+  </define>
+  <define name="sys-name-64-def">
+    <data type="token">
+      <param name="pattern">[A-Z0-9_]{1,64}</param>
+    </data>
+  </define>
+  <define name="sys-name-128-def">
+    <data type="token">
+      <param name="pattern">[A-Z0-9_]{1,128}</param>
+    </data>
+  </define>
+  <define name="name-128-def">
+    <data type="token">
+      <param name="pattern">[A-Za-z0-9_\-]{1,128}</param>
+    </data>
+  </define>
+  <define name="name-16-def">
+    <data type="token">
+      <param name="pattern">[A-Za-z0-9_\-]{1,16}</param>
+    </data>
+  </define>
+  <define name="symbol-def">
+    <data type="token">
+      <param name="maxLength">64</param>
+    </data>
+  </define>
+  <define name="symbol-def-32">
+    <data type="token">
+      <param name="maxLength">32</param>
+    </data>
+  </define>
+  <define name="signed-64-pos-def">
+    <data type="nonNegativeInteger"/>
+  </define>
+  <define name="unsigned-32-def">
+    <data type="nonNegativeInteger">
+      <param name="maxInclusive">4294967295</param>
+    </data>
+  </define>
+  <define name="unsigned-16-def">
+    <data type="nonNegativeInteger">
+      <param name="maxInclusive">65535</param>
+    </data>
+  </define>
+  <define name="unsigned-16-pos-def">
+    <data type="positiveInteger">
+      <param name="maxInclusive">65535</param>
+    </data>
+  </define>
+  <define name="unsigned-8-def">
+    <data type="nonNegativeInteger">
+      <param name="maxInclusive">255</param>
+    </data>
+  </define>
+  <define name="unsigned-8-pos-def">
+    <data type="positiveInteger">
+      <param name="maxInclusive">255</param>
+    </data>
+  </define>
+  <define name="offset-64-def">
+    <data type="nonNegativeInteger">
+      <param name="maxInclusive">63</param>
+    </data>
+  </define>
+  <define name="string-400-def">
+    <data type="normalizedString">
+      <param name="maxLength">400</param>
+    </data>
+  </define>
+  <define name="string-512-def">
+    <data type="normalizedString">
+      <param name="maxLength">512</param>
+    </data>
+  </define>
+  <define name="non-empty-token-def">
+    <data type="token">
+      <param name="minLength">1</param>
+    </data>
+  </define>
+  <define name="token-64-def">
+    <data type="token">
+      <param name="maxLength">64</param>
+    </data>
+  </define>
+  <define name="c-format-string-def">
+    <data type="token">
+      <param name="pattern">[^%]*%{0,1}[^%]+</param>
+    </data>
+  </define>
+  <define name="string-type-def">
+    <attribute>
+      <name ns="">type</name>
+      <choice>
+        <value>fixed_length</value>
+        <value>length_prefixed</value>
+      </choice>
+    </attribute>
+  </define>
+  <define name="header-def">
+    <element>
+      <name ns="">header</name>
+      <attribute>
+        <name ns="">mission_name</name>
+        <value>ProjectXYZ</value>
+      </attribute>
+      <optional>
+        <element>
+          <name ns="">spacecraft_ids</name>
+          <oneOrMore>
+            <element>
+              <name ns="">spacecraft_id</name>
+              <attribute>
+                <name ns="">value</name>
+                <data type="nonNegativeInteger"/>
+              </attribute>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <attribute>
+        <name ns="">version</name>
+        <data type="token"/>
+      </attribute>
+      <attribute>
+        <name ns="">schema_version</name>
+        <data type="token"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="enum-def">
+    <element>
+      <name ns="">enum</name>
+      <attribute>
+        <name ns="">symbol</name>
+        <ref name="sys-name-64-def"/>
+      </attribute>
+      <attribute>
+        <name ns="">numeric</name>
+        <data type="int"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="enum-table-def">
+    <element>
+      <name ns="">enum_table</name>
+      <attribute>
+        <name ns="">name</name>
+        <ref name="name-def"/>
+      </attribute>
+      <optional>
+        <attribute>
+          <name ns="">export</name>
+          <value>yes</value>
+        </attribute>
+      </optional>
+      <element>
+        <name ns="">values</name>
+        <oneOrMore>
+          <ref name="enum-def"/>
+        </oneOrMore>
+      </element>
+    </element>
+  </define>
+  <define name="parameterized-algorithm-def">
+    <element>
+      <name ns="">parameterized_algorithm</name>
+      <attribute>
+        <name ns="">name</name>
+        <data type="token"/>
+      </attribute>
+      <zeroOrMore>
+        <ref name="algorithm-parameter-def"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="algorithm-parameter-def">
+    <element>
+      <name ns="">parameter</name>
+      <attribute>
+        <name ns="">name</name>
+        <ref name="name-def"/>
+      </attribute>
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="categories-def">
+    <element>
+      <name ns="">categories</name>
+      <group>
+        <optional>
+          <element>
+            <name ns="">module</name>
+            <ref name="mission-module-def"/>
+          </element>
+        </optional>
+        <element>
+          <name ns="">ops_category</name>
+          <ref name="mission-ops-category-def"/>
+        </element>
+      </group>
+    </element>
+  </define>
+  <define name="system-mode-def">
+    <choice>
+      <value>TEST</value>
+      <value>PRE-LAUNCH</value>
+      <value>LAUNCH</value>
+      <value>CRUISE</value>
+      <value>EDL APPROACH</value>
+      <value>EDL MAIN</value>
+      <value>SURFACE NOMINAL</value>
+      <value>SURFACE STANDBY</value>
+    </choice>
+  </define>
+  <define name="mission-module-def">
+    <choice>
+      <value>aclk_mgr</value>
+      <value>acm_svc</value>
+      <value>acs_ctl</value>
+      <value>adc_svc</value>
+      <value>adl_svc</value>
+      <value>aman_ctl</value>
+      <value>ant_mgr</value>
+      <value>app_exe</value>
+      <value>app_svc</value>
+      <value>arm_ctl</value>
+      <value>asia_drv</value>
+      <value>asiadis_drv</value>
+      <value>asiadis_mgr</value>
+      <value>atif_drv</value>
+      <value>atifdis_drv</value>
+      <value>atifdis_mgr</value>
+      <value>bc_drv</value>
+      <value>bc_mgr</value>
+      <value>cbm_ctl</value>
+      <value>cfdp_svc</value>
+      <value>cic_drv</value>
+      <value>cmd_svc</value>
+      <value>cmod_svc</value>
+      <value>coll_svc</value>
+      <value>comm_mgr</value>
+      <value>comp_svc</value>
+      <value>cpu_drv</value>
+      <value>crc_drv</value>
+      <value>crc_mgr</value>
+      <value>cstr_mgr</value>
+      <value>data_app</value>
+      <value>dimu_drv</value>
+      <value>dimu_mgr</value>
+      <value>dm_mgr</value>
+      <value>dma_drv</value>
+      <value>dpc_svc</value>
+      <value>dpm_svc</value>
+      <value>dpt_svc</value>
+      <value>dsa_mgr</value>
+      <value>dwn_app</value>
+      <value>dwn_drv</value>
+      <value>dwn_mgr</value>
+      <value>ecam_mgr</value>
+      <value>edl_ctl</value>
+      <value>edlbg_svc</value>
+      <value>edlcam_mgr</value>
+      <value>edlcomm_svc</value>
+      <value>edlgnc</value>
+      <value>eha_svc</value>
+      <value>enet_drv</value>
+      <value>evr_svc</value>
+      <value>file_svc</value>
+      <value>fpm_svc</value>
+      <value>frame_mgr</value>
+      <value>fv_svc</value>
+      <value>gate_svc</value>
+      <value>gid_mgr</value>
+      <value>grip_ctl</value>
+      <value>health_svc</value>
+      <value>helo_mgr</value>
+      <value>hsm_svc</value>
+      <value>hst_svc</value>
+      <value>hsuart_drv</value>
+      <value>iccitc_drv</value>
+      <value>imf_svc</value>
+      <value>iml_svc</value>
+      <value>ivp_svc</value>
+      <value>kd_svc</value>
+      <value>lander_exe</value>
+      <value>lap_svc</value>
+      <value>launch_ctl</value>
+      <value>lic_drv</value>
+      <value>lmc_mgr</value>
+      <value>lvs_mgr</value>
+      <value>mat3_svc</value>
+      <value>mathf_svc</value>
+      <value>matrix_svc</value>
+      <value>mav_mgr</value>
+      <value>mc_mgr</value>
+      <value>mech_mgr</value>
+      <value>mem_svc</value>
+      <value>mot_svc</value>
+      <value>msg_svc</value>
+      <value>nand_mgr</value>
+      <value>nor_mgr</value>
+      <value>nvds_svc</value>
+      <value>nvfs_svc</value>
+      <value>nvm_drv</value>
+      <value>osal_svc</value>
+      <value>param_svc</value>
+      <value>plat_mgr</value>
+      <value>pwr_mgr</value>
+      <value>pyro_mgr</value>
+      <value>rac_ctl</value>
+      <value>ramfs_svc</value>
+      <value>rdo_mgr</value>
+      <value>rec_svc</value>
+      <value>reu_mgr</value>
+      <value>rm_ctl</value>
+      <value>rt_drv</value>
+      <value>rt_mgr</value>
+      <value>rt_svc</value>
+      <value>rts_svc</value>
+      <value>sarb_svc</value>
+      <value>sbs_svc</value>
+      <value>sfp_exe</value>
+      <value>sc_app</value>
+      <value>scfg_svc</value>
+      <value>scu_ctl</value>
+      <value>scu_mgr</value>
+      <value>seq_svc</value>
+      <value>sfp_exe</value>
+      <value>shell_app</value>
+      <value>shell_ctl</value>
+      <value>shell_svc</value>
+      <value>smm_exe</value>
+      <value>spw_drv</value>
+      <value>sr_svc</value>
+      <value>ssa_mgr</value>
+      <value>sspa_mgr</value>
+      <value>stacam_mgr</value>
+      <value>starid_svc</value>
+      <value>surf_app</value>
+      <value>sys_app</value>
+      <value>thrm_mgr</value>
+      <value>thruster_mgr</value>
+      <value>time_svc</value>
+      <value>twta_mgr</value>
+      <value>types_svc</value>
+      <value>uart_drv</value>
+      <value>upl_app</value>
+      <value>upl_drv</value>
+      <value>upl_mgr</value>
+      <value>ust_mgr</value>
+      <value>utils_svc</value>
+      <value>vce_mgr</value>
+      <value>vis_ctl</value>
+      <value>vislib_svc</value>
+      <value>zfit_app</value>
+      <value>zfit_uth</value>
+      <value>zfit_worker</value>
+    </choice>
+  </define>
+  <define name="mission-ops-category-def">
+    <choice>
+      <value>ACM</value>
+      <value>ACS</value>
+      <value>AVS</value>
+      <value>BCTL</value>
+      <value>CBM</value>
+      <value>CMD</value>
+      <value>CTB</value>
+      <value>DDM</value>
+      <value>DMX</value>
+      <value>DWN</value>
+      <value>EDL</value>
+      <value>FSW</value>
+      <value>HDW</value>
+      <value>IMG</value>
+      <value>LMC</value>
+      <value>LPCE</value>
+      <value>MDLI</value>
+      <value>MLS</value>
+      <value>PRM</value>
+      <value>PWR</value>
+      <value>PYRO</value>
+      <value>REU</value>
+      <value>RSB</value>
+      <value>SAM</value>
+      <value>SAPP</value>
+      <value>SDEP</value>
+      <value>SEQ</value>
+      <value>SFP</value>
+      <value>SMC</value>
+      <value>SPW</value>
+      <value>SRH</value>
+      <value>STS</value>
+      <value>TEL</value>
+      <value>THRM</value>
+      <value>TIME</value>
+      <value>UPL</value>
+      <value>VCE</value>
+      <value>WAKE</value>
+    </choice>
+  </define>
+  <define name="mission_phase">
+    <value>LAUNCH</value>
+  </define>
+  <define name="channel-id-def">
+    <data type="token">
+      <param name="pattern">[A-Z]{1}[A-Z0-9]{0,3}-[0-9]{4}</param>
+    </data>
+  </define>
+  <define name="hex-only-int">
+    <data type="token">
+      <param name="pattern">[0-9A-F]+</param>
+    </data>
+  </define>
+  <define name="hex-only-int-16">
+    <data type="token">
+      <param name="pattern">0[x][0-9A-F]+</param>
+      <param name="length">6</param>
+    </data>
+  </define>
+  <define name="hex-only-int-32">
+    <data type="token">
+      <param name="pattern">0[x][0-9A-F]+</param>
+      <param name="length">10</param>
+    </data>
+  </define>
+  <define name="hex-int">
+    <data type="token">
+      <param name="pattern">[0-9]+|0x[0-9A-F]+</param>
+    </data>
+  </define>
+  <define name="apid-range-def">
+    <data type="nonNegativeInteger">
+      <param name="maxExclusive">2047</param>
+    </data>
+  </define>
+  <define name="stem-def">
+    <data type="token">
+      <param name="pattern">[A-Z][A-Z0-9_]{1,32}</param>
+    </data>
+  </define>
+  <define name="icmd-stem-def">
+    <data type="token">
+      <param name="pattern">[A-Z][A-Z0-9_]{1,64}</param>
+    </data>
+  </define>
+  <define name="poly-index-range-def">
+    <data type="nonNegativeInteger">
+      <param name="maxInclusive">7</param>
+    </data>
+  </define>
+  <define name="product-viewer-def">
+    <element>
+      <name ns="">viewer</name>
+      <attribute>
+        <name ns="">name</name>
+        <text/>
+      </attribute>
+      <choice>
+        <empty/>
+        <text/>
+      </choice>
+    </element>
+  </define>
+  <define name="table-lookup-def">
+    <element>
+      <name ns="">table_lookup</name>
+      <zeroOrMore>
+        <element>
+          <name ns="">point</name>
+          <attribute>
+            <name ns="">raw</name>
+            <data type="float"/>
+          </attribute>
+          <attribute>
+            <name ns="">eng</name>
+            <data type="float"/>
+          </attribute>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="poly-def">
+    <element>
+      <name ns="">polynomial_expansion</name>
+      <oneOrMore>
+        <element>
+          <name ns="">factor</name>
+          <attribute>
+            <name ns="">index</name>
+            <ref name="poly-index-range-def"/>
+          </attribute>
+          <attribute>
+            <name ns="">coeff</name>
+            <data type="float"/>
+          </attribute>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <start>
+    <ref name="apid-dictionary-def"/>
+  </start>
+  <define name="apid-dictionary-def">
+    <element>
+      <name ns="">apid_dictionary</name>
+      <ref name="header-def"/>
+      <element>
+        <name ns="">apids</name>
+        <zeroOrMore>
+          <ref name="apid-def"/>
+        </zeroOrMore>
+      </element>
+    </element>
+  </define>
+  <define name="apid-def">
+    <element>
+      <name ns="">apid_definition</name>
+      <attribute>
+        <name ns="">apid</name>
+        <ref name="apid-range-def"/>
+      </attribute>
+      <attribute>
+        <name ns="">format</name>
+        <ref name="apid-format-def"/>
+      </attribute>
+      <optional>
+        <attribute>
+          <name ns="">recorded</name>
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <element>
+        <name ns="">name</name>
+        <ref name="name-def"/>
+      </element>
+      <element>
+        <name ns="">title</name>
+        <ref name="token-64-def"/>
+      </element>
+      <element>
+        <name ns="">description</name>
+        <data type="string"/>
+      </element>
+      <ref name="categories-def"/>
+      <optional>
+        <element>
+          <name ns="">downlink_info</name>
+          <attribute>
+            <name ns="">product_type</name>
+            <value>Data Product</value>
+          </attribute>
+          <attribute>
+            <name ns="">auto_delete</name>
+            <choice>
+              <value>Yes</value>
+              <value>No</value>
+            </choice>
+          </attribute>
+          <attribute>
+            <name ns="">compress</name>
+            <choice>
+              <value>Yes</value>
+              <value>No</value>
+            </choice>
+          </attribute>
+          <attribute>
+            <name ns="">default_priority</name>
+            <ref name="data-priority-def"/>
+          </attribute>
+          <optional>
+            <element>
+              <name ns="">continuous_dp_limits</name>
+              <optional>
+                <attribute>
+                  <name ns="">continuous_dp_max_size</name>
+                  <ref name="unsigned-32-def"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute>
+                  <name ns="">continuous_dp_max_time</name>
+                  <ref name="unsigned-32-def"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute>
+                  <name ns="">continuous_dp_max_writes</name>
+                  <ref name="unsigned-16-def"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute>
+                  <name ns="">restartable</name>
+                  <choice>
+                    <value>Yes</value>
+                    <value>No</value>
+                  </choice>
+                </attribute>
+              </optional>
+            </element>
+          </optional>
+        </element>
+      </optional>
+    </element>
+  </define>
+  <define name="apid-format-def">
+    <choice>
+      <value>FILL</value>
+      <value>TIME_CORRELATION</value>
+      <value>EVR</value>
+      <value>PRE_CHANNELIZED</value>
+      <value>DATA_PRODUCT</value>
+      <value>DECOM_FROM_MAP</value>
+      <value>CFDP_DATA</value>
+      <value>CFDP_PROTOCOL</value>
+      <value>OTHER</value>
+    </choice>
+  </define>
+  <define name="data-priority-def">
+    <data type="nonNegativeInteger">
+      <param name="minInclusive">1</param>
+      <param name="maxInclusive">100</param>
+    </data>
+  </define>
+</grammar>

@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<RML>
+  <History/>
+  <ModelingTimes/>
+  <Sequences>
+    <Sequence>
+      <Commands>
+        <Command Comment=";" Name=""/>
+        <Command Comment=";" Name=""/>
+        <Command Comment="; This is a demonstration of how tts_seq_viewer can work for a simple earth orbiting mission." Name=""/>
+        <Command Comment="; The details of this sequence don't matter much, but for context, it is meant to represent" Name=""/>
+        <Command Comment="; a simple spacecraft setting up comm for an X-Band contact with Wallops ground station." Name=""/>
+        <Command Comment=";" Name=""/>
+        <Command Comment="; This is a realtively timed sequence because it could be used at any given time depending on" Name=""/>
+        <Command Comment="; the exact geometries and view periods to Wallops." Name=""/>
+        <Command Comment=";" Name=""/>
+        <Command Comment="; In a real sequence, one might expect metatdata to also go here." Name=""/>
+        <Command Comment=";------------------------------------------------------------------------------------------------" Name=""/>
+        <Command Comment="" Name=""/>
+        <Command Comment="" Name="TX_POWER">
+          <Arguments>
+            <Argument Name="on_off" Value="ON"/>
+            <Argument Name="freq_band" Value="XBAND"/>
+          </Arguments>
+        </Command>
+        <Command Comment="" Name="CLOSE_SCI_PRODUCTS">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name="FLUSH_DL_BUFFERS">
+          <Arguments/>
+        </Command>
+        <Command Comment="" Name="SET_VCDU">
+          <Arguments>
+            <Argument Name="vcdu_number" Value="17"/>
+          </Arguments>
+        </Command>
+        <Command Comment="" Name="SET_TLM_PROD_RATE">
+          <Arguments>
+            <Argument Name="prod_rate" Value="XBAND_DL"/>
+          </Arguments>
+        </Command>
+        <Command Comment="" Name="SET_PLAYBACK_RATE">
+          <Arguments>
+            <Argument Name="playback_rate" Value="200_MBPS"/>
+          </Arguments>
+        </Command>
+        <Command Comment="" Name="START_PLAYBACK">
+          <Arguments/>
+        </Command>
+      </Commands>
+    </Sequence>
+  </Sequences>
+</RML>

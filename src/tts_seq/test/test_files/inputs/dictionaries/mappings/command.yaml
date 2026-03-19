@@ -1,0 +1,32 @@
+command_dictionary/enum_definitions/enum_table:
+  identifier: ~
+  label: ["@name", "Name"]
+  context_data:
+    - ["@name", "Name"]
+  linked_choices:
+    ~
+  used_exterally:
+    - ["@name", "command_definitions/fsw_command", "arguments/enum_arg/@enum_name"]
+  uniqueness:
+    - ["Global", "@name"]
+    - ["Local", "values/enum/@symbol"]
+    - ["Local", "values/enum/@numeric"]
+
+command_dictionary/command_definitions/fsw_command:
+  identifier: ["@opcode", "Opcode"]
+  label: ["@stem", "Stem"]
+  context_data:
+    - ["categories/ops_category/text()", "Ops Category"]
+  linked_choices:
+    - ["arguments/enum_arg/@enum_name", "command_definitions/enum_definitions/enum_table", "@name"]
+  used_exterally:
+    - ["@stem", "RML/Sequences/Sequence/Commands/Command", "@Name"]
+  uniqueness:
+    - ["Global", "@opcode"]
+    - ["Global", "@stem"]
+
+command_dictionary/command_definitions/hw_command:
+  identifier: ["@opcode", "Opcode"]
+  label: ["@stem", "Stem"]
+  context_data:
+    - ["categories/ops_category/text()", "Ops Category"]

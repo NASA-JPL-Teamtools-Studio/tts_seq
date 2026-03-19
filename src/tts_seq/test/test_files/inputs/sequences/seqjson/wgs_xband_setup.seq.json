@@ -1,0 +1,157 @@
+{
+    "id": "wgs_xband_setup",
+    "metadata": {
+        "planId": 1,
+        "timeSorted": false,
+        "simulationDatasetId": 1
+    },
+    "steps": [
+        {
+            "type": "note",
+            "text": ";"
+        },
+        {
+            "type": "note",
+            "text": ";"
+        },
+        {
+            "type": "note",
+            "text": "; This is a demonstration of how tts_seq_viewer can work for a simple earth orbiting mission."
+        },
+        {
+            "type": "note",
+            "text": "; The details of this sequence don't matter much, but for context, it is meant to represent"
+        },
+        {
+            "type": "note",
+            "text": "; a simple spacecraft setting up comm for an X-Band contact with Wallops ground station."
+        },
+        {
+            "type": "note",
+            "text": ";"
+        },
+        {
+            "type": "note",
+            "text": "; This is a realtively timed sequence because it could be used at any given time depending on"
+        },
+        {
+            "type": "note",
+            "text": "; the exact geometries and view periods to Wallops."
+        },
+        {
+            "type": "note",
+            "text": ";"
+        },
+        {
+            "type": "note",
+            "text": "; In a real sequence, one might expect metatdata to also go here."
+        },
+        {
+            "type": "note",
+            "text": ";------------------------------------------------------------------------------------------------"
+        },
+        {
+            "type": "note",
+            "text": ""
+        },
+        {
+            "args": [
+                {
+                    "name": "on_off",
+                    "value": "ON",
+                    "type": "ENUM8"
+                },
+                {
+                    "name": "freq_band",
+                    "value": "XBAND",
+                    "type": "ENUM8"
+                }
+            ],
+            "stem": "TX_POWER",
+            "time": {
+                "tag": "00:00:01",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        },
+        {
+            "args": [],
+            "stem": "CLOSE_SCI_PRODUCTS",
+            "time": {
+                "tag": "00:00:05",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        },
+        {
+            "args": [],
+            "stem": "FLUSH_DL_BUFFERS",
+            "time": {
+                "tag": "00:00:05",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        },
+        {
+            "args": [
+                {
+                    "name": "vcdu_number",
+                    "value": "17",
+                    "type": "I8"
+                }
+            ],
+            "stem": "SET_VCDU",
+            "time": {
+                "tag": "00:00:01",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        },
+        {
+            "args": [
+                {
+                    "name": "prod_rate",
+                    "value": "XBAND_DL",
+                    "type": "ENUM8"
+                }
+            ],
+            "stem": "SET_TLM_PROD_RATE",
+            "time": {
+                "tag": "00:00:01",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        },
+        {
+            "args": [
+                {
+                    "name": "playback_rate",
+                    "value": "200_MBPS",
+                    "type": "ENUM8"
+                }
+            ],
+            "stem": "SET_PLAYBACK_RATE",
+            "time": {
+                "tag": "00:00:01",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        },
+        {
+            "args": [],
+            "stem": "START_PLAYBACK",
+            "time": {
+                "tag": "00:00:01",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        }
+    ]
+}

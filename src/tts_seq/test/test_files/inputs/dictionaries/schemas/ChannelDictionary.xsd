@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  
+  ProjectXYZ telemetry channel dictionary schema
+      
+  This schema defines a common, multi-mission format for expression of the 
+  channelized telemetry portion of the flight-ground telemetry dictionary. 
+  This dictionary essentially defines the types of discrete telemetry values 
+  exchanged between flight and ground software, and the telemetry values 
+  derived by ground software from flight data.
+  
+  This xml is focused on the processing and display of the measurements. 
+  Some meta-data about the measurements have been found to be useful in the past 
+  and is included by name in the dictionary. Other meta-data that is mission specific
+  or of lesser use is stored using a generic keyword/value system.
+  
+  Numeric data to be extracted from channel packets must be placed into packets
+  in big-endian order, i.e., the most significant byte has the smallest offset.
+  For 4 byte floating-point values, the bits must represent of a floating-point  
+  value according to the IEEE 754 floating-point "single format" bit layout. For 
+  8 byte floating-point values, the bits must represent of a floating-point 
+  value according to the IEEE 754 floating-point "double format" bit layout. 
+  
+  String data must be placed into packets such that the first character 
+  in the string has the smallest offset in the packet. All characters should 
+  be in the ASCII printable range (hexadecimal values 0x20 through 0x7E). 
+  The GDS will replace carriage returns (0x0D), line feeds (0x0A), and all 
+  other characters outside of the printable range by space characters (0x20).  
+  The byte length of string fields must correspond to the length of 
+  the string in the packet. The C NULL (0x00) character has no meaning to the 
+  GDS and will not be recognized as a string terminator.
+  
+  Copyright (c) 2013-2015 California Institute of Technology, All Rights Reserved
+  JPL Proprietary Information
+  
+  Authors:     C.Swan
+  History:    
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:include schemaLocation="CommonDictionary.xsd"/>
+  <!-- Include common dictionary XML definitions -->
+  <!-- Start XML document here -->
+  <!-- Top-level element for the telemetry dictionary -->
+  <xs:element name="telemetry_dictionary">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="header"/>
+        <xs:element minOccurs="0" ref="enum_definitions"/>
+        <xs:element minOccurs="0" ref="derivation_definitions"/>
+        <xs:element minOccurs="0" ref="telemetry_groups"/>
+        <xs:element ref="telemetry_definitions"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="enum_definitions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="enum_table"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="derivation_definitions">
+    <xs:complexType>
+      <xs:group minOccurs="0" maxOccurs="unbounded" ref="derivation-def"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="telemetry_groups">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="group"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="telemetry_definitions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="telemetry"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!-- Defines a single telemetry channel -->
+  <xs:element name="telemetry">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="measurement_id"/>
+        <xs:element minOccurs="0" ref="source_derivation_id"/>
+        <xs:element ref="description"/>
+        <xs:choice minOccurs="0">
+          <xs:element ref="format"/>
+          <xs:element ref="boolean_format"/>
+          <xs:element ref="enum_format"/>
+        </xs:choice>
+        <xs:element minOccurs="0" ref="raw_units"/>
+        <xs:element minOccurs="0" ref="raw_to_eng"/>
+        <xs:element minOccurs="0" ref="bit_extract"/>
+        <xs:element ref="categories"/>
+        <xs:element minOccurs="0" ref="fsw_specification"/>
+      </xs:sequence>
+      <xs:attribute name="abbreviation" use="required" type="channel-id-def"/>
+      <xs:attribute name="channel_derivation" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="None"/>
+            <xs:enumeration value="bit_extract"/>
+            <xs:enumeration value="algorithm"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="name" use="required" type="name-def"/>
+      <xs:attribute name="type" use="required" type="channel-type-def"/>
+      <xs:attribute name="source" use="required" type="channel-source-def"/>
+      <xs:attribute name="byte_length" use="required" type="unsigned-8-def"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="measurement_id" type="unsigned-16-def"/>
+  <xs:element name="source_derivation_id" type="name-def"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="raw_units" type="xs:token"/>
+  <xs:element name="raw_to_eng">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="polynomial_expansion"/>
+          <xs:element ref="table_lookup"/>
+          <xs:element ref="parameterized_algorithm"/>
+        </xs:choice>
+        <xs:element minOccurs="0" ref="format"/>
+        <xs:element ref="eng_units"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="eng_units" type="xs:token"/>
+  <xs:element name="bit_extract">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="parent_id"/>
+        <xs:element maxOccurs="unbounded" ref="bits"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="parent_id" type="channel-id-def"/>
+  <xs:element name="bits">
+    <xs:complexType>
+      <xs:attribute name="offset" use="required" type="offset-64-def"/>
+      <xs:attribute name="length" use="required" type="offset-64-def"/>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    Format specifier for display of a raw non-enum/boolean telemetry value on the 
+    ground. Format specifiers embedded in this string must adhere to the
+    C printf standard for format strings, excluding the %p formatter and use of 
+    the "#" and "*" width specifiers. %SCLK, %SCET, and %LMST formatters may be used 
+    for time values. Use two percents (%%) to represent a single percent sign in the
+    output. Do not use carriage returns or line feeds in format text. 
+    
+    Default for floating point channels is %16.9e. There are no other defaults.
+  -->
+  <xs:element name="format" type="xs:normalizedString"/>
+  <!--
+    Format specifier for display of a boolean telemetry value on the ground.
+    Default in the ground system is to display TRUE for non-zero channel values,
+    and FALSE for zero channel values.  This element allows different
+    values, such as ON and OFF, to be displayed instead. It also allows the
+    formatters for both the numeric and string values to be specified.
+  -->
+  <xs:element name="boolean_format">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="numeric_format"/>
+        <xs:element minOccurs="0" ref="string_format"/>
+      </xs:sequence>
+      <xs:attribute name="true_str" use="required" type="symbol-def"/>
+      <xs:attribute name="false_str" use="required" type="symbol-def"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="numeric_format" type="xs:normalizedString"/>
+  <xs:element name="string_format" type="xs:normalizedString"/>
+  <!--
+    Format specifier for display of an enumeration, or status, telemetry value 
+    on the ground. This element specifies the enumeration table name, and
+    formatters for both the numeric and string values.
+  -->
+  <xs:element name="enum_format">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="numeric_format"/>
+        <xs:element minOccurs="0" ref="string_format"/>
+      </xs:sequence>
+      <xs:attribute name="enum_name" use="required" type="name-def"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Defines a custom channel derivation, including algorithm, trigger channels, -->
+  <xs:group name="derivation-def">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="derivation"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:element name="derivation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="parameterized_algorithm"/>
+        <xs:element maxOccurs="unbounded" ref="parent_id"/>
+        <xs:element minOccurs="0" ref="trigger_id"/>
+      </xs:sequence>
+      <xs:attribute name="derivation_id" use="required" type="name-def"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="trigger_id" type="channel-id-def"/>
+  <xs:element name="group">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="group_channel"/>
+      </xs:sequence>
+      <xs:attribute name="group_name" use="required" type="fsw-name-def"/>
+      <xs:attribute name="group_desc" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="group_channel" type="channel-id-def"/>
+  <xs:element name="fsw_specification">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="reu_mux_mapping"/>
+      </xs:sequence>
+      <xs:attribute name="sbs_buffer_depth" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:positiveInteger">
+            <xs:minInclusive value="2"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    The data type of the telemetry value. The size is given in byte_length. At this 
+    time, measurements are only primitive data types. 
+    
+    1. Time channels must contain coarse spacecraft clock values (SCLK coarse) ONLY.
+       The bit size of these channels should not exceed the bit size of the project
+       coarse SCLK. The value of the channel will be interpreted as an unsigned integer.
+    2. Boolean channels may take any values, but will be interpreted on the ground 
+       as FALSE if the unsigned value is 0, and TRUE if the unsigned value is non-0.
+    3. Enum channels must have a corresponding enum-table-def, and are interpreted by 
+       the ground as signed values, not unsigned, as with legacy STATUS channels.
+    4. Channels with source "bit_extract" can have type integer, unsigned, enum, or 
+       boolean.
+  -->
+  <xs:simpleType name="channel-type-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="integer"/>
+      <xs:enumeration value="unsigned"/>
+      <xs:enumeration value="float"/>
+      <xs:enumeration value="enum"/>
+      <xs:enumeration value="string"/>
+      <xs:enumeration value="time"/>
+      <xs:enumeration value="boolean"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!--
+    The possible sources of a telemetry value:
+    
+    1. "flight" implies the telemetry value is computed on board the spacecraft
+    
+  -->
+  <xs:simpleType name="channel-source-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="flight"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="reu_mux_mapping">
+    <xs:complexType>
+      <xs:attribute name="reu" use="required" type="reus-def"/>
+      <xs:attribute name="side" use="required" type="reu-side-def"/>
+      <xs:attribute name="mux_id" use="required" type="hex-only-int-16"/>
+      <xs:attribute name="length" use="required" type="offset-64-def"/>
+      <xs:attribute name="offset" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:nonNegativeInteger">
+            <xs:maxInclusive value="255"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="reus-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="CRUISE_REU"/>
+      <xs:enumeration value="ENTRY_REU"/>
+      <xs:enumeration value="LANDER_REU"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="reu-side-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="A"/>
+      <xs:enumeration value="B"/>
+      <xs:enumeration value="PRIME"/>
+      <xs:enumeration value="BACKUP"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

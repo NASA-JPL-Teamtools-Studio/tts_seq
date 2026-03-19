@@ -1,0 +1,54 @@
+{
+    "id": "background",
+    "metadata": {
+        "planId": 1,
+        "timeSorted": false,
+        "simulationDatasetId": 1
+    },
+    "steps": [
+        {
+            "args": [
+                {
+                    "name": "hemisphere",
+                    "type": "str_arg",
+                    "value": "N_HEMI"
+                },
+                {
+                    "name": "day_night",
+                    "type": "str_arg",
+                    "value": "DAY"
+                }
+            ],
+            "stem": "DO_SCIENCE",
+            "time": {
+                "tag": "2023-033T14:02:00.000000",
+                "type": "ABSOLUTE"
+            },
+            "type": "command"
+        },
+        {
+            "args": [],
+            "stem": "STOP_SCIENCE",
+            "time": {
+                "tag": "2023-033T14:07:00.000000",
+                "type": "ABSOLUTE"
+            },
+            "type": "command"
+        },
+        {
+            "args": [
+                {
+                    "name": "seq_id",
+                    "type": "str_arg",
+                    "value": "BREAK_DOWN_COMM"
+                }                
+            ],
+            "stem": "RUN_SEQ",
+            "time": {
+                "tag": "2023-033T14:07:00.000000",
+                "type": "ABSOLUTE"
+            },
+            "type": "command"
+        }
+    ]
+  }

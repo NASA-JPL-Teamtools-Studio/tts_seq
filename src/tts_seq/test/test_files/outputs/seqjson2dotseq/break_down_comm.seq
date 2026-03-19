@@ -1,0 +1,20 @@
+;on_board_filename=break_down_comm
+;planId=1
+;timeSorted=false
+;simulationDatasetId=1
+;
+;
+; This is a demonstration of how tts_seq_viewer can work for a simple earth orbiting mission.
+; The details of this sequence don't matter much, but for context, it is meant to represent
+; a simple spacecraft breaking down comm after an arbitrary contact on an X or S band station.
+;
+; This is a realtively timed sequence because it could be used at any given time depending on
+; the exact geometries and view periods to the station.
+;
+; In a real sequence, one might expect metatdata to also go here.
+;------------------------------------------------------------------------------------------------
+
+R00:00:01 STOP_PLAYBACK
+R00:00:01 SET_TLM_PROD_RATE NOMINAL_SCI
+R00:00:01 TX_POWER OFF,XBAND
+R00:00:01 TX_POWER OFF,SBAND

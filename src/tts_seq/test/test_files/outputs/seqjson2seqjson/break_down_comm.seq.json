@@ -1,0 +1,126 @@
+{
+    "id": "break_down_comm",
+    "metadata": {
+        "planId": 1,
+        "timeSorted": false,
+        "simulationDatasetId": 1
+    },
+    "steps": [
+        {
+            "type": "note",
+            "text": ";"
+        },
+        {
+            "type": "note",
+            "text": ";"
+        },
+        {
+            "type": "note",
+            "text": "; This is a demonstration of how tts_seq_viewer can work for a simple earth orbiting mission."
+        },
+        {
+            "type": "note",
+            "text": "; The details of this sequence don't matter much, but for context, it is meant to represent"
+        },
+        {
+            "type": "note",
+            "text": "; a simple spacecraft breaking down comm after an arbitrary contact on an X or S band station."
+        },
+        {
+            "type": "note",
+            "text": ";"
+        },
+        {
+            "type": "note",
+            "text": "; This is a realtively timed sequence because it could be used at any given time depending on"
+        },
+        {
+            "type": "note",
+            "text": "; the exact geometries and view periods to the station."
+        },
+        {
+            "type": "note",
+            "text": ";"
+        },
+        {
+            "type": "note",
+            "text": "; In a real sequence, one might expect metatdata to also go here."
+        },
+        {
+            "type": "note",
+            "text": ";------------------------------------------------------------------------------------------------"
+        },
+        {
+            "type": "note",
+            "text": ""
+        },
+        {
+            "args": [],
+            "stem": "STOP_PLAYBACK",
+            "time": {
+                "tag": "00:00:01",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        },
+        {
+            "args": [
+                {
+                    "name": "prod_rate",
+                    "value": "NOMINAL_SCI",
+                    "type": "ENUM8"
+                }
+            ],
+            "stem": "SET_TLM_PROD_RATE",
+            "time": {
+                "tag": "00:00:01",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        },
+        {
+            "args": [
+                {
+                    "name": "on_off",
+                    "value": "OFF",
+                    "type": "ENUM8"
+                },
+                {
+                    "name": "freq_band",
+                    "value": "XBAND",
+                    "type": "ENUM8"
+                }
+            ],
+            "stem": "TX_POWER",
+            "time": {
+                "tag": "00:00:01",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        },
+        {
+            "args": [
+                {
+                    "name": "on_off",
+                    "value": "OFF",
+                    "type": "ENUM8"
+                },
+                {
+                    "name": "freq_band",
+                    "value": "SBAND",
+                    "type": "ENUM8"
+                }
+            ],
+            "stem": "TX_POWER",
+            "time": {
+                "tag": "00:00:01",
+                "type": "COMMAND_RELATIVE"
+            },
+            "type": "command",
+            "description": ""
+        }
+    ]
+}

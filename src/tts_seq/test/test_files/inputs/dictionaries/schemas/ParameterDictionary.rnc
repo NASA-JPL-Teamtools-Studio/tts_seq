@@ -1,0 +1,356 @@
+namespace rng = "http://relaxng.org/ns/structure/1.0"
+
+# ProjectXYZ parameter dictionary schema.
+#     
+# Defines XML structures shared by the multi-mission command and
+# telemetry dictionaries.
+#
+# Copyright (c) 2013-2015 California Institute of Technology, All Rights Reserved
+# JPL Proprietary Information
+
+include "CommonDictionary.rnc"
+
+# Data Type Definitions
+module-id-value       = xsd:positiveInteger { maxInclusive="32767"}
+group-id-value        = unsigned-16-def
+copy-id-value         = unsigned-16-def 
+param-id-value        = unsigned-16-def 
+group-version-value   = unsigned-16-pos-def
+
+string-length-value   = xsd:int { minInclusive = "1" maxInclusive = "128"}
+
+# NOTE: The actual format of param-range-value is dependent on its type
+param-range-value     = xsd:token
+param-data-types      = ( "U8"
+                        | "U16"
+                        | "U32"
+                        | "I8"
+                        | "I16"
+                        | "I32"
+                        | "F32"
+                        | "F64"
+                        | "ENUM"
+                        | "STRING"
+                        | "BOOL"
+                        | "BITMASK")
+
+
+start = element ParameterDictionary {
+    # The header section names the Project which owns the Command Dictionary, and contains
+    # the Command Dictionary version information.
+    header-def,
+
+    # Any Enumeration Typdefs
+    element enum_definitions { enum-table-def+ }?,
+    
+    element bitmask_mappings { bitmask-mapping-def+ }?,
+
+    # The modules follow
+    module-def+
+}
+
+# Element used to establish the bit mask names for one set. One and only one set of named bitmasks can be referenced by each
+# parameter of the BITMASK type. Multiple parameters can share the same bitmask names.
+bitmask-mapping-def = element bitmask_mapping {
+    # Helix Implementation: names must be unique across parameter dictionary
+    attribute name { fsw-name-64-def },
+    
+    element bitmask {
+        # Hex value of the bit mask. 
+        # Helix Implementation: value must be unique within a bitmask_mapping
+        attribute value {hex-only-int-32},
+        
+        # Name used to refer to this value. 
+        # Helix Implementation: Names must be unique within a bitmask_mapping
+        attribute name { sys-name-64-def }
+    }*
+}
+
+module-def = element module {
+    # The module name
+    attribute name { mission-module-def },
+    
+    # The ops category of the module
+    attribute ops_category { mission-ops-category-def },
+    
+    # The module id 
+    attribute id { module-id-value },
+
+    group-def+
+}
+
+group-def = element group {
+    # The group id
+    attribute group_id { group-id-value },
+
+    # The group name
+    attribute group_name {sys-name-32-def},
+
+    # This is a flag indicating that the group can only be set via the
+    # pie_set_group command (pie_set_numeric commands  which sets all group
+    # members with one command. (Note: Groups without is_atomic set to true
+    # can also be set using pie_set_group if they have no  string parameters,
+    # but in those cases pie_set_numeric commands will succeed).
+    attribute is_atomic {xsd:boolean},
+
+    # The group description
+    attribute group_description { xsd:string },
+
+    # Version for this group. If this number increments between FSW builds,
+    # previous NPM records for this group will not be loaded and parameter
+    # defaults will be set on the 1st FSW initialization.
+    attribute version { group-version-value },
+
+    # Whether this group requires custom validation to be called
+    attribute custom_validation_required {"Yes" | "No"},
+
+    # Describe custom validation (if required)
+    attribute custom_validation_description {xsd:string}?,
+
+    # Are there additional actions required when setting this parameter?
+    attribute set_action { xsd:boolean },
+
+    # Description of what those additional actions are
+    attribute set_action_description {xsd:string}?,
+
+    # Number of copies of this group
+    attribute count_value {xsd:positiveInteger},
+
+    copy-def+
+}
+
+# Every copy will have the same parameter entries as the other copies in the
+# group however the min / max ranges of these parameters may differ by copy.
+copy-def = element copy {
+    # The copy id
+    attribute copy_id { copy-id-value },
+
+    # The copy name
+    attribute copy_name {sys-name-32-def},
+    
+    # A description for the copy
+    attribute copy_description {xsd:string}?,
+
+    parameter-def+
+}
+
+parameter-def = element parameter {
+    # The param uuid
+    # This is a combination of the module, group, copy, and local parameter id (to form a unique id)
+    attribute param_uuid {signed-64-pos-def},
+    
+    # The parameter unique name
+    # This a combination of the ops_cat, group, copy, and local names
+    attribute param_unique_name {sys-name-128-def},
+
+    # The param id (local within the copy)
+    attribute local_param_id { param-id-value },
+
+    # The param name
+    attribute param_name { sys-name-64-def },
+    
+    # The param type
+    attribute param_type { param-data-types },
+    
+    # The param description
+    attribute param_description { xsd:string },
+
+    # The param units
+    attribute units { xsd:string },
+
+    # The param default value
+    attribute default_value { param-range-value },
+    
+    # The rationale for the parameter default
+    attribute default_rationale {xsd:string},
+
+    # The min & max values may not be present if the developer has not
+    # specified them, or they are set to the type specific MIN or MAX value
+    attribute max { param-range-value }?,
+    attribute min { param-range-value }?,
+
+    # This only applies for STRING Typed Parameters
+    attribute max_length { string-length-value }?,
+
+    # This only Applies for ENUM Typed Parameters
+    attribute enum_typedef { name-def }?,
+    
+    # This only Applies for Bitmask Typed Parameters.
+    # This references a "bitmask" name from the bitmask-mappings-def.
+    # The bit names become applicable to this parameter during command construction.
+    attribute bitmask_mapping { fsw-name-64-def }?
+}
+
+# Helix Implementation: ParameterDictionary content is to be imported into the following
+# flattened format, and then this flattened format will be exported back into valid ParameterDictionary
+# content. The flattened format serves to demarcate how the parameter dictionary is to be
+# viewed in Helix.
+flattened_start = element FlattenedParameterDictionary {
+    # Header
+    header-def,
+
+    # Parameter Enums
+	element enum_definitions { enum-table-def+ }?,
+    
+    # Bitmask mappings
+    element bitmask_mappings { bitmask-mapping-def+ }?,
+
+    # Contains all the parameter definitions.
+    flattened-param-def+
+  }
+  
+flattened-param-def = element param {
+    
+    ####################### Merged Content
+    
+    # The param uuid
+    # This is a combination of the module, group, copy, and local parameter id (to form a unique id)
+    # Helix Implementation: Validate that this is unique within the parameter dictionary
+    # Helix Implementation: Autogenerated from <spare_bits><module_id><group_id><copy_id><local_param_id>
+    attribute param_uuid {signed-64-pos-def},
+    
+    # The parameter unique name
+    # This a combination of the ops_cat, group, copy #, and local names
+    # Helix Implementation: This must be unique within the parameter dictionary
+    # Helix Implementation: Autogenerated from <OPS_CAT>_<GROUP_NAME>_<COPY_ID>_<PARAM_NAME>
+    attribute param_unique_name {sys-name-128-def},
+
+    ###################### Parameter Content
+    
+    # The param id (local within the copy)
+    # Helix Implementation: Validate that the local_param_id is unique within the copy
+    attribute local_param_id { param-id-value },
+
+    # The param name
+    # Helix Implementation: Validate content matches against copy_id = 0, for all attributes with the same module_id, group_id, local_param_id
+    # Helix Implementation: Validate that the param_name is unique within the copy
+    attribute param_name { sys-name-64-def },
+    
+    # The param type
+    # Helix Implementation: Validate content matches against copy_id = 0, for all attributes with the same module_id, group_id, local_param_id
+    attribute param_type { param-data-types },
+    
+    # The param description
+    # Helix Implementation: Validate content matches against copy_id = 0, for all attributes with the same module_id, group_id, local_param_id
+    attribute param_description { xsd:string },
+
+    # The param units
+    # Helix Implementation: Validate content matches against copy_id = 0, for all attributes with the same module_id, group_id, local_param_id
+    attribute units { xsd:string },
+
+    # The param default value
+    attribute default_value { param-range-value },
+    
+    # The rationale for the parameter default
+    attribute default_rationale {xsd:string},
+
+    # The min & max values may not be present if the developer has not
+    # specified them, or they are set to the type specific MIN or MAX value
+    attribute max { param-range-value }?,
+    attribute min { param-range-value }?,
+
+    # This only applies for STRING Typed Parameters
+    # Helix Implementation: If param_type == STRING this is required else forbidden
+    # Helix Implementation: Validate content matches against copy_id = 0, for all attributes with the same module_id, group_id, local_param_id
+    attribute max_length { string-length-value }?,
+
+    # This only Applies for ENUM Typed Parameters
+    # Helix Implementation: If param_type == ENUM this is required else forbidden
+    # Helix Implementation: Validate content matches against copy_id = 0, for all attributes with the same module_id, group_id, local_param_id
+    attribute enum_typedef { name-def }?,
+    
+    # This only Applies for Bitmask Typed Parameters.
+    # This references a "bitmask" name from the bitmask-mappings-def.
+    # The bit names become applicable to this parameter during command construction.
+    # Helix Implementation: If param_type == BITMASK this is required else forbidden
+    # Helix Implementation: If param_type == BITMASK this is required else forbidden
+    # Helix Implementation: Validate content matches against copy_id = 0, for all attributes with the same module_id, group_id, local_param_id
+    attribute bitmask_mapping { fsw-name-64-def }?,
+    
+    ######################  Copy Contents
+    
+    # The copy id
+    # Helix Implementation: Validate that local_param_id 0 exists for this copy_id
+    # Note that copy_id uniqueness is verified as part of the copy_name validation
+    attribute copy_id { copy-id-value },
+
+    # The copy name
+    # Helix Implementation: Validate that the copy_name for the same module_id, group ID, copy ID match
+    # Helix Implementation: Validate that the copy_name is unique within the group
+    attribute copy_name {sys-name-32-def},
+    
+    # The copy desription
+    # Helix Implementation: Validate that the copy_description for the same module_id, group ID, copy ID match
+    attribute copy_description {xsd:string}?,
+    
+    
+    
+    ######################  Group Contents
+    
+    # The group id
+    # Helix Implementation: Validate that the same params exist for each copy with the same module_id, group_id
+    # Helix Implementation: Validate that copy_id 0 exists for this group_id
+    # Note that group_id_id uniqueness is verified as part of the group_name validation
+    attribute group_id { group-id-value },
+    
+    # The group name
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    # Helix Implementation: Validate that group_name is unique per module
+    attribute group_name {sys-name-32-def},
+    
+    # The group description
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    attribute group_description { xsd:string },
+    
+    # This is a flag indicating that the group can only be set via the
+    # pie_set_group command (pie_set_numeric commands  which sets all group
+    # members with one command. (Note: Groups without is_atomic set to true
+    # can also be set using pie_set_group if they have no  string parameters,
+    # but in those cases pie_set_numeric commands will succeed).
+    
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    attribute is_atomic {xsd:boolean},
+
+    # Version for this group. If this number increments between FSW builds,
+    # previous NPM records for this group will not be loaded and parameter
+    # defaults will be set on the 1st FSW initialization.
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    # Helix Implementation: Lock this field so it requires "edit unique Id" to edit
+    attribute version { group-version-value },
+  
+    # Whether this group requires custom validation to be called
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    attribute custom_validation_required {"Yes" | "No"},
+  
+    # Describe custom validation (if required)
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    # Helix Implementation: If custom_validation_required is truthy this is required, else forbidden
+    attribute custom_validation_description {xsd:string}?,
+
+    # Are there additional actions required when setting this parameter?
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    attribute set_action { xsd:boolean },
+
+    # Description of what those additional actions are
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    # Helix Implementation: If set_action is truthy this is required, else forbidden
+    attribute set_action_description {xsd:string}?,
+    
+    # Number of copies of this group
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    # Helix Implementation: Validate that the number of copies matches the count_value
+    attribute count_value {xsd:positiveInteger},
+
+    
+    ######################  Module Contents
+
+    # The module id
+    # Helix Implementation: Autogenerate with and validate against the module name - id mapping in the schema.
+    attribute module_id { module-id-value },
+    
+    # This is used to category different commands into groups.
+    # Helix Implementation: Categories must contain module (FSW element)
+    # Helix Implementation: Validate content matches against copy_id = 0, local_param_id = 0, for all attributes with the same module_id, group_id
+    categories-def
+
+}

@@ -1,0 +1,6 @@
+{
+    "command_existence_rule_files": [],
+    "command_timing_rule_files": [],
+    "command_argument_rule_files": ["fr_arg_test_input.csv"],
+    "command_dictionary_path": "../../../dictionaries/test_command.xml"
+}

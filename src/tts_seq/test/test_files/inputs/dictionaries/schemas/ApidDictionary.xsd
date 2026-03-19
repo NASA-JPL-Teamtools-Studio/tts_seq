@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ProjectXYZ Application Packet Identifier (APID) dictionary schema. 
+       
+  This schema defines a common, multi-mission format for description of 
+  telemetry Application Packet Identifiers (APIDs). The APID dictionary 
+  essentially  defines the types of application packets exchanged between 
+  flight and ground software. The APID of a packet is used for routing 
+  packets through the proper processing sequence on the ground.
+  
+  Copyright (c) 2013-2015 California Institute of Technology, All Rights Reserved
+  JPL Proprietary Information
+  
+  Authors:     C.Swan
+  History:     
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:include schemaLocation="CommonDictionary.xsd"/>
+  <!-- Include common dictionary XML definitions -->
+  <!-- Start XML document here -->
+  <!-- Top-level element for the APID dictionary -->
+  <xs:element name="apid_dictionary">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="header"/>
+        <xs:element ref="apids"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="apids">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="apid_definition"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    XML element that defines a single Application Packet Identifier expected 
+    from the flight software
+  -->
+  <xs:element name="apid_definition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="title"/>
+        <xs:element ref="description"/>
+        <xs:element ref="categories"/>
+        <xs:element minOccurs="0" ref="downlink_info"/>
+      </xs:sequence>
+      <xs:attribute name="apid" use="required" type="apid-range-def"/>
+      <xs:attribute name="format" use="required" type="apid-format-def"/>
+      <xs:attribute name="recorded" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="name" type="name-def"/>
+  <xs:element name="title" type="token-64-def"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="downlink_info">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="continuous_dp_limits"/>
+      </xs:sequence>
+      <xs:attribute name="product_type" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="Data Product"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="auto_delete" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="Yes"/>
+            <xs:enumeration value="No"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="compress" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="Yes"/>
+            <xs:enumeration value="No"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="default_priority" use="required" type="data-priority-def"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="continuous_dp_limits">
+    <xs:complexType>
+      <xs:attribute name="continuous_dp_max_size" type="unsigned-32-def"/>
+      <xs:attribute name="continuous_dp_max_time" type="unsigned-32-def"/>
+      <xs:attribute name="continuous_dp_max_writes" type="unsigned-16-def"/>
+      <xs:attribute name="restartable">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="Yes"/>
+            <xs:enumeration value="No"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    Allowed values for APID format:
+    
+    FILL is reserved for packets that contain data that should not be processed
+    TIME CORRELATION packets contain flight software time correlation
+    information.
+    EVR packets contain individual event records to be processed 
+    into EVR messages by the ground system.
+    PRE_CHANNELIZED indicates packets that contain telemetry channels
+    packed into a standard pre-channelized format.
+    DATA_PRODUCT packets contain science or engineering data file content,
+    spanning multiple packets.
+    DECOM_FROM_MAP packets contain telemetry channels or other engineering
+    data that must be decommutated on the ground using a specific decommutation
+    map.
+    Both CFDP_DATA and CFDP_PROTOCOL indicate packets that contain standard CFDP PDUs as the content.
+    Functionally, ground CFDP processing will not treat the two differently.
+    A dictionary owner may choose to use these to indicate when a data product dictionary should accompany the APID
+    OTHER packets contain custom data that is possibly not recognized or
+    processable by the ground system.
+  -->
+  <xs:simpleType name="apid-format-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="FILL"/>
+      <xs:enumeration value="TIME_CORRELATION"/>
+      <xs:enumeration value="EVR"/>
+      <xs:enumeration value="PRE_CHANNELIZED"/>
+      <xs:enumeration value="DATA_PRODUCT"/>
+      <xs:enumeration value="DECOM_FROM_MAP"/>
+      <xs:enumeration value="CFDP_DATA"/>
+      <xs:enumeration value="CFDP_PROTOCOL"/>
+      <xs:enumeration value="OTHER"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="data-priority-def">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:minInclusive value="1"/>
+      <xs:maxInclusive value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  
+  ProjectXYZ flight command dictionary schema.
+      
+  This schema defines a common, multi-mission format for expression of the 
+  command portion of the flight-ground dictionary. 
+  Refer to the CCSDS Packet Telemetry Standard for bit and byte ordering of values. 
+  All values that are inserted to the command stream are assumed to be in 
+  Global Data Representation (GDR) format with the most significant element first.
+  
+  Copyright (c) 2015 California Institute of Technology, All Rights Reserved
+  JPL Proprietary Information
+  
+  Authors:     C.Swan
+  History:                   
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:include schemaLocation="CommonDictionary.xsd"/>
+  <!-- Include common dictionary XML definitions -->
+  <!-- Start XML Document here -->
+  <!--
+    Top-level element for the command dictionary. This contains a common header, 
+    any enumeration definitions for command arguments, and the list of command 
+    definitions.
+  -->
+  <xs:element name="command_dictionary">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="header"/>
+        <xs:element ref="uplink_file_types"/>
+        <xs:element minOccurs="0" ref="enum_definitions"/>
+        <xs:element ref="command_definitions"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="enum_definitions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="enum_table"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="command_definitions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="command-definition-def"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    Uplink file types indicate the types of files that can be
+    uplinked by the current mission. The type is identified 
+    in the encoded file load.
+  -->
+  <xs:element name="uplink_file_types">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="file_type"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="file_type">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="symbol-def-32"/>
+      <xs:attribute name="id" use="required" type="xs:nonNegativeInteger"/>
+      <xs:attribute name="extension" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:pattern value="[a-z][a-z0-9]{1,4}"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="file_format_spec" use="required" type="xs:token"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- A command definition can be a FSW command or a hardware command -->
+  <xs:element name="command-definition-def" abstract="true"/>
+  <!--
+    Defines a flight software command. These types of commands have
+    arguments.
+  -->
+  <xs:element name="fsw_command" substitutionGroup="command-definition-def">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="arguments">
+          <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+              <xs:element ref="enum_arg"/>
+              <xs:element ref="var_string_arg"/>
+              <xs:element ref="repeat_arg"/>
+              <xs:element ref="integer_arg"/>
+              <xs:element ref="unsigned_arg"/>
+              <xs:element ref="float_arg"/>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+        <xs:element ref="categories"/>
+        <xs:element ref="description"/>
+        <xs:element ref="completion"/>
+        <xs:element ref="fsw_specification"/>
+        <xs:element ref="restricted_modes"/>
+      </xs:sequence>
+      <xs:attribute name="opcode" use="required" type="hex-only-int-16"/>
+      <xs:attribute name="stem" use="required" type="stem-def"/>
+      <xs:attribute name="class" use="required" type="fsw-command-class-def"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="completion" type="xs:string"/>
+  <!--
+    Defines a flight hardware command. Hardware commands are unique in
+    that they do not have arguments.
+  -->
+  <xs:element name="hw_command" substitutionGroup="command-definition-def">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="categories"/>
+        <xs:element ref="description"/>
+      </xs:sequence>
+      <xs:attribute name="opcode" use="required" type="hex-only-int-16"/>
+      <xs:attribute name="stem" use="required" type="stem-def"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Defines a single signed integer command argument. -->
+  <xs:element name="integer_arg">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group minOccurs="0" ref="int-arg-range-def"/>
+        <xs:element ref="description"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="name-def"/>
+      <xs:attribute name="bit_length" use="required" type="integer-arg-length-def"/>
+      <xs:attribute name="units" use="required" type="xs:token"/>
+      <xs:attribute name="index" use="required" type="xs:positiveInteger"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Defines a single unsigned integer command argument. -->
+  <xs:element name="unsigned_arg">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group minOccurs="0" ref="unsigned-arg-range-def"/>
+        <xs:element ref="description"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="name-def"/>
+      <xs:attribute name="bit_length" use="required" type="integer-arg-length-def"/>
+      <xs:attribute name="units" use="required" type="xs:token"/>
+      <xs:attribute name="index" use="required" type="xs:positiveInteger"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Defines a single floating point command argument. -->
+  <xs:element name="float_arg">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group minOccurs="0" ref="float-arg-range-def"/>
+        <xs:element ref="description"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="name-def"/>
+      <xs:attribute name="bit_length" use="required" type="float-arg-length-def"/>
+      <xs:attribute name="units" use="required" type="xs:token"/>
+      <xs:attribute name="index" use="required" type="xs:positiveInteger"/>
+    </xs:complexType>
+  </xs:element>
+  <!--
+    Defines a single enumerated command argument. Enumerated arguments have 
+    both an ordinal representation, and a symbolic representation, where the 
+    ordinal maps to the symbol.
+  -->
+  <xs:element name="enum_arg">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group minOccurs="0" ref="arg-range-def"/>
+        <xs:element ref="description"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="name-def"/>
+      <xs:attribute name="bit_length" use="required" type="enum-arg-length-def"/>
+      <xs:attribute name="enum_name" use="required" type="name-def"/>
+      <xs:attribute name="index" use="required" type="xs:positiveInteger"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Defines a single variable length string command argument. -->
+  <xs:element name="var_string_arg">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="valid_regex"/>
+        <xs:element ref="description"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="name-def"/>
+      <xs:attribute name="prefix_bit_length" use="required" type="prefix-length-def"/>
+      <xs:attribute name="max_bit_length" use="required" type="string-arg-length-def"/>
+      <xs:attribute name="index" use="required" type="xs:positiveInteger"/>
+      <xs:attribute name="cts_item_type">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="dynamic_arg"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="valid_regex" type="xs:normalizedString"/>
+  <!--
+    Defines a command argument that is a repeating block of other arguments. A
+    prefix in the resulting encoded data indicates how many times the arguments
+    in the block are repeated in the following data block.
+  -->
+  <xs:element name="repeat_arg">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description"/>
+        <xs:element ref="repeat"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="name-def"/>
+      <xs:attribute name="prefix_bit_length" use="required" type="prefix-length-def"/>
+      <xs:attribute name="cts_encoding">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="chunked_hexed"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="repeat">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="arguments">
+          <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+              <xs:element ref="enum_arg"/>
+              <xs:element ref="var_string_arg"/>
+              <xs:element ref="float_arg"/>
+              <xs:element ref="integer_arg"/>
+              <xs:element ref="unsigned_arg"/>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="min" use="required" type="xs:nonNegativeInteger"/>
+      <xs:attribute name="max" use="required" type="xs:positiveInteger"/>
+    </xs:complexType>
+  </xs:element>
+  <!-- Valid range for bit length of an integer or unsigned argument. -->
+  <xs:simpleType name="integer-arg-length-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="8"/>
+      <xs:enumeration value="16"/>
+      <xs:enumeration value="32"/>
+      <xs:enumeration value="64"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Valid range for bit length of a floating point argument. -->
+  <xs:simpleType name="float-arg-length-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="32"/>
+      <xs:enumeration value="64"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Valid range for an enum argument bit length -->
+  <xs:simpleType name="enum-arg-length-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="8"/>
+      <xs:enumeration value="16"/>
+      <xs:enumeration value="32"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!--
+    Valid bit length range for fixed string arguments and 
+    maximum length for variable string arguments. This is 1024 bits (128 bytes)
+    for FSW
+  -->
+  <xs:simpleType name="string-arg-length-def">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="1024"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Valid bit lengths for repeat argument and variable string prefixes -->
+  <xs:simpleType name="prefix-length-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="8"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Element used to define valid argument ranges. -->
+  <xs:group name="arg-range-def">
+    <xs:sequence>
+      <xs:element name="range_of_values">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include">
+              <xs:complexType>
+                <xs:attribute name="min" use="required" type="xs:normalizedString"/>
+                <xs:attribute name="max" use="required" type="xs:normalizedString"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!-- Element used to define valid argument ranges for signed integers. -->
+  <xs:group name="int-arg-range-def">
+    <xs:sequence>
+      <xs:element name="range_of_values">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include">
+              <xs:complexType>
+                <xs:attribute name="min" use="required" type="xs:integer"/>
+                <xs:attribute name="max" use="required" type="xs:integer"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!-- Element used to define valid argument ranges for signed integers. -->
+  <xs:group name="unsigned-arg-range-def">
+    <xs:sequence>
+      <xs:element name="range_of_values">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include">
+              <xs:complexType>
+                <xs:attribute name="min" use="required" type="xs:nonNegativeInteger"/>
+                <xs:attribute name="max" use="required" type="xs:nonNegativeInteger"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!--
+    Element used to define valid argument ranges for floating point
+    numbers.
+  -->
+  <xs:group name="float-arg-range-def">
+    <xs:sequence>
+      <xs:element name="range_of_values">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="include">
+              <xs:complexType>
+                <xs:attribute name="min" use="required" type="xs:double"/>
+                <xs:attribute name="max" use="required" type="xs:double"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <!-- Binary integer pattern -->
+  <xs:simpleType name="bin-int">
+    <xs:restriction base="xs:token">
+      <xs:pattern value="0b[01]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!--
+    Different command classes may be encoded using different
+    virtual channels, or have other encoding differences.
+    
+    FSW - A standard flight software command
+    SEQ - A sequence directive/command. used for managing execution of
+          commands in sequence files
+  -->
+  <xs:simpleType name="fsw-command-class-def">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="FSW"/>
+      <xs:enumeration value="SEQ"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="fsw_specification">
+    <xs:complexType>
+      <xs:attribute name="custom_validation_required" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="Yes"/>
+            <xs:enumeration value="No"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="custom_validation_description"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="restricted_modes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="mode"/>
+        <xs:element ref="prime_string_restriction"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="mode">
+    <xs:complexType>
+      <xs:attribute name="mode_name" use="required" type="system-mode-def"/>
+      <xs:attribute name="reason" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="prime_string_restriction">
+    <xs:complexType>
+      <xs:attribute name="prime_string_only" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="Yes"/>
+            <xs:enumeration value="No"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="prime_string_restrict_reason"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

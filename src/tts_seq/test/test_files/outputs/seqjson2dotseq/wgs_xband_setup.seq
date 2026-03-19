@@ -1,0 +1,23 @@
+;on_board_filename=wgs_xband_setup
+;planId=1
+;timeSorted=false
+;simulationDatasetId=1
+;
+;
+; This is a demonstration of how tts_seq_viewer can work for a simple earth orbiting mission.
+; The details of this sequence don't matter much, but for context, it is meant to represent
+; a simple spacecraft setting up comm for an X-Band contact with Wallops ground station.
+;
+; This is a realtively timed sequence because it could be used at any given time depending on
+; the exact geometries and view periods to Wallops.
+;
+; In a real sequence, one might expect metatdata to also go here.
+;------------------------------------------------------------------------------------------------
+
+R00:00:01 TX_POWER ON,XBAND
+R00:00:05 CLOSE_SCI_PRODUCTS
+R00:00:05 FLUSH_DL_BUFFERS
+R00:00:01 SET_VCDU 17
+R00:00:01 SET_TLM_PROD_RATE XBAND_DL
+R00:00:01 SET_PLAYBACK_RATE 200_MBPS
+R00:00:01 START_PLAYBACK
