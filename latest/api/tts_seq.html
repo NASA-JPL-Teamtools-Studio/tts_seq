@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tts_seq &mdash; tts-seq 0.3.5.dev0+g99ef78b25.d20260323 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/bugfix.css?v=aa86f000" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8cd83db4"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tts_seq.cmd_modeling" href="tts_seq.cmd_modeling.html" />
+    <link rel="prev" title="tts-seq" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tts-seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tts_seq</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.cmd_modeling.html">tts_seq.cmd_modeling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html">tts_seq.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html">tts_seq.sim_modules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-tts_seq.cmd_dict_utils">tts_seq.cmd_dict_utils</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tts_seq.cmd_dict_utils.ArgRange"><code class="docutils literal notranslate"><span class="pre">ArgRange</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tts_seq.cmd_dict_utils.CmdDictReader"><code class="docutils literal notranslate"><span class="pre">CmdDictReader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tts_seq.cmd_dict_utils.EnumTable"><code class="docutils literal notranslate"><span class="pre">EnumTable</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tts_seq.cmd_dict_utils.EnumValue"><code class="docutils literal notranslate"><span class="pre">EnumValue</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tts_seq.cmd_dict_utils.FswCommand"><code class="docutils literal notranslate"><span class="pre">FswCommand</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tts_seq.cmd_dict_utils.FswCommandArg"><code class="docutils literal notranslate"><span class="pre">FswCommandArg</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tts-seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">tts_seq</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tts_seq">
+<span id="tts-seq"></span><h1>tts_seq<a class="headerlink" href="#module-tts_seq" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tts_seq.cmd_modeling.html">tts_seq.cmd_modeling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tts_seq.cmd_modeling.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.cmd_modeling.html#module-tts_seq.cmd_modeling.commands">tts_seq.cmd_modeling.commands</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.AbsWait"><code class="docutils literal notranslate"><span class="pre">AbsWait</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.Command"><code class="docutils literal notranslate"><span class="pre">Command</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.CommandStep"><code class="docutils literal notranslate"><span class="pre">CommandStep</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.CondWait"><code class="docutils literal notranslate"><span class="pre">CondWait</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.EmitEvr"><code class="docutils literal notranslate"><span class="pre">EmitEvr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.FcnCall"><code class="docutils literal notranslate"><span class="pre">FcnCall</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.LinearToGoal"><code class="docutils literal notranslate"><span class="pre">LinearToGoal</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.MarkEvent"><code class="docutils literal notranslate"><span class="pre">MarkEvent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.RelWait"><code class="docutils literal notranslate"><span class="pre">RelWait</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.SetState"><code class="docutils literal notranslate"><span class="pre">SetState</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.SetTrace"><code class="docutils literal notranslate"><span class="pre">SetTrace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.Wait"><code class="docutils literal notranslate"><span class="pre">Wait</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tts_seq.core.html">tts_seq.core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tts_seq.core.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#module-tts_seq.core.dotseq_dict">tts_seq.core.dotseq_dict</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.dotseq_dict.DotSeqDict"><code class="docutils literal notranslate"><span class="pre">DotSeqDict</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#module-tts_seq.core.human_readable_dict">tts_seq.core.human_readable_dict</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.human_readable_dict.HumanReadableDict"><code class="docutils literal notranslate"><span class="pre">HumanReadableDict</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#tts-seq-core-rml-dict">tts_seq.core.rml_dict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#module-tts_seq.core.scr_dict">tts_seq.core.scr_dict</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.scr_dict.ScrSeqDict"><code class="docutils literal notranslate"><span class="pre">ScrSeqDict</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#module-tts_seq.core.seqcollection">tts_seq.core.seqcollection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqcollection.SeqCollection"><code class="docutils literal notranslate"><span class="pre">SeqCollection</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#module-tts_seq.core.seqdict">tts_seq.core.seqdict</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqArg"><code class="docutils literal notranslate"><span class="pre">SeqArg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqArgType"><code class="docutils literal notranslate"><span class="pre">SeqArgType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqDict"><code class="docutils literal notranslate"><span class="pre">SeqDict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqStep"><code class="docutils literal notranslate"><span class="pre">SeqStep</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqStepType"><code class="docutils literal notranslate"><span class="pre">SeqStepType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqTimeTag"><code class="docutils literal notranslate"><span class="pre">SeqTimeTag</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqTimeType"><code class="docutils literal notranslate"><span class="pre">SeqTimeType</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#module-tts_seq.core.seqjson_dict">tts_seq.core.seqjson_dict</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqjson_dict.SeqJsonDict"><code class="docutils literal notranslate"><span class="pre">SeqJsonDict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqjson_dict.seqjson_to_dict"><code class="docutils literal notranslate"><span class="pre">seqjson_to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqjson_dict.seqjson_to_seqdict"><code class="docutils literal notranslate"><span class="pre">seqjson_to_seqdict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#module-tts_seq.core.seqn_dict">tts_seq.core.seqn_dict</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqn_dict.SeqNDict"><code class="docutils literal notranslate"><span class="pre">SeqNDict</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#module-tts_seq.core.sequence_delivery_manager">tts_seq.core.sequence_delivery_manager</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.core.html#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager"><code class="docutils literal notranslate"><span class="pre">SequenceDeliveryManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html#tts-seq-core-simulation">tts_seq.core.simulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tts_seq.sim_modules.html">tts_seq.sim_modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tts_seq.sim_modules.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html#module-tts_seq.sim_modules.base">tts_seq.sim_modules.base</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.sim_modules.html#tts_seq.sim_modules.base.Module"><code class="docutils literal notranslate"><span class="pre">Module</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html#module-tts_seq.sim_modules.cmd">tts_seq.sim_modules.cmd</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.sim_modules.html#tts_seq.sim_modules.cmd.CmdModule"><code class="docutils literal notranslate"><span class="pre">CmdModule</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html#module-tts_seq.sim_modules.eha">tts_seq.sim_modules.eha</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.sim_modules.html#tts_seq.sim_modules.eha.EhaModule"><code class="docutils literal notranslate"><span class="pre">EhaModule</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html#module-tts_seq.sim_modules.engineering_file_system">tts_seq.sim_modules.engineering_file_system</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.sim_modules.html#tts_seq.sim_modules.engineering_file_system.EngFsModule"><code class="docutils literal notranslate"><span class="pre">EngFsModule</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html#module-tts_seq.sim_modules.evr">tts_seq.sim_modules.evr</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.sim_modules.html#tts_seq.sim_modules.evr.EvrModule"><code class="docutils literal notranslate"><span class="pre">EvrModule</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html#module-tts_seq.sim_modules.param">tts_seq.sim_modules.param</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.sim_modules.html#tts_seq.sim_modules.param.ParamModule"><code class="docutils literal notranslate"><span class="pre">ParamModule</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html#module-tts_seq.sim_modules.seq_no_logic">tts_seq.sim_modules.seq_no_logic</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tts_seq.sim_modules.html#tts_seq.sim_modules.seq_no_logic.SeqModule"><code class="docutils literal notranslate"><span class="pre">SeqModule</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<section id="module-tts_seq.cmd_dict_utils">
+<span id="tts-seq-cmd-dict-utils"></span><h3>tts_seq.cmd_dict_utils<a class="headerlink" href="#module-tts_seq.cmd_dict_utils" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.ArgRange">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_dict_utils.</span></span><span class="sig-name descname"><span class="pre">ArgRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.ArgRange" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.ArgRange.mn">
+<span class="sig-name descname"><span class="pre">mn</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">object</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.ArgRange.mn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.ArgRange.mx">
+<span class="sig-name descname"><span class="pre">mx</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">object</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.ArgRange.mx" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.CmdDictReader">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_dict_utils.</span></span><span class="sig-name descname"><span class="pre">CmdDictReader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_dict_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.CmdDictReader" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.CmdDictReader.cmd">
+<span class="sig-name descname"><span class="pre">cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.CmdDictReader.cmd" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.CmdDictReader.cmd_dict">
+<span class="sig-name descname"><span class="pre">cmd_dict</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.CmdDictReader.cmd_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.CmdDictReader.construct_enum_tables">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">construct_enum_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.CmdDictReader.construct_enum_tables" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.CmdDictReader.construct_fsw_command_arg">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">construct_fsw_command_arg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enum_tables</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.CmdDictReader.construct_fsw_command_arg" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.CmdDictReader.construct_fsw_commands">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">construct_fsw_commands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enum_tables</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.CmdDictReader.construct_fsw_commands" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.CmdDictReader.read_fsw_commands">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">read_fsw_commands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fsw_dict_file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.CmdDictReader.read_fsw_commands" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.CmdDictReader.sanitize_description">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sanitize_description</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.CmdDictReader.sanitize_description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.EnumTable">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_dict_utils.</span></span><span class="sig-name descname"><span class="pre">EnumTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'list[EnumValue]'</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.EnumTable" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.EnumTable.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.EnumTable.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.EnumTable.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tts_seq.cmd_dict_utils.EnumValue" title="tts_seq.cmd_dict_utils.EnumValue"><span class="pre">EnumValue</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.EnumTable.values" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.EnumValue">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_dict_utils.</span></span><span class="sig-name descname"><span class="pre">EnumValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.EnumValue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.EnumValue.numeric">
+<span class="sig-name descname"><span class="pre">numeric</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.EnumValue.numeric" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.EnumValue.symbol">
+<span class="sig-name descname"><span class="pre">symbol</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.EnumValue.symbol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommand">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_dict_utils.</span></span><span class="sig-name descname"><span class="pre">FswCommand</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'list[FswCommandArg]'</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restricted_modes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'list[str]'</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommand" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommand.args">
+<span class="sig-name descname"><span class="pre">args</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tts_seq.cmd_dict_utils.FswCommandArg" title="tts_seq.cmd_dict_utils.FswCommandArg"><span class="pre">FswCommandArg</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommand.args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommand.description">
+<span class="sig-name descname"><span class="pre">description</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommand.description" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommand.restricted_modes">
+<span class="sig-name descname"><span class="pre">restricted_modes</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommand.restricted_modes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommand.stem">
+<span class="sig-name descname"><span class="pre">stem</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommand.stem" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommandArg">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_dict_utils.</span></span><span class="sig-name descname"><span class="pre">FswCommandArg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enum_table</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tts_seq.cmd_dict_utils.EnumTable" title="tts_seq.cmd_dict_utils.EnumTable"><span class="pre">tts_seq.cmd_dict_utils.EnumTable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tts_seq.cmd_dict_utils.ArgRange" title="tts_seq.cmd_dict_utils.ArgRange"><span class="pre">tts_seq.cmd_dict_utils.ArgRange</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommandArg" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommandArg.arg_range">
+<span class="sig-name descname"><span class="pre">arg_range</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tts_seq.cmd_dict_utils.ArgRange" title="tts_seq.cmd_dict_utils.ArgRange"><span class="pre">ArgRange</span></a></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommandArg.arg_range" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommandArg.arg_type">
+<span class="sig-name descname"><span class="pre">arg_type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommandArg.arg_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommandArg.enum_table">
+<span class="sig-name descname"><span class="pre">enum_table</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tts_seq.cmd_dict_utils.EnumTable" title="tts_seq.cmd_dict_utils.EnumTable"><span class="pre">EnumTable</span></a></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommandArg.enum_table" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.cmd_dict_utils.FswCommandArg.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.cmd_dict_utils.FswCommandArg.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="tts-seq" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tts_seq.cmd_modeling.html" class="btn btn-neutral float-right" title="tts_seq.cmd_modeling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 JPL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

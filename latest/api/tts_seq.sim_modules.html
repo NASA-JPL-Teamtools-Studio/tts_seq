@@ -1,0 +1,724 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tts_seq.sim_modules &mdash; tts-seq 0.3.5.dev0+g99ef78b25.d20260323 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/bugfix.css?v=aa86f000" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8cd83db4"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="tts_seq.core" href="tts_seq.core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tts-seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tts_seq.html">tts_seq</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="tts_seq.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.cmd_modeling.html">tts_seq.cmd_modeling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html">tts_seq.core</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tts_seq.sim_modules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tts_seq.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tts-seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tts_seq.html">tts_seq</a></li>
+      <li class="breadcrumb-item active">tts_seq.sim_modules</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tts_seq.sim_modules">
+<span id="tts-seq-sim-modules"></span><h1>tts_seq.sim_modules<a class="headerlink" href="#module-tts_seq.sim_modules" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<section id="module-tts_seq.sim_modules.base">
+<span id="tts-seq-sim-modules-base"></span><h3>tts_seq.sim_modules.base<a class="headerlink" href="#module-tts_seq.sim_modules.base" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.base.Module">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.sim_modules.base.</span></span><span class="sig-name descname"><span class="pre">Module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.base.Module" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for all simulation modules representing hardware or FSW logic.</p>
+<p>Modules are responsible for modeling specific spacecraft behaviors in response 
+to commands. They are updated once per simulation time-step by the SeqSimulation 
+engine.</p>
+<p>Modules can also be used to model other autonomous or physics behaviors. Just ignore
+the command and evr methods if you use them that way.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<em>SeqSimulation</em>) – Pointer to the parent simulation instance.</p></li>
+<li><p><strong>PRIORITY</strong> (<em>int</em>) – Execution order for the module (lower is earlier). Defaults to 1000.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.base.Module.PRIORITY">
+<span class="sig-name descname"><span class="pre">PRIORITY</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000</span></span><a class="headerlink" href="#tts_seq.sim_modules.base.Module.PRIORITY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.base.Module.add_command">
+<span class="sig-name descname"><span class="pre">add_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command_cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_engine_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.base.Module.add_command" title="Link to this definition"></a></dt>
+<dd><p>Assigns a new command to the module for simulation.</p>
+<p>The command is wrapped in a specific simulation command class which 
+breaks the hardware behavior into discrete, simulatable steps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command_cls</strong> (<em>Type</em><em>[</em><em>BaseCommand</em><em>]</em>) – The simulation-specific command wrapper class.</p></li>
+<li><p><strong>command</strong> (<a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqStep" title="tts_seq.core.seqdict.SeqStep"><em>SeqStep</em></a>) – The raw sequence command object.</p></li>
+<li><p><strong>sequence_engine_id</strong> (<em>str</em><em>, </em><em>optional</em>) – ID of the sequence engine that issued the command.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.base.Module.emit_evr">
+<span class="sig-name descname"><span class="pre">emit_evr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.base.Module.emit_evr" title="Link to this definition"></a></dt>
+<dd><p>Helper method to issue an Event Record (EVR) from this module.</p>
+<p>Delegates to the parent simulation’s EvrModule to log the event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Identifier/Mnemonic for the EVR.</p></li>
+<li><p><strong>level</strong> (<em>str</em>) – Severity level (e.g., ‘ACTIVITY_LO’, ‘WARNING_HI’, ‘FATAL’).</p></li>
+<li><p><strong>message</strong> (<em>str</em>) – Human-readable log message.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.base.Module.simulate_step">
+<span class="sig-name descname"><span class="pre">simulate_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.base.Module.simulate_step" title="Link to this definition"></a></dt>
+<dd><p>Propagates the state of all currently executing commands by one time-step.</p>
+<p>Iterates through command steps, triggering the simulate() method for 
+incomplete items. If all steps for a command are finished, the command 
+is marked complete and removed from the active queue.</p>
+<p>No parameters</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.sim_modules.cmd">
+<span id="tts-seq-sim-modules-cmd"></span><h3>tts_seq.sim_modules.cmd<a class="headerlink" href="#module-tts_seq.sim_modules.cmd" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.sim_modules.cmd.</span></span><span class="sig-name descname"><span class="pre">CmdModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.sim_modules.base.Module" title="tts_seq.sim_modules.base.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Simulation module responsible for command execution, validation, and dispatching.</p>
+<p>The CmdModule mimics a flight software Command Service. It handles the receipt of 
+immediate and sequenced commands, validates them against the Command Dictionary, 
+enforces Mode Constraints, manages Command Constraint Overrides (CCO), and 
+dispatches validated commands to target modules for modeling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sim</strong> (<em>SeqSimulation</em>) – Pointer to the parent simulation instance.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.CCO_STEM">
+<span class="sig-name descname"><span class="pre">CCO_STEM</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CMD_CONSTRAINT_OVERRIDE'</span></span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.CCO_STEM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.CMD_CONSTRAINT_OVERRIDE">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">CMD_CONSTRAINT_OVERRIDE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_engine_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.CMD_CONSTRAINT_OVERRIDE" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="tts_seq.cmd_modeling.html#tts_seq.cmd_modeling.commands.Command" title="tts_seq.cmd_modeling.commands.Command"><code class="xref py py-class docutils literal notranslate"><span class="pre">Command</span></code></a></p>
+<p>Inner command class that models the behavior of the CCO command.</p>
+<p>When executed, this command sets a flag that allows the next single command 
+to bypass mode-based constraints.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.FSW_CMD_MODULE_XPATH">
+<span class="sig-name descname"><span class="pre">FSW_CMD_MODULE_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'categories/module/text()'</span></span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.FSW_CMD_MODULE_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.FSW_CMD_STEM_LABEL">
+<span class="sig-name descname"><span class="pre">FSW_CMD_STEM_LABEL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stem'</span></span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.FSW_CMD_STEM_LABEL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.FSW_CMD_XPATH">
+<span class="sig-name descname"><span class="pre">FSW_CMD_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.//fsw_command'</span></span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.FSW_CMD_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.MODE_CHANNEL_NAME">
+<span class="sig-name descname"><span class="pre">MODE_CHANNEL_NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'MODE_CURRENT_MODE'</span></span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.MODE_CHANNEL_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cmd'</span></span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.SEQ_CMD_DISPATCH_EVR_NAME">
+<span class="sig-name descname"><span class="pre">SEQ_CMD_DISPATCH_EVR_NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CMDSVC_EVR_SEQ_CMD_DISPATCH'</span></span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.SEQ_CMD_DISPATCH_EVR_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.announce_dispatch_success">
+<span class="sig-name descname"><span class="pre">announce_dispatch_success</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_engine_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.announce_dispatch_success" title="Link to this definition"></a></dt>
+<dd><p>Emits an EVR confirming that a command has been successfully dispatched.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stem</strong> (<em>str</em>) – The command stem dispatched.</p></li>
+<li><p><strong>module_name</strong> (<em>str</em>) – The name of the target module.</p></li>
+<li><p><strong>sequence_engine_id</strong> (<em>int</em><em>, </em><em>optional</em>) – The ID of the calling sequence engine, if any.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.cmd_class_name">
+<span class="sig-name descname"><span class="pre">cmd_class_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.cmd_class_name" title="Link to this definition"></a></dt>
+<dd><p>Determines the modeling class name from a command stem.</p>
+<p>Provides a hook for missions with non-standard naming conventions. 
+Defaults to an uppercase version of the stem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stem</strong> (<em>str</em>) – The command stem to convert.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The class name string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.cmd_stem_dict_representation">
+<span class="sig-name descname"><span class="pre">cmd_stem_dict_representation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.cmd_stem_dict_representation" title="Link to this definition"></a></dt>
+<dd><p>Formats the command stem for lookup in the Command Dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stem</strong> (<em>str</em>) – The raw command stem.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The stem formatted for dictionary XPath matching.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.execute_command">
+<span class="sig-name descname"><span class="pre">execute_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_engine_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.execute_command" title="Link to this definition"></a></dt>
+<dd><p>The core command processing logic. Validates constraints and routes 
+the command to modeling.</p>
+<p>The process involves:
+1. Archiving command provenance and history.
+2. Locating the command in the mission dictionary via XPath.
+3. Checking ‘spacecraft_restricted_modes’ against the current modeled mode.
+4. Validating and consuming CCO (Constraint Override) flags.
+5. Dynamically instantiating the command’s modeling class in the target module.
+6. Resetting CCO state for the next command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqStep" title="tts_seq.core.seqdict.SeqStep"><em>SeqStep</em></a>) – The sequence step/command to execute.</p></li>
+<li><p><strong>parent</strong> (<em>str</em>) – ID of the calling sequence or source.</p></li>
+<li><p><strong>sequence_engine_id</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of the sequence engine slot.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.cmd.CmdModule.get_module_from_xml_element">
+<span class="sig-name descname"><span class="pre">get_module_from_xml_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.cmd.CmdModule.get_module_from_xml_element" title="Link to this definition"></a></dt>
+<dd><p>Extracts the target handling module name from the Command Dictionary XML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>lxml.etree._Element</em>) – The XML element for the command definition.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The name of the simulation module responsible for this command.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.sim_modules.eha">
+<span id="tts-seq-sim-modules-eha"></span><h3>tts_seq.sim_modules.eha<a class="headerlink" href="#module-tts_seq.sim_modules.eha" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.sim_modules.eha.</span></span><span class="sig-name descname"><span class="pre">EhaModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.sim_modules.base.Module" title="tts_seq.sim_modules.base.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Simulation module responsible for tracking and recording engineering telemetry 
+channel values (EHA).</p>
+<p>The EhaModule monitors modeled EHA values and captures them into the 
+simulation’s telemetry history. It uses a “change-only” recording logic: 
+it records a value if it has changed from the previous step, or if it is the 
+first time the channel is being seen. This keeps us from saving lots of 
+points with no informational value. It is not realistic to how an actual
+spacecraft works, but simulating actual spacecraft telemetry behavior is
+the kind of complexity no one should ever need to include.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<em>SeqSimulation</em>) – Pointer to the parent simulation instance.</p></li>
+<li><p><strong>PRIORITY</strong> (<em>int</em>) – Execution priority set to 10000 to ensure it captures the 
+final state of all other modules in the current time-step.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.CHANNEL_ID_XPATH">
+<span class="sig-name descname"><span class="pre">CHANNEL_ID_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'&#64;abbreviation'</span></span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.CHANNEL_ID_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.CHANNEL_LOOKUP_ATTR">
+<span class="sig-name descname"><span class="pre">CHANNEL_LOOKUP_ATTR</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'name'</span></span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.CHANNEL_LOOKUP_ATTR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.CHANNEL_TYPE_XPATH">
+<span class="sig-name descname"><span class="pre">CHANNEL_TYPE_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'&#64;type'</span></span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.CHANNEL_TYPE_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.CHANNEL_XPATH">
+<span class="sig-name descname"><span class="pre">CHANNEL_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/telemetry_dictionary/telemetry_definitions/telemetry'</span></span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.CHANNEL_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.ENG_UNITS_XPATH">
+<span class="sig-name descname"><span class="pre">ENG_UNITS_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'raw_to_eng/eng_units'</span></span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.ENG_UNITS_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.MODULE_XPATH">
+<span class="sig-name descname"><span class="pre">MODULE_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'categories/module'</span></span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.MODULE_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eha'</span></span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.PRIORITY">
+<span class="sig-name descname"><span class="pre">PRIORITY</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10000</span></span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.PRIORITY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.RAW_UNITS_XPATH">
+<span class="sig-name descname"><span class="pre">RAW_UNITS_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'raw_units'</span></span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.RAW_UNITS_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.close_out_channels">
+<span class="sig-name descname"><span class="pre">close_out_channels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.close_out_channels" title="Link to this definition"></a></dt>
+<dd><p>Finalizes the telemetry log by recording the final state of all channels.</p>
+<p>This ensures that the telemetry history extends to the very end of the 
+simulation duration, even if the values did not change in the final steps.</p>
+<p>No parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.eha.EhaModule.simulate_step">
+<span class="sig-name descname"><span class="pre">simulate_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.eha.EhaModule.simulate_step" title="Link to this definition"></a></dt>
+<dd><p>Monitors all modeled values and records transitions in telemetry channels.</p>
+<p>For every value in the simulation’s modeled_values:
+1. Detects if the value is new or has changed.
+2. If a change occurs, it stamps the new value at the current simulation time.
+3. To ensure continuous trending, it also stamps the <em>previous</em> value</p>
+<blockquote>
+<div><p>at the <em>previous</em> time-step if it hasn’t been recorded yet.</p>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>Records a data point if 5+ minutes have passed since the last recording
+for that channel, regardless of whether the value changed.</p></li>
+</ol>
+<p>No parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.sim_modules.engineering_file_system">
+<span id="tts-seq-sim-modules-engineering-file-system"></span><h3>tts_seq.sim_modules.engineering_file_system<a class="headerlink" href="#module-tts_seq.sim_modules.engineering_file_system" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.engineering_file_system.EngFsModule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.sim_modules.engineering_file_system.</span></span><span class="sig-name descname"><span class="pre">EngFsModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.engineering_file_system.EngFsModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.sim_modules.base.Module" title="tts_seq.sim_modules.base.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Simulation module responsible for modeling the onboard file system (FS).</p>
+<p>The EngFsModule tracks the state of files stored on the spacecraft’s 
+engineering file system. It allows the simulation to model file existence, 
+deletion, and potentially storage constraints, ensuring that sequences 
+interacting with the file system are modeled accurately.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<em>SeqSimulation</em>) – Pointer to the parent simulation instance.</p></li>
+<li><p><strong>initial_onboard_files</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – A list of file paths representing the 
+starting state of the file system.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.engineering_file_system.EngFsModule.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'engfs'</span></span><a class="headerlink" href="#tts_seq.sim_modules.engineering_file_system.EngFsModule.NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.engineering_file_system.EngFsModule.rm_file">
+<span class="sig-name descname"><span class="pre">rm_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.engineering_file_system.EngFsModule.rm_file" title="Link to this definition"></a></dt>
+<dd><p>Models the deletion of a file from the onboard storage.</p>
+<p>This method updates the internal file list to remove the specified 
+path and emits an Event Record (EVR) indicating the action was 
+taken.</p>
+<p>Note: In the current implementation, the EVR mnemonic is hardcoded 
+as ‘FSSVC_EVR_RM_FAILED’ despite the message indicating success; 
+this matches the provided source logic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The full path or identifier of the file to remove.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.sim_modules.evr">
+<span id="tts-seq-sim-modules-evr"></span><h3>tts_seq.sim_modules.evr<a class="headerlink" href="#module-tts_seq.sim_modules.evr" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.evr.EvrModule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.sim_modules.evr.</span></span><span class="sig-name descname"><span class="pre">EvrModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.evr.EvrModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.sim_modules.base.Module" title="tts_seq.sim_modules.base.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Simulation module responsible for logging and validating Event Records (EVRs).</p>
+<p>The EvrModule serves as the central repository for all events issued during 
+the simulation. It cross-references issued events against the mission’s 
+production EVR dictionary and simulation-specific dictionaries to ensure 
+telemetry validity.</p>
+<p><strong>Note that the current implementation is very minimal! Some of the things
+these docs say this module does are actually a bit more aspirational</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sim</strong> (<em>SeqSimulation</em>) – Pointer to the parent simulation instance.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.evr.EvrModule.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'evr'</span></span><a class="headerlink" href="#tts_seq.sim_modules.evr.EvrModule.NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.evr.EvrModule.save_evr">
+<span class="sig-name descname"><span class="pre">save_evr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.evr.EvrModule.save_evr" title="Link to this definition"></a></dt>
+<dd><p>Validates and records an Event Record into the simulation history.</p>
+<p>This method checks if the event name exists in the primary ‘evr’ 
+dictionary or the ‘sim_evr’ dictionary. If the event is not found, 
+a warning is logged, though the simulation continues. The event is 
+then appended to the simulation’s master history list with the 
+current simulation timestamp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<em>str</em>) – The name of the module that issued the EVR.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The mnemonic/name of the EVR (e.g., ‘BATTERY_LOW’).</p></li>
+<li><p><strong>level</strong> (<em>str</em>) – The severity level of the event.</p></li>
+<li><p><strong>message</strong> (<em>str</em>) – The descriptive log message associated with the event.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.sim_modules.param">
+<span id="tts-seq-sim-modules-param"></span><h3>tts_seq.sim_modules.param<a class="headerlink" href="#module-tts_seq.sim_modules.param" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.sim_modules.param.</span></span><span class="sig-name descname"><span class="pre">ParamModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.sim_modules.base.Module" title="tts_seq.sim_modules.base.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Only a stub. Not yet complete.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.CCO_STEM">
+<span class="sig-name descname"><span class="pre">CCO_STEM</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CMD_CONSTRAINT_OVERRIDE'</span></span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.CCO_STEM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.FSW_CMD_MODULE_XPATH">
+<span class="sig-name descname"><span class="pre">FSW_CMD_MODULE_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'categories/module/text()'</span></span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.FSW_CMD_MODULE_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.FSW_CMD_STEM_LABEL">
+<span class="sig-name descname"><span class="pre">FSW_CMD_STEM_LABEL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stem'</span></span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.FSW_CMD_STEM_LABEL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.FSW_CMD_XPATH">
+<span class="sig-name descname"><span class="pre">FSW_CMD_XPATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.//fsw_command'</span></span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.FSW_CMD_XPATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.MODE_CHANNEL_NAME">
+<span class="sig-name descname"><span class="pre">MODE_CHANNEL_NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'MODE_CURRENT_MODE'</span></span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.MODE_CHANNEL_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'param'</span></span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.cmd_class_name">
+<span class="sig-name descname"><span class="pre">cmd_class_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.cmd_class_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.cmd_stem_dict_representation">
+<span class="sig-name descname"><span class="pre">cmd_stem_dict_representation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stem</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.cmd_stem_dict_representation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.execute_command">
+<span class="sig-name descname"><span class="pre">execute_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.execute_command" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.param.ParamModule.get_module_from_xml_element">
+<span class="sig-name descname"><span class="pre">get_module_from_xml_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.param.ParamModule.get_module_from_xml_element" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.sim_modules.seq_no_logic">
+<span id="tts-seq-sim-modules-seq-no-logic"></span><h3>tts_seq.sim_modules.seq_no_logic<a class="headerlink" href="#module-tts_seq.sim_modules.seq_no_logic" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.sim_modules.seq_no_logic.</span></span><span class="sig-name descname"><span class="pre">SeqModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.sim_modules.base.Module" title="tts_seq.sim_modules.base.Module"><code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></a></p>
+<p>Simulation module responsible for managing and executing spacecraft sequences.</p>
+<p>This is appropraite for the simplest case of a sequence module where there is no 
+conditional sequencing of any kind.</p>
+<p>This module acts as a virtual Sequence Service, managing multiple sequence 
+engines (execution slots) in parallel. It handles the timing logic for 
+stepping through commands and ensures that absolute and relative time tags 
+are correctly processed against the simulation clock.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<em>SeqSimulation</em>) – Pointer to the parent simulation instance.</p></li>
+<li><p><strong>NO_SEQ_ENGINES</strong> (<em>int</em>) – Total number of parallel sequence slots available. Defaults to 8.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule.NAME">
+<span class="sig-name descname"><span class="pre">NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'seq'</span></span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule.NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule.NO_SEQ_ENGINES">
+<span class="sig-name descname"><span class="pre">NO_SEQ_ENGINES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule.NO_SEQ_ENGINES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule.advance_engine">
+<span class="sig-name descname"><span class="pre">advance_engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">engine_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule.advance_engine" title="Link to this definition"></a></dt>
+<dd><p>Increments the step index for a sequence and calculates the next execution time.</p>
+<p>If the last command in the sequence has been reached, the engine is cleared.
+Otherwise, the ‘next_step_time’ is updated based on whether the next 
+command uses Absolute or Relative timing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>engine_id</strong> (<em>int</em>) – Index of the engine slot to advance.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If an unsupported timing type is encountered.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule.clear_engine">
+<span class="sig-name descname"><span class="pre">clear_engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_engine_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule.clear_engine" title="Link to this definition"></a></dt>
+<dd><p>Unloads a sequence and resets the specified engine to IDLE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seq_engine_id</strong> (<em>int</em>) – Index of the engine slot to clear.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule.empty_engine">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">empty_engine</span></span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule.empty_engine" title="Link to this definition"></a></dt>
+<dd><p>Definition of a sequence engine in its default, inactive state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary containing idle state attributes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule.load_sequence">
+<span class="sig-name descname"><span class="pre">load_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uuid_lineage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule.load_sequence" title="Link to this definition"></a></dt>
+<dd><p>Assigns a sequence from the simulation collection to an idle engine and starts execution.</p>
+<p>The method handles deep copying the sequence template, stripping comments, 
+generating a unique instance UUID, and calculating the execution time for</p>
+<blockquote>
+<div><p>the first command.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seq_name</strong> (<em>str</em>) – ID of the sequence to load from the collection.</p></li>
+<li><p><strong>uuid_lineage</strong> (<em>str</em>) – Ancestry string for tracking nested sequence calls.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule.next_idle_engine">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">next_idle_engine</span></span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule.next_idle_engine" title="Link to this definition"></a></dt>
+<dd><p>Finds the first available engine slot currently in the ‘IDLE’ state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The integer index of the available engine, or None if all are busy.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule.simulate_step">
+<span class="sig-name descname"><span class="pre">simulate_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule.simulate_step" title="Link to this definition"></a></dt>
+<dd><p>Primary time-step update for sequence execution.</p>
+<p>In each simulation second, this method checks all active engines. If 
+the current simulation time has reached or exceeded an engine’s 
+‘next_step_time’, the command at the current index is dispatched to the 
+CmdModule for execution and the engine is advanced.</p>
+<p>No parameters</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.sim_modules.seq_no_logic.SeqModule.update_sequence_observables">
+<span class="sig-name descname"><span class="pre">update_sequence_observables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_engine_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.sim_modules.seq_no_logic.SeqModule.update_sequence_observables" title="Link to this definition"></a></dt>
+<dd><p>Hook for updating telemetry or state variables related to sequence execution.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tts_seq.core.html" class="btn btn-neutral float-left" title="tts_seq.core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 JPL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

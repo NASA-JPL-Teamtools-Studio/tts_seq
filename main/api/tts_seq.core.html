@@ -1,0 +1,1059 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tts_seq.core &mdash; tts-seq 0.3.5.dev0+g99ef78b25.d20260323 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/bugfix.css?v=aa86f000" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8cd83db4"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tts_seq.sim_modules" href="tts_seq.sim_modules.html" />
+    <link rel="prev" title="tts_seq.cmd_modeling" href="tts_seq.cmd_modeling.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tts-seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tts_seq.html">tts_seq</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="tts_seq.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.cmd_modeling.html">tts_seq.cmd_modeling</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tts_seq.core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html">tts_seq.sim_modules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tts_seq.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tts-seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tts_seq.html">tts_seq</a></li>
+      <li class="breadcrumb-item active">tts_seq.core</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tts_seq.core">
+<span id="tts-seq-core"></span><h1>tts_seq.core<a class="headerlink" href="#module-tts_seq.core" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<section id="module-tts_seq.core.dotseq_dict">
+<span id="tts-seq-core-dotseq-dict"></span><h3>tts_seq.core.dotseq_dict<a class="headerlink" href="#module-tts_seq.core.dotseq_dict" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.dotseq_dict.DotSeqDict">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.dotseq_dict.</span></span><span class="sig-name descname"><span class="pre">DotSeqDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.dotseq_dict.DotSeqDict" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.core.human_readable_dict.HumanReadableDict" title="tts_seq.core.human_readable_dict.HumanReadableDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">HumanReadableDict</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.dotseq_dict.DotSeqDict.ARG_DELIMITER">
+<span class="sig-name descname"><span class="pre">ARG_DELIMITER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">','</span></span><a class="headerlink" href="#tts_seq.core.dotseq_dict.DotSeqDict.ARG_DELIMITER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.core.human_readable_dict">
+<span id="tts-seq-core-human-readable-dict"></span><h3>tts_seq.core.human_readable_dict<a class="headerlink" href="#module-tts_seq.core.human_readable_dict" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.human_readable_dict.HumanReadableDict">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.human_readable_dict.</span></span><span class="sig-name descname"><span class="pre">HumanReadableDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.human_readable_dict.HumanReadableDict" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.core.seqdict.SeqDict" title="tts_seq.core.seqdict.SeqDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">SeqDict</span></code></a></p>
+<p>Reader and container for standard .seq (dot-seq) sequence files common
+on Earth orbiting missions.</p>
+<p>This class handles the parsing of legacy ASCII sequence files, which use 
+positional arguments and special character-based metadata (semicolons). 
+It leverages a Command Dictionary to map positional values found in the 
+text file back to named arguments with specific bit-lengths and types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.human_readable_dict.HumanReadableDict.ARG_DELIMITER">
+<span class="sig-name descname"><span class="pre">ARG_DELIMITER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.human_readable_dict.HumanReadableDict.ARG_DELIMITER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.human_readable_dict.HumanReadableDict.TIME_FORMATS">
+<span class="sig-name descname"><span class="pre">TIME_FORMATS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ABSOLUTE':</span> <span class="pre">'%Y-%jT%H:%M:%S',</span> <span class="pre">'COMMAND_RELATIVE':</span> <span class="pre">'%H:%M:%S'}</span></span><a class="headerlink" href="#tts_seq.core.human_readable_dict.HumanReadableDict.TIME_FORMATS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.human_readable_dict.HumanReadableDict.build_command_stem_to_argdata_map">
+<span class="sig-name descname"><span class="pre">build_command_stem_to_argdata_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_dict_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#tts_seq.core.human_readable_dict.HumanReadableDict.build_command_stem_to_argdata_map" title="Link to this definition"></a></dt>
+<dd><p>Parses the XML Command Dictionary to create a lookup map for argument metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cmd_dict_path</strong> (<em>pathlib.Path</em>) – Path to the mission XML command dictionary.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary mapping command stems to lists of argument definitions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.human_readable_dict.HumanReadableDict.dotseq_to_seqjson_style_dict">
+<span class="sig-name descname"><span class="pre">dotseq_to_seqjson_style_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_dict_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#tts_seq.core.human_readable_dict.HumanReadableDict.dotseq_to_seqjson_style_dict" title="Link to this definition"></a></dt>
+<dd><p>The primary parsing engine that converts a .seq file into a JSON-compatible dictionary.</p>
+<p>This method identifies metadata lines, time tags (Absolute/Relative), and command 
+stems. It uses the command dictionary to map positional arguments in the text file 
+to named arguments with correct types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>pathlib.Path</em>) – Path to the input .seq file.</p></li>
+<li><p><strong>cmd_dict_path</strong> (<em>pathlib.Path</em>) – Path to the command dictionary for argument mapping.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary structure compatible with standard sequence JSON ingestion.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.human_readable_dict.HumanReadableDict.extract_unquoted_comment_with_leading_ws">
+<span class="sig-name descname"><span class="pre">extract_unquoted_comment_with_leading_ws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.human_readable_dict.HumanReadableDict.extract_unquoted_comment_with_leading_ws" title="Link to this definition"></a></dt>
+<dd><p>Returns everything from the first unquoted semicolon, including any
+whitespace immediately before it, to the end of the line.
+Preserves all trailing spaces and newline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – The raw line string from the .seq file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The extracted comment string including leading whitespace and semicolon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="tts-seq-core-rml-dict">
+<h3>tts_seq.core.rml_dict<a class="headerlink" href="#tts-seq-core-rml-dict" title="Link to this heading"></a></h3>
+</section>
+<section id="module-tts_seq.core.scr_dict">
+<span id="tts-seq-core-scr-dict"></span><h3>tts_seq.core.scr_dict<a class="headerlink" href="#module-tts_seq.core.scr_dict" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.scr_dict.ScrSeqDict">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.scr_dict.</span></span><span class="sig-name descname"><span class="pre">ScrSeqDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.scr_dict.ScrSeqDict" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.core.seqdict.SeqDict" title="tts_seq.core.seqdict.SeqDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">SeqDict</span></code></a></p>
+<p>Reader and container for SCR files. Used on OCO-2</p>
+<p>This class handles the parsing of SCR-formatted files, supporting three primary 
+types: ATS, RTS, and Macros. It specializes in extracting commands and timing 
+information from tab-delimited or metadata-heavy text formats into a 
+standardized SeqDict structure.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.scr_dict.ScrSeqDict.TIME_FORMATS">
+<span class="sig-name descname"><span class="pre">TIME_FORMATS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ABSOLUTE':</span> <span class="pre">'%y/%m:%d:%H:%M:%S',</span> <span class="pre">'COMMAND_RELATIVE':</span> <span class="pre">'%H:%M:%S'}</span></span><a class="headerlink" href="#tts_seq.core.scr_dict.ScrSeqDict.TIME_FORMATS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.scr_dict.ScrSeqDict.ats_scr_to_seqjson_style_dict">
+<span class="sig-name descname"><span class="pre">ats_scr_to_seqjson_style_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#tts_seq.core.scr_dict.ScrSeqDict.ats_scr_to_seqjson_style_dict" title="Link to this definition"></a></dt>
+<dd><p>Parses ATS (Absolute Time Sequence) SCR files.</p>
+<p>This parser handles scripts wrapped in begin/end blocks and extracts 
+metadata denoted by ‘$’ signs (e.g., $TIME=val).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>pathlib.Path</em>) – Path to the .scr file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A JSON-style dictionary containing the sequence steps and metadata.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.scr_dict.ScrSeqDict.extract_unquoted_comment_with_leading_ws">
+<span class="sig-name descname"><span class="pre">extract_unquoted_comment_with_leading_ws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.scr_dict.ScrSeqDict.extract_unquoted_comment_with_leading_ws" title="Link to this definition"></a></dt>
+<dd><p>Returns everything from the first unquoted semicolon, including any
+whitespace immediately before it, to the end of the line.
+Preserves all trailing spaces and newline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – The raw line string from the sequence file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The extracted comment string including leading whitespace and semicolon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.scr_dict.ScrSeqDict.parameterized_file_to_seqjson_style_dict">
+<span class="sig-name descname"><span class="pre">parameterized_file_to_seqjson_style_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameterized_rts_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#tts_seq.core.scr_dict.ScrSeqDict.parameterized_file_to_seqjson_style_dict" title="Link to this definition"></a></dt>
+<dd><p>Parses tab-delimited parameterized files (typically RTS or Macro tables).</p>
+<p>This method filters lines based on the RTS/Macro number provided in the config 
+and converts relative offset seconds into formatted time strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameterized_rts_path</strong> (<em>pathlib.Path</em><em> or </em><em>list</em>) – Path to the delimited file or a list of lines.</p></li>
+<li><p><strong>file_type</strong> (<em>str</em>) – String indicating the type (e.g., ‘RTS’ or ‘Macro’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A JSON-style dictionary containing the filtered steps.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.core.seqcollection">
+<span id="tts-seq-core-seqcollection"></span><h3>tts_seq.core.seqcollection<a class="headerlink" href="#module-tts_seq.core.seqcollection" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqcollection.</span></span><span class="sig-name descname"><span class="pre">SeqCollection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequences</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict_validation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A manager class for a collection of SeqDict objects.</p>
+<p>Provides functionality to aggregate multiple sequence files, validate their 
+consistency (e.g., ensuring they all share a common command dictionary), and 
+resolves recursive sequence calls into a flat, chronologically ordered list 
+of commands.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Human-readable name for the collection.</p></li>
+<li><p><strong>sequences</strong> (<em>list</em><em>[</em><a class="reference internal" href="#tts_seq.core.seqdict.SeqDict" title="tts_seq.core.seqdict.SeqDict"><em>SeqDict</em></a><em>]</em><em>, </em><em>optional</em>) – Initial list of SeqDict objects.</p></li>
+<li><p><strong>strict_validation</strong> (<em>bool</em>) – If True, raises an exception during additions if the collection becomes invalid.</p></li>
+<li><p><strong>command_dict</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to the master command dictionary for this collection.</p></li>
+<li><p><strong>parameter_dict</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to the master parameter dictionary for this collection.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.CALLING_COMMAND_STEMS">
+<span class="sig-name descname"><span class="pre">CALLING_COMMAND_STEMS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.CALLING_COMMAND_STEMS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.SEQ_DICT_CLASS">
+<span class="sig-name descname"><span class="pre">SEQ_DICT_CLASS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.SEQ_DICT_CLASS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.SEQ_FILE_EXTENSION">
+<span class="sig-name descname"><span class="pre">SEQ_FILE_EXTENSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.SEQ_FILE_EXTENSION" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.add_seqdict">
+<span class="sig-name descname"><span class="pre">add_seqdict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seqdict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.add_seqdict" title="Link to this definition"></a></dt>
+<dd><p>Adds a SeqDict instance to the collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seqdict</strong> (<a class="reference internal" href="#tts_seq.core.seqdict.SeqDict" title="tts_seq.core.seqdict.SeqDict"><em>SeqDict</em></a>) – The sequence object to add.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If validation fails and strict_validation is True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.fswx_report">
+<span class="sig-name descname"><span class="pre">fswx_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command_dict_was_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_dict_is_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.fswx_report" title="Link to this definition"></a></dt>
+<dd><p>Generates a Flight Software Transition (FSWX) report comparing two dictionary versions.</p>
+<p><strong>Currently incomplete!</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command_dict_was_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to the ‘baseline’ command dictionary.</p></li>
+<li><p><strong>command_dict_is_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Path to the ‘current’ command dictionary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If the collection is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.get_called_seq_id">
+<span class="sig-name descname"><span class="pre">get_called_seq_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.get_called_seq_id" title="Link to this definition"></a></dt>
+<dd><p>Extracts the ID of a sub-sequence from a ‘call’ command’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>step</strong> (<a class="reference internal" href="#tts_seq.core.seqdict.SeqStep" title="tts_seq.core.seqdict.SeqStep"><em>SeqStep</em></a>) – The command step that calls another sequence.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ID of the sequence being called.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.get_seq">
+<span class="sig-name descname"><span class="pre">get_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.get_seq" title="Link to this definition"></a></dt>
+<dd><p>Retrieves a specific sequence from the collection by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>seq_id</strong> (<em>str</em>) – ID of the sequence to find.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The matching SeqDict object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tts_seq.core.seqdict.SeqDict" title="tts_seq.core.seqdict.SeqDict">SeqDict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If no sequence is found or if ID matches are not unique.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.load_sequences_from_filepath">
+<span class="sig-name descname"><span class="pre">load_sequences_from_filepath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.load_sequences_from_filepath" title="Link to this definition"></a></dt>
+<dd><p>Iterates through a directory and adds all files matching the collection’s 
+defined file extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collection_file_path</strong> (<em>str</em><em> or </em><em>Path</em>) – Directory containing sequence files.</p></li>
+<li><p><strong>config_dict</strong> (<em>dict</em><em>, </em><em>optional</em>) – Configuration to pass to the SEQ_DICT_CLASS constructor.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.resolve_steps">
+<span class="sig-name descname"><span class="pre">resolve_steps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ancestor_seqs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_begin_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_subsequences</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.resolve_steps" title="Link to this definition"></a></dt>
+<dd><p>Recursively resolves sequence calls into a flat list of steps with 
+absolute timestamps.</p>
+<p>This method processes the ‘entry_point’ sequence and, if any commands in 
+that sequence are “call” commands, it recursively resolves those 
+sub-sequences as well (unless expand_subsequences is False).</p>
+<p>This is of limited use for projects that use any sort of conditional sequencing.
+In that case, use tts_seq.core.simulation. But for projects that use only 
+absolute and relative time commanding, this can be used.</p>
+<p>That being said, it’s likely that if you want this, you also want other simulation
+capabilities, in which  case you’d want tts_seq.core.simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entry_point</strong> (<em>str</em>) – The ID of the sequence to start resolution from.</p></li>
+<li><p><strong>ancestor_seqs</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of sequence IDs that led to the current sequence (for tracking genealogy).</p></li>
+<li><p><strong>sequence_begin_time</strong> (<em>datetime</em><em>, </em><em>optional</em>) – The start time used for resolving relative tags.</p></li>
+<li><p><strong>expand_subsequences</strong> (<em>bool</em>) – If True, recursively expand sub-sequences. If False, only resolve times for the main sequence.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>Exception</strong> – If a relative command is found without a start time reference.</p></li>
+<li><p><strong>NotImplementedError</strong> – If an unsupported time type is encountered.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tts_seq.core.seqcollection.SeqCollection.valid">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">valid</span></span><a class="headerlink" href="#tts_seq.core.seqcollection.SeqCollection.valid" title="Link to this definition"></a></dt>
+<dd><p>Returns the validity status of the collection by running consistency checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if valid, False if warnings were found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.core.seqdict">
+<span id="tts-seq-core-seqdict"></span><h3>tts_seq.core.seqdict<a class="headerlink" href="#module-tts_seq.core.seqdict" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArg">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqdict.</span></span><span class="sig-name descname"><span class="pre">SeqArg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tts_seq.core.seqdict.SeqArgType" title="tts_seq.core.seqdict.SeqArgType"><span class="pre">SeqArgType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArg" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Representation of a single command argument containing a type, value, and name.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArg.argtype">
+<span class="sig-name descname"><span class="pre">argtype</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tts_seq.core.seqdict.SeqArgType" title="tts_seq.core.seqdict.SeqArgType"><span class="pre">SeqArgType</span></a></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArg.argtype" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArg.make_arg">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">make_arg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArg.make_arg" title="Link to this definition"></a></dt>
+<dd><p>Factory method to create a SeqArg from raw values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arg_val</strong> – The value of the argument.</p></li>
+<li><p><strong>arg_name</strong> – The name of the argument.</p></li>
+<li><p><strong>arg_type</strong> – The string identifier of the argument type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new SeqArg instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArg.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArg.name" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArg.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArg.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Converts the SeqArg to a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArg.to_string">
+<span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArg.to_string" title="Link to this definition"></a></dt>
+<dd><p>Returns a JSON-like string representation of the argument.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArg.valid">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">valid</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArg.valid" title="Link to this definition"></a></dt>
+<dd><p>Checks if the argument value is valid based on its type definitions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArg.value">
+<span class="sig-name descname"><span class="pre">value</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">any</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArg.value" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqdict.</span></span><span class="sig-name descname"><span class="pre">SeqArgType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of supported sequence argument data types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.ENUM16">
+<span class="sig-name descname"><span class="pre">ENUM16</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">32</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.ENUM16" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.ENUM32">
+<span class="sig-name descname"><span class="pre">ENUM32</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">33</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.ENUM32" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.ENUM8">
+<span class="sig-name descname"><span class="pre">ENUM8</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">31</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.ENUM8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.FLOAT">
+<span class="sig-name descname"><span class="pre">FLOAT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">40</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.FLOAT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.HEX">
+<span class="sig-name descname"><span class="pre">HEX</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">101</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.HEX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.I16">
+<span class="sig-name descname"><span class="pre">I16</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.I16" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.I32">
+<span class="sig-name descname"><span class="pre">I32</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.I32" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.I8">
+<span class="sig-name descname"><span class="pre">I8</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.I8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.NUMBER">
+<span class="sig-name descname"><span class="pre">NUMBER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.NUMBER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.REPEAT">
+<span class="sig-name descname"><span class="pre">REPEAT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">103</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.REPEAT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.STRING">
+<span class="sig-name descname"><span class="pre">STRING</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.STRING" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.SYMBOL">
+<span class="sig-name descname"><span class="pre">SYMBOL</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">102</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.SYMBOL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.U16">
+<span class="sig-name descname"><span class="pre">U16</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">22</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.U16" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.U32">
+<span class="sig-name descname"><span class="pre">U32</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">23</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.U32" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.U8">
+<span class="sig-name descname"><span class="pre">U8</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">21</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.U8" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqArgType.get_arg_type">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_arg_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqArgType.get_arg_type" title="Link to this definition"></a></dt>
+<dd><p>Maps a variety of string aliases to a canonical SeqArgType. Since we capture
+all projects here, we need a mapper to take their project-specific string into
+something SeqDict understands.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arg_type</strong> (<em>str</em><em> or </em><a class="reference internal" href="#tts_seq.core.seqdict.SeqArgType" title="tts_seq.core.seqdict.SeqArgType"><em>SeqArgType</em></a>) – The string or enum representation of the type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The resolved SeqArgType enum.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tts_seq.core.seqdict.SeqArgType" title="tts_seq.core.seqdict.SeqArgType">SeqArgType</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – If the string cannot be mapped.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqdict.</span></span><span class="sig-name descname"><span class="pre">SeqDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strict_validation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for passing around structured sequence information in FRESH.
+All FRESH IO classes should have a method that returns this object.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.TIME_FORMATS">
+<span class="sig-name descname"><span class="pre">TIME_FORMATS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.TIME_FORMATS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.resolve_time">
+<span class="sig-name descname"><span class="pre">resolve_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.resolve_time" title="Link to this definition"></a></dt>
+<dd><p>Calculates the absolute datetime for a specific step based on its time tag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>step_id</strong> – Index of the step.</p></li>
+<li><p><strong>current_time</strong> – Reference time for relative tags.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.serialize">
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.serialize" title="Link to this definition"></a></dt>
+<dd><p>Returns the serialized dot-seq representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.strip_comments">
+<span class="sig-name descname"><span class="pre">strip_comments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.strip_comments" title="Link to this definition"></a></dt>
+<dd><p>Removes all NOTE-type steps from the sequence.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Converts the sequence into a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.to_dotseq">
+<span class="sig-name descname"><span class="pre">to_dotseq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.to_dotseq" title="Link to this definition"></a></dt>
+<dd><p>Serializes the sequence into the .seq (dot-seq) text format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.to_human_view">
+<span class="sig-name descname"><span class="pre">to_human_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_to_stem_delimiter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stem_to_arg_delmiter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_delimiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.to_human_view" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.to_pydiment_diff_xml">
+<span class="sig-name descname"><span class="pre">to_pydiment_diff_xml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.to_pydiment_diff_xml" title="Link to this definition"></a></dt>
+<dd><p>Returns an RML representation without comments for diffing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.to_rml">
+<span class="sig-name descname"><span class="pre">to_rml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.to_rml" title="Link to this definition"></a></dt>
+<dd><p>Returns the sequence as a pretty-printed RML XML string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.to_rml_etree">
+<span class="sig-name descname"><span class="pre">to_rml_etree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.to_rml_etree" title="Link to this definition"></a></dt>
+<dd><p>Generates an RML (XML) ElementTree representation of the sequence.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.to_seqjson">
+<span class="sig-name descname"><span class="pre">to_seqjson</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.to_seqjson" title="Link to this definition"></a></dt>
+<dd><p>Serializes the sequence into a JSON string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.to_seqn">
+<span class="sig-name descname"><span class="pre">to_seqn</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.to_seqn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqDict.valid">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">valid</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqDict.valid" title="Link to this definition"></a></dt>
+<dd><p>Determines if the entire sequence (including all steps and arguments) is valid.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqdict.</span></span><span class="sig-name descname"><span class="pre">SeqStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steptype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tts_seq.core.seqdict.SeqStepType" title="tts_seq.core.seqdict.SeqStepType"><span class="pre">SeqStepType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tts_seq.core.seqdict.SeqArg" title="tts_seq.core.seqdict.SeqArg"><span class="pre">SeqArg</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tts_seq.core.seqdict.SeqTimeTag" title="tts_seq.core.seqdict.SeqTimeTag"><span class="pre">SeqTimeTag</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tts_seq.core.seqdict.SeqDict" title="tts_seq.core.seqdict.SeqDict"><span class="pre">SeqDict</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Represents a single step in a sequence, which can be a Command or a Note (i.e. a standalone comment).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.args">
+<span class="sig-name descname"><span class="pre">args</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#tts_seq.core.seqdict.SeqArg" title="tts_seq.core.seqdict.SeqArg"><span class="pre">SeqArg</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.args" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.description">
+<span class="sig-name descname"><span class="pre">description</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.description" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 5</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.from_arg_dict">
+<span class="sig-name descname"><span class="pre">from_arg_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steptype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tts_seq.core.seqdict.SeqStepType" title="tts_seq.core.seqdict.SeqStepType"><span class="pre">SeqStepType</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.from_arg_dict" title="Link to this definition"></a></dt>
+<dd><p>Creates a SeqStep using argument lists and metadata.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.from_dict">
+<span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tts_seq.core.seqdict.SeqDict" title="tts_seq.core.seqdict.SeqDict"><span class="pre">SeqDict</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.from_dict" title="Link to this definition"></a></dt>
+<dd><p>Parses a dictionary representation of a step into a SeqStep object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.get_arg_val">
+<span class="sig-name descname"><span class="pre">get_arg_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.get_arg_val" title="Link to this definition"></a></dt>
+<dd><p>Retrieves an argument value by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arg_name</strong> – The name of the argument to find.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If 0 or &gt;1 matches are found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.module">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">module</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.module" title="Link to this definition"></a></dt>
+<dd><p>Placeholder for module identification.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.seq_dict">
+<span class="sig-name descname"><span class="pre">seq_dict</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tts_seq.core.seqdict.SeqDict" title="tts_seq.core.seqdict.SeqDict"><span class="pre">SeqDict</span></a></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.seq_dict" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 6</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.stem">
+<span class="sig-name descname"><span class="pre">stem</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.stem" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.steptype">
+<span class="sig-name descname"><span class="pre">steptype</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tts_seq.core.seqdict.SeqStepType" title="tts_seq.core.seqdict.SeqStepType"><span class="pre">SeqStepType</span></a></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.steptype" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.text">
+<span class="sig-name descname"><span class="pre">text</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.text" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.time">
+<span class="sig-name descname"><span class="pre">time</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tts_seq.core.seqdict.SeqTimeTag" title="tts_seq.core.seqdict.SeqTimeTag"><span class="pre">SeqTimeTag</span></a></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.time" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Converts the step back into a dictionary representation.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStep.valid">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">valid</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStep.valid" title="Link to this definition"></a></dt>
+<dd><p>Validates the step and all its arguments.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStepType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqdict.</span></span><span class="sig-name descname"><span class="pre">SeqStepType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStepType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of step types within a sequence (Command vs Note).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStepType.COMMAND">
+<span class="sig-name descname"><span class="pre">COMMAND</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStepType.COMMAND" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStepType.NOTE">
+<span class="sig-name descname"><span class="pre">NOTE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStepType.NOTE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStepType.OTHER">
+<span class="sig-name descname"><span class="pre">OTHER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStepType.OTHER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqStepType.from_string">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steptype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqStepType.from_string" title="Link to this definition"></a></dt>
+<dd><p>Maps a string identifier to a SeqStepType.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeTag">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqdict.</span></span><span class="sig-name descname"><span class="pre">SeqTimeTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timetype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#tts_seq.core.seqdict.SeqTimeType" title="tts_seq.core.seqdict.SeqTimeType"><span class="pre">SeqTimeType</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeTag" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
+<p>Representation of a sequence time tag consisting of the raw tag string and its type.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeTag.get_datetime_tag">
+<span class="sig-name descname"><span class="pre">get_datetime_tag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeTag.get_datetime_tag" title="Link to this definition"></a></dt>
+<dd><p>Attempts to parse the raw tag string into a Python datetime object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Datetime object if successful.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If format is incorrect.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeTag.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeTag.tag" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeTag.timetype">
+<span class="sig-name descname"><span class="pre">timetype</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#tts_seq.core.seqdict.SeqTimeType" title="tts_seq.core.seqdict.SeqTimeType"><span class="pre">SeqTimeType</span></a></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeTag.timetype" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqdict.</span></span><span class="sig-name descname"><span class="pre">SeqTimeType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of time tag types used in sequences (e.g. Absolute, Relative).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeType.ABSOLUTE">
+<span class="sig-name descname"><span class="pre">ABSOLUTE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeType.ABSOLUTE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeType.COMMAND_COMPLETE">
+<span class="sig-name descname"><span class="pre">COMMAND_COMPLETE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeType.COMMAND_COMPLETE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeType.COMMAND_RELATIVE">
+<span class="sig-name descname"><span class="pre">COMMAND_RELATIVE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeType.COMMAND_RELATIVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeType.EPOCH_RELATIVE">
+<span class="sig-name descname"><span class="pre">EPOCH_RELATIVE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeType.EPOCH_RELATIVE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeType.IMMEDIATE">
+<span class="sig-name descname"><span class="pre">IMMEDIATE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeType.IMMEDIATE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqdict.SeqTimeType.from_string">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timetype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqdict.SeqTimeType.from_string" title="Link to this definition"></a></dt>
+<dd><p>Maps a string identifier to a SeqTimeType enum.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.core.seqjson_dict">
+<span id="tts-seq-core-seqjson-dict"></span><h3>tts_seq.core.seqjson_dict<a class="headerlink" href="#module-tts_seq.core.seqjson_dict" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqjson_dict.SeqJsonDict">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqjson_dict.</span></span><span class="sig-name descname"><span class="pre">SeqJsonDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqjson_dict.SeqJsonDict" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.core.seqdict.SeqDict" title="tts_seq.core.seqdict.SeqDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">SeqDict</span></code></a></p>
+<p>Reader and container for SEQ 2.0’s Sequence JSON files. This class extends SeqDict to 
+provide ingestion logic for JSON-formatted spacecraft sequences.</p>
+<p>It includes logic to cross-reference a Command Dictionary to ensure argument
+names and restricted modes are correctly populated if they are missing from
+the source JSON.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqjson_dict.SeqJsonDict.TIME_FORMATS">
+<span class="sig-name descname"><span class="pre">TIME_FORMATS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ABSOLUTE':</span> <span class="pre">'%Y-%jT%H:%M:%S.%f',</span> <span class="pre">'COMMAND_RELATIVE':</span> <span class="pre">'%H:%M:%S'}</span></span><a class="headerlink" href="#tts_seq.core.seqjson_dict.SeqJsonDict.TIME_FORMATS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.seqjson_dict.SeqJsonDict.seqjson_to_dict">
+<span class="sig-name descname"><span class="pre">seqjson_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#tts_seq.core.seqjson_dict.SeqJsonDict.seqjson_to_dict" title="Link to this definition"></a></dt>
+<dd><p>Reads a JSON file from disk and returns its dictionary representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>pathlib.Path</em>) – The path to the JSON file to be read.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The parsed JSON data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If the file does not exist at the given path.</p></li>
+<li><p><strong>json.JSONDecodeError</strong> – If the file is not a valid JSON document.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tts_seq.core.seqjson_dict.seqjson_to_dict">
+<span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqjson_dict.</span></span><span class="sig-name descname"><span class="pre">seqjson_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_json_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqjson_dict.seqjson_to_dict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tts_seq.core.seqjson_dict.seqjson_to_seqdict">
+<span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqjson_dict.</span></span><span class="sig-name descname"><span class="pre">seqjson_to_seqdict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_json_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqjson_dict.seqjson_to_seqdict" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-tts_seq.core.seqn_dict">
+<span id="tts-seq-core-seqn-dict"></span><h3>tts_seq.core.seqn_dict<a class="headerlink" href="#module-tts_seq.core.seqn_dict" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.seqn_dict.SeqNDict">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.seqn_dict.</span></span><span class="sig-name descname"><span class="pre">SeqNDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.seqn_dict.SeqNDict" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.core.human_readable_dict.HumanReadableDict" title="tts_seq.core.human_readable_dict.HumanReadableDict"><code class="xref py py-class docutils literal notranslate"><span class="pre">HumanReadableDict</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.seqn_dict.SeqNDict.ARG_DELIMITER">
+<span class="sig-name descname"><span class="pre">ARG_DELIMITER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'</span> <span class="pre">'</span></span><a class="headerlink" href="#tts_seq.core.seqn_dict.SeqNDict.ARG_DELIMITER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-tts_seq.core.sequence_delivery_manager">
+<span id="tts-seq-core-sequence-delivery-manager"></span><h3>tts_seq.core.sequence_delivery_manager<a class="headerlink" href="#module-tts_seq.core.sequence_delivery_manager" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.core.sequence_delivery_manager.</span></span><span class="sig-name descname"><span class="pre">SequenceDeliveryManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delivery_cycle_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delivery_base_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_dictionary_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.DELIVERABLE_STATUSES">
+<span class="sig-name descname"><span class="pre">DELIVERABLE_STATUSES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.DELIVERABLE_STATUSES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.ONBOARD_SEQUENCE_DIRECTORY">
+<span class="sig-name descname"><span class="pre">ONBOARD_SEQUENCE_DIRECTORY</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.ONBOARD_SEQUENCE_DIRECTORY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.RESOLUTION_ORDER">
+<span class="sig-name descname"><span class="pre">RESOLUTION_ORDER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.RESOLUTION_ORDER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.SEQDICT_CLASS">
+<span class="sig-name descname"><span class="pre">SEQDICT_CLASS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.SEQDICT_CLASS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.SEQUENCE_SPAWNING_COMMANDS">
+<span class="sig-name descname"><span class="pre">SEQUENCE_SPAWNING_COMMANDS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.SEQUENCE_SPAWNING_COMMANDS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.SEQUENCE_STATUSES">
+<span class="sig-name descname"><span class="pre">SEQUENCE_STATUSES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.SEQUENCE_STATUSES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.SEQUENCE_SUFFIX">
+<span class="sig-name descname"><span class="pre">SEQUENCE_SUFFIX</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.SEQUENCE_SUFFIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.approve_sequences">
+<span class="sig-name descname"><span class="pre">approve_sequences</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.approve_sequences" title="Link to this definition"></a></dt>
+<dd><p>Approve all descendant sequences by writing them to the approved directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.collect_descendants">
+<span class="sig-name descname"><span class="pre">collect_descendants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.collect_descendants" title="Link to this definition"></a></dt>
+<dd><p>Recursively collect all descendant sequences from entry points.</p>
+<p>Searches for sequences in the following order:
+1. In each status directory according to RESOLUTION_ORDER
+2. In the ONBOARD_SEQUENCE_DIRECTORY</p>
+<p>Warns if a sequence is found in a non-deliverable status.
+Errors if a sequence is not found at all, but continues processing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.create_delivery_directories">
+<span class="sig-name descname"><span class="pre">create_delivery_directories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.core.sequence_delivery_manager.SequenceDeliveryManager.create_delivery_directories" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="tts-seq-core-simulation">
+<h3>tts_seq.core.simulation<a class="headerlink" href="#tts-seq-core-simulation" title="Link to this heading"></a></h3>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tts_seq.cmd_modeling.html" class="btn btn-neutral float-left" title="tts_seq.cmd_modeling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tts_seq.sim_modules.html" class="btn btn-neutral float-right" title="tts_seq.sim_modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 JPL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

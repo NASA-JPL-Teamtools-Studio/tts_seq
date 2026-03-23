@@ -1,0 +1,352 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tts_seq.cmd_modeling &mdash; tts-seq 0.3.5.dev0+g99ef78b25.d20260323 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/bugfix.css?v=aa86f000" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8cd83db4"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tts_seq.core" href="tts_seq.core.html" />
+    <link rel="prev" title="tts_seq" href="tts_seq.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            tts-seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tts_seq.html">tts_seq</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="tts_seq.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tts_seq.cmd_modeling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.core.html">tts_seq.core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tts_seq.sim_modules.html">tts_seq.sim_modules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tts_seq.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tts-seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="tts_seq.html">tts_seq</a></li>
+      <li class="breadcrumb-item active">tts_seq.cmd_modeling</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tts_seq.cmd_modeling">
+<span id="tts-seq-cmd-modeling"></span><h1>tts_seq.cmd_modeling<a class="headerlink" href="#module-tts_seq.cmd_modeling" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<section id="module-tts_seq.cmd_modeling.commands">
+<span id="tts-seq-cmd-modeling-commands"></span><h3>tts_seq.cmd_modeling.commands<a class="headerlink" href="#module-tts_seq.cmd_modeling.commands" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.AbsWait">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">AbsWait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_until_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.AbsWait" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.Wait" title="tts_seq.cmd_modeling.commands.Wait"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wait</span></code></a></p>
+<p>Wait until a specific absolute simulation time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wait_until_time</strong> (<em>datetime</em>) – The datetime object to wait for.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.Command">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">Command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_engine_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.Command" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for modeling the execution of a spacecraft command.</p>
+<p>A Command represents the simulated lifecycle of a hardware or software 
+action. It breaks down a single sequence command into one or more 
+discrete <cite>CommandStep</cite> objects that are processed sequentially by the 
+parent module’s simulation loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference internal" href="tts_seq.sim_modules.html#tts_seq.sim_modules.base.Module" title="tts_seq.sim_modules.base.Module"><em>Module</em></a>) – The simulation module instance handling this command.</p></li>
+<li><p><strong>seq_step</strong> (<a class="reference internal" href="tts_seq.core.html#tts_seq.core.seqdict.SeqStep" title="tts_seq.core.seqdict.SeqStep"><em>SeqStep</em></a>) – The raw sequence step data from the sequence engine.</p></li>
+<li><p><strong>sequence_engine_id</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of the calling sequence engine, if any.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.Command.add_command_step">
+<span class="sig-name descname"><span class="pre">add_command_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.Command.add_command_step" title="Link to this definition"></a></dt>
+<dd><p>Appends a discrete modeling step to the command’s execution queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>step_cls</strong> (<em>Type</em><em>[</em><a class="reference internal" href="#tts_seq.cmd_modeling.commands.CommandStep" title="tts_seq.cmd_modeling.commands.CommandStep"><em>CommandStep</em></a><em>]</em>) – The class of the CommandStep to instantiate.</p></li>
+<li><p><strong>args</strong> (<em>list</em>) – Positional arguments for the step class constructor.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keyword arguments for the step class constructor.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.Command.finish_command">
+<span class="sig-name descname"><span class="pre">finish_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">success</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.Command.finish_command" title="Link to this definition"></a></dt>
+<dd><p>Marks the command as finished and emits the appropriate completion EVR.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>success</strong> (<em>bool</em>) – Whether the command completed successfully. Defaults to True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.CommandStep">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">CommandStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.CommandStep" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract base class for an atomic unit of simulation logic within a Command.</p>
+<p>CommandSteps are executed one at a time. The next step in a Command will not 
+start until the current step’s <cite>complete</cite> attribute is set to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>module</strong> (<a class="reference internal" href="tts_seq.sim_modules.html#tts_seq.sim_modules.base.Module" title="tts_seq.sim_modules.base.Module"><em>Module</em></a>) – The parent module instance.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.CommandStep.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.CommandStep.simulate" title="Link to this definition"></a></dt>
+<dd><p>Logic to be executed every simulation second. Subclasses must override 
+this and set self.complete = True when the step is finished.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.CondWait">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">CondWait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.CondWait" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.Wait" title="tts_seq.cmd_modeling.commands.Wait"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wait</span></code></a></p>
+<p>Placeholder for a conditional wait step (waiting for telemetry to reach a state).</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.EmitEvr">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">EmitEvr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.EmitEvr" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.CommandStep" title="tts_seq.cmd_modeling.commands.CommandStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">CommandStep</span></code></a></p>
+<p>Command step that emits a standardized Event Record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The EVR mnemonic/name.</p></li>
+<li><p><strong>level</strong> (<em>str</em>) – Severity level.</p></li>
+<li><p><strong>message</strong> (<em>str</em>) – Log message string.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.EmitEvr.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.EmitEvr.simulate" title="Link to this definition"></a></dt>
+<dd><p>simulation logic to emit an EVR</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.FcnCall">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">FcnCall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fcn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.FcnCall" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.CommandStep" title="tts_seq.cmd_modeling.commands.CommandStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">CommandStep</span></code></a></p>
+<p>Executes an arbitrary Python function as a simulation step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fcn</strong> (<em>callable</em>) – The function to call.</p></li>
+<li><p><strong>args</strong> (<em>list</em>) – Arguments for the function.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Keyword arguments for the function.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.LinearToGoal">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">LinearToGoal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_per_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.LinearToGoal" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.CommandStep" title="tts_seq.cmd_modeling.commands.CommandStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">CommandStep</span></code></a></p>
+<p>Models a value transitioning linearly over time until it reaches a goal.</p>
+<p>Commonly used to simplistically model temperature changes or motor movements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>goal_label</strong> (<em>str</em>) – Attribute name on the module containing the target value.</p></li>
+<li><p><strong>actual_label</strong> (<em>str</em>) – Key in simulation modeled_values to be updated.</p></li>
+<li><p><strong>rate_per_s</strong> (<em>float</em>) – The amount to change the actual value per simulation second.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.LinearToGoal.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.LinearToGoal.simulate" title="Link to this definition"></a></dt>
+<dd><p>simulation logic to step towards a goal. If the value is at the goal, step
+compeltes. If it is less than one time step away, it jumps to the goal and
+completes. Otherwise, it takes one time step towards the goal.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.MarkEvent">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">MarkEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.MarkEvent" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.CommandStep" title="tts_seq.cmd_modeling.commands.CommandStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">CommandStep</span></code></a></p>
+<p>Records a custom simulation event into the sim’s event history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – Category or name of the event.</p></li>
+<li><p><strong>msg</strong> (<em>str</em>) – Descriptive message.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.MarkEvent.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.MarkEvent.simulate" title="Link to this definition"></a></dt>
+<dd><p>Simulation logic to write an event to the simulation event history. Similar
+to EmitEvr, but not meant to have a literal analogue to a spacecraft data
+stream. Orbit events on an Earth orbiting spacecraft are an example.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.RelWait">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">RelWait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_duration_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.RelWait" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.Wait" title="tts_seq.cmd_modeling.commands.Wait"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wait</span></code></a></p>
+<p>Wait for a specific duration in seconds from the current time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wait_duration_s</strong> (<em>int</em><em> or </em><em>float</em>) – Number of seconds to delay.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.SetState">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">SetState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modeled_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.SetState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.CommandStep" title="tts_seq.cmd_modeling.commands.CommandStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">CommandStep</span></code></a></p>
+<p>Instantly sets a modeled value to a specific state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – The name of the channel in simulation modeled_values.</p></li>
+<li><p><strong>modeled_value</strong> (<em>any</em>) – The value to set.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.SetState.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.SetState.simulate" title="Link to this definition"></a></dt>
+<dd><p>simulation logic to set a state</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.SetTrace">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">SetTrace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.SetTrace" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.CommandStep" title="tts_seq.cmd_modeling.commands.CommandStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">CommandStep</span></code></a></p>
+<p>Utility step to trigger a Python debugger (pdb) at a specific point in a command.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.Wait">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">tts_seq.cmd_modeling.commands.</span></span><span class="sig-name descname"><span class="pre">Wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.Wait" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tts_seq.cmd_modeling.commands.CommandStep" title="tts_seq.cmd_modeling.commands.CommandStep"><code class="xref py py-class docutils literal notranslate"><span class="pre">CommandStep</span></code></a></p>
+<p>A time-based delay step that blocks the command execution for a period.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="tts_seq.cmd_modeling.commands.Wait.simulate">
+<span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tts_seq.cmd_modeling.commands.Wait.simulate" title="Link to this definition"></a></dt>
+<dd><p>simulation wait until a time</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tts_seq.html" class="btn btn-neutral float-left" title="tts_seq" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tts_seq.core.html" class="btn btn-neutral float-right" title="tts_seq.core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026 JPL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
