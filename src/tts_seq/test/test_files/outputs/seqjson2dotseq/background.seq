@@ -23,7 +23,7 @@
 
 ;Begin orbit 903
 ;North Pole, heading South                                 2023-033T14:00:00.000000
-A2023-033T14:02:00.000000 DO_SCIENCE N_HEMI,DAY           ;2 minutes after N pole
+A2023-033T14:02:00.000000 DO_SCIENCE "N_HEMI","DAY"           ;2 minutes after N pole
 A2023-033T14:07:00.000000 STOP_SCIENCE                    ;3 minutes before WGS session
 A2023-033T14:08:00.000000 RUN_SEQ "WGS_XBAND_SETUP"         ;2 minutes before WGS session
 ;AOS at WGS                                                2023-033T14:10:00.000000
@@ -32,52 +32,52 @@ A2023-033T14:20:30.000000 RUN_SEQ "BREAK_DOWN_COMM"         ;30s after LOS at WG
 A2023-033T14:21:30.000000 ADCS_YAW 180                    ;1 minute before Desc Eq Crossing
 
 ;Descending Equator Crossing                               2023-033T14:22:30.000000
-A2023-033T14:24:30.000000 DO_SCIENCE S_HEMI,DAY           ;2 minutes after Desc Eq Crossing
+A2023-033T14:24:30.000000 DO_SCIENCE "S_HEMI","DAY"           ;2 minutes after Desc Eq Crossing
 A2023-033T14:43:00.000000 STOP_SCIENCE                    ;2 minutes before S pole
 
 ;South Pole, heading North                                 2023-033T14:45:00.000000
-A2023-033T14:47:00.000000 DO_SCIENCE S_HEMI,NIGHT         ;2 minutes after S pole
+A2023-033T14:47:00.000000 DO_SCIENCE "S_HEMI","NIGHT"         ;2 minutes after S pole
 A2023-033T14:57:30.000000 STOP_SCIENCE                    ;10 minutes before Asc Eq Crossing
 A2023-033T15:00:00.000000 DARK_SIDE_CALIBRATION           ;7.5 minutes before Asc Eq Crossing
 
 ;Ascending Equator Crossing                                2023-033T15:07:30.000000    
-A2023-033T15:15:00.000000 DO_SCIENCE N_HEMI,NIGHT         ;7.5 minutes after Asc Eq Crossing
+A2023-033T15:15:00.000000 DO_SCIENCE "N_HEMI","NIGHT"         ;7.5 minutes after Asc Eq Crossing
 A2023-033T15:28:00.000000 STOP_SCIENCE                    ;2 minutes N pole
 
 ;Begin orbit 904
 ;North Pole, heading South                                 2023-033T15:30:00.000000
-A2023-033T15:32:00.000000 DO_SCIENCE N_HEMI,DAY           ;2 minutes after N pole
+A2023-033T15:32:00.000000 DO_SCIENCE "N_HEMI","DAY"           ;2 minutes after N pole
 A2023-033T15:49:30.000000 STOP_SCIENCE                    ;3 minutes before Desc Eq Crossing
 A2023-033T15:50:30.000000 ADCS_YAW 180                    ;2 minutes before Desc Eq Crossing
 
 ;Descending Equator Crossing                               2023-033T15:52:30.000000
-A2023-033T15:54:30.000000 DO_SCIENCE S_HEMI,DAY           ;2 minutes after Desc Eq Crossing
+A2023-033T15:54:30.000000 DO_SCIENCE "S_HEMI","DAY"           ;2 minutes after Desc Eq Crossing
 A2023-033T16:13:00.000000 STOP_SCIENCE                    ;2 minutes before S pole
 
 ;South Pole, heading North                                 2023-033T16:15:00.000000
-A2023-033T16:17:00.000000 DO_SCIENCE S_HEMI,NIGHT         ;2 minutes after S pole
+A2023-033T16:17:00.000000 DO_SCIENCE "S_HEMI","NIGHT"         ;2 minutes after S pole
 A2023-033T16:27:30.000000 STOP_SCIENCE                    ;10 minutes before Asc Eq Crossing
 A2023-033T16:30:00.000000 DARK_SIDE_CALIBRATION           ;7.5 minutes before Asc Eq Crossing
 
 ;Ascending Equator Crossing                                2023-033T16:37:30.000000    
-A2023-033T16:45:00.000000 DO_SCIENCE N_HEMI,NIGHT         ;7.5 minutes after Asc Eq Crossing
+A2023-033T16:45:00.000000 DO_SCIENCE "N_HEMI","NIGHT"         ;7.5 minutes after Asc Eq Crossing
 A2023-033T16:58:00.000000 STOP_SCIENCE                    ;2 minutes N pole
 
 ;Begin orbit 905
 ;North Pole, heading South                                 2023-033T17:00:00.000000
-A2023-033T17:02:00.000000 DO_SCIENCE N_HEMI,DAY           ;2 minutes after N pole
+A2023-033T17:02:00.000000 DO_SCIENCE "N_HEMI","DAY"           ;2 minutes after N pole
 A2023-033T17:19:30.000000 STOP_SCIENCE                    ;3 minutes before Desc Eq Crossing
 A2023-033T17:20:30.000000 ADCS_YAW 180                    ;2 minutes before Desc Eq Crossing
 
 ;Descending Equator Crossing                               2023-033T17:22:30.000000            
-A2023-033T17:24:30.000000 DO_SCIENCE S_HEMI,DAY           ;2 minutes after Desc Eq Crossing
+A2023-033T17:24:30.000000 DO_SCIENCE "S_HEMI","DAY"           ;2 minutes after Desc Eq Crossing
 A2023-033T17:43:00.000000 STOP_SCIENCE                    ;2 minutes before S pole
 
 ;South Pole, heading North                                 2023-033T17:45:00.000000
-A2023-033T17:47:00.000000 DO_SCIENCE S_HEMI,NIGHT         ;2 minutes after S pole
+A2023-033T17:47:00.000000 DO_SCIENCE "S_HEMI","NIGHT"         ;2 minutes after S pole
 A2023-033T17:57:30.000000 STOP_SCIENCE                    ;10 minutes before Asc Eq Crossing
 A2023-033T18:00:00.000000 DARK_SIDE_CALIBRATION           ;7.5 minutes before Asc Eq Crossing
 
 ;Ascending Equator Crossing                                2023-033T18:07:30.000000    
-A2023-033T18:15:00.000000 DO_SCIENCE N_HEMI,NIGHT         ;7.5 minutes after Asc Eq Crossing
+A2023-033T18:15:00.000000 DO_SCIENCE "N_HEMI","NIGHT"         ;7.5 minutes after Asc Eq Crossing
 A2023-033T18:28:00.000000 STOP_SCIENCE                    ;2 minutes N pole
