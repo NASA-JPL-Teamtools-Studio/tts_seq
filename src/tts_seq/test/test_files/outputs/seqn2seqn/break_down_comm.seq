@@ -15,6 +15,6 @@
 ;------------------------------------------------------------------------------------------------
 
 R00:00:01 STOP_PLAYBACK
-R00:00:01 SET_TLM_PROD_RATE NOMINAL_SCI
-R00:00:01 TX_POWER OFF XBAND
-R00:00:01 TX_POWER OFF SBAND
+R00:00:01 SET_TLM_PROD_RATE "NOMINAL_SCI"
+R00:00:01 TX_POWER "OFF" "XBAND"
+R00:00:01 TX_POWER "OFF" "SBAND"
