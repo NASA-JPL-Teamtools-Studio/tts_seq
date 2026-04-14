@@ -477,7 +477,7 @@ class SeqDict:
                     # Add quotes around string and enum arguments
                     formatted_args = []
                     for a in step.args:
-                        if a.argtype == SeqArgType.STRING or a.argtype in [SeqArgType.ENUM8, SeqArgType.ENUM16, SeqArgType.ENUM32]:
+                        if a.argtype in [SeqArgType.STRING, SeqArgType.ENUM8, SeqArgType.ENUM16, SeqArgType.ENUM32]:
                             formatted_args.append(f'"{a.value}"')
                         else:
                             formatted_args.append(str(a.value))
