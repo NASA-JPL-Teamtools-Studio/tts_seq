@@ -474,10 +474,10 @@ class SeqDict:
                 serialized_step += f"{step.stem}"
                 if len(step.args):
                     serialized_step += stem_to_arg_delmiter
-                    # Add quotes around string arguments
+                    # Add quotes around string and enum arguments
                     formatted_args = []
                     for a in step.args:
-                        if a.argtype == SeqArgType.STRING:
+                        if a.argtype in [SeqArgType.STRING, SeqArgType.ENUM8, SeqArgType.ENUM16, SeqArgType.ENUM32]:
                             formatted_args.append(f'"{a.value}"')
                         else:
                             formatted_args.append(str(a.value))

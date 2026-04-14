@@ -115,9 +115,15 @@ def sample_seq():
         "time": {"type": "R", "tag": "00:00:05"},
         "args": [{"name": "filename", "value": "TEST_SEQ", "type": "STRING"}]
     }
+    enum_cmd_step = {
+        "type": "command",
+        "stem": "CHANGE_MODE",
+        "time": {"type": "R", "tag": "00:00:01"},
+        "args": [{"name": "mode", "value": "TEST_MODE", "type": "ENUM8"}]
+    }
     note_step = {"type": "note", "text": "; This is a comment"}
     
-    sd.steps = SeqDict._make_steps_from_list([cmd_step, str_cmd_step, note_step], sd)
+    sd.steps = SeqDict._make_steps_from_list([cmd_step, str_cmd_step, enum_cmd_step, note_step], sd)
     return sd
 
 def test_serialize_to_dotseq(sample_seq):
@@ -126,14 +132,16 @@ def test_serialize_to_dotseq(sample_seq):
     assert ";subsystem=GNC" in output
     assert "A2026-001T00:00:00 SET_VAL 100" in output
     assert 'R00:00:05 RUN_SEQ "TEST_SEQ"' in output
+    assert 'R00:00:01 CHANGE_MODE "TEST_MODE"' in output
     assert "; This is a comment" in output
 
 def test_strip_comments(sample_seq):
-    assert len(sample_seq.steps) == 3
+    assert len(sample_seq.steps) == 4
     sample_seq.strip_comments()
-    assert len(sample_seq.steps) == 2
+    assert len(sample_seq.steps) == 3
     assert sample_seq.steps[0].steptype == SeqStepType.COMMAND
     assert sample_seq.steps[1].steptype == SeqStepType.COMMAND
+    assert sample_seq.steps[2].steptype == SeqStepType.COMMAND
 
 def test_to_rml_xml(sample_seq):
     rml_xml = sample_seq.to_rml()
