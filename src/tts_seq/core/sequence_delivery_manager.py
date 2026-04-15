@@ -13,6 +13,7 @@ class SequenceDeliveryManager(ABC):
     SEQUENCE_SPAWNING_COMMANDS = None
     SEQUENCE_SUFFIX = None
     SEQDICT_CLASS = None
+    SEQUENCE_FORMAT = None
 
     def __init__(self, delivery_cycle_name, delivery_base_path, entry_points, command_dictionary_path):
         self.delivery_cycle_name = delivery_cycle_name
@@ -128,14 +129,20 @@ class SequenceDeliveryManager(ABC):
                 output_filename = f"{seq_id}{self.SEQUENCE_SUFFIX}"
                 output_path = approved_dir.joinpath(output_filename)
                 
-                # Convert sequence to JSON string
-                seq_json = sequence.to_seqjson()
+                if self.SEQUENCE_FORMAT == 'seqjson':
+                    seq_file_content = sequence.to_seqjson()
+                elif self.SEQUENCE_FORMAT == 'seqn':
+                    seq_file_content = sequence.to_seqn()
+                elif self.SEQUENCE_FORMAT == 'dotseq':
+                    seq_file_content = sequence.to_dotseq()
+                else:
+                    raise Exception(f'Unknown sequence format: {self.SEQUENCE_FORMAT}')                
                 
                 # Write to the approved directory
                 with open(output_path, 'w') as f:
-                    f.write(seq_json)
+                    f.write(seq_file_content)
                     
-                logger.info(f"Approved sequence {seq_id} written to {output_path}")
+                logger.info(f"Approved sequence {seq_id} written to {output_path} as format '{self.SEQUENCE_FORMAT}'")
                 approved_sequences.append(seq_id)
             except Exception as e:
                 logger.error(f"Error approving sequence: {e}")
