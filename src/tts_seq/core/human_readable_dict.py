@@ -22,7 +22,10 @@ class HumanReadableDict(SeqDict):
     text file back to named arguments with specific bit-lengths and types.
     """
     ARG_DELIMITER = None
-
+    #this default ID_KEY is NISAR legacy. I did this because I had to generalize
+    #but didn't want to risk breaking NISAR and it's all the same otherwise.
+    #but there's nothing else special about the name 'on_board_filename'
+    ID_KEY = 'on_board_filename' 
     TIME_FORMATS = {
         'ABSOLUTE': '%Y-%jT%H:%M:%S',
         'COMMAND_RELATIVE': '%H:%M:%S'
@@ -190,7 +193,7 @@ class HumanReadableDict(SeqDict):
                         linesplit = line.split('=')
                         if len(linesplit) != 2:
                             step = {'type': 'note','text': description}
-                        elif linesplit[0][1:] == 'on_board_filename':
+                        elif linesplit[0][1:] == self.ID_KEY:
                             dict_data['id'] = linesplit[1]
                             continue
                         else:
