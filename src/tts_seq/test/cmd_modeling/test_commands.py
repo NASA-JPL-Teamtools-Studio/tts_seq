@@ -142,6 +142,26 @@ def test_abs_wait(mock_module, mock_sim):
     step.simulate()
     assert step.complete is True
 
+def test_wait_exposes_completion_time(mock_module, mock_sim):
+    step = RelWait(mock_module, 5)
+
+    assert step.next_wakeup_time() == mock_sim.current_time + timedelta(seconds=5)
+
+
+def test_linear_to_goal_exposes_analytic_completion_time(mock_module, mock_sim):
+    mock_module.target_temp = 10.0
+    mock_sim.modeled_values['actual_temp'] = 0.0
+    mock_sim.execution_mode = 'event'
+    step = LinearToGoal(mock_module, 'target_temp', 'actual_temp', 2.0)
+
+    assert step.next_wakeup_time() == mock_sim.current_time + timedelta(seconds=5)
+
+    mock_sim.current_time += timedelta(seconds=5)
+    step.simulate()
+    assert mock_sim.modeled_values['actual_temp'] == 10.0
+    assert step.complete is True
+
+
 def test_rel_wait(mock_module, mock_sim):
     step = RelWait(mock_module, 5) # 5 second wait
     

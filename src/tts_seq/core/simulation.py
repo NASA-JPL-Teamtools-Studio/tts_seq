@@ -1,7 +1,10 @@
 import pdb
 from copy import deepcopy
 from datetime import datetime, timedelta
+from bisect import bisect_right
+from numbers import Real
 from pathlib import Path
+from time import monotonic
 from lxml import etree
 import pandas as pd
 import base64
@@ -268,6 +271,44 @@ class SeqSimulation:
 		self.cached_eha_container = eha_container
 		return eha_container
 
+	def resample_telemetry(self, timestamps, linear_channels=()):
+		"""Materialize sparse channel facts at requested timestamps.
+
+		Channels named in ``linear_channels`` are linearly interpolated between
+		their surrounding numeric facts. Other channels use the most recent fact.
+		"""
+		channel_history = {}
+		for timestamp, values in sorted(self.channels.items()):
+			for channel_name, value in values.items():
+				channel_history.setdefault(channel_name, []).append((timestamp, value))
+
+		linear_channels = set(linear_channels)
+		resampled = {}
+		for timestamp in timestamps:
+			values_at_timestamp = {}
+			for channel_name, history in channel_history.items():
+				times = [item[0] for item in history]
+				index = bisect_right(times, timestamp)
+				if index == 0:
+					continue
+				previous_time, previous_value = history[index - 1]
+				if (
+					channel_name in linear_channels
+					and index < len(history)
+					and isinstance(previous_value, Real)
+					and not isinstance(previous_value, bool)
+					and isinstance(history[index][1], Real)
+					and not isinstance(history[index][1], bool)
+				):
+					next_time, next_value = history[index]
+					span = (next_time - previous_time).total_seconds()
+					fraction = (timestamp - previous_time).total_seconds() / span
+					values_at_timestamp[channel_name] = previous_value + (next_value - previous_value) * fraction
+				else:
+					values_at_timestamp[channel_name] = previous_value
+			resampled[timestamp] = values_at_timestamp
+		return resampled
+
 	def dtat_dataframe(self):
 		"""
 		Formats simulation telemetry into a pandas DataFrame suitable for DTAT plotting.
@@ -394,7 +435,67 @@ class SeqSimulation:
 		logger.info('Compilation Starting')
 		html_compiler.render_to_file(file_path)
 
-	def execute(self, entry_point, begin_time, end_time=None):
+	def _log_progress(self, last_day, last_orbit):
+		day = self.current_time.date()
+		orbit = self.modeled_values.get('ORBIT')
+		if day != last_day or orbit != last_orbit:
+			logger.info(
+				f'Simulation progress: time={self.current_time.isoformat()} '
+				f'orbit={orbit if orbit is not None else "UNKNOWN"} '
+				f'commands={len(self.command_history)} evrs={len(self.evrs)} '
+				f'channels={len(self.channels)}'
+			)
+		return day, orbit
+
+	def _next_event_time(self):
+		next_times = [
+			engine['next_step_time']
+			for engine in self.seq_module.engines.values()
+			if engine['status'] != 'IDLE' and engine['next_step_time'] is not None
+		]
+		for module in self.modules.values():
+			next_time = module.next_wakeup_time()
+			if next_time is not None:
+				next_times.append(next_time)
+		return min(next_times) if next_times else None
+
+	def _simulation_is_idle(self):
+		return (
+			all(engine['status'] == 'IDLE' for engine in self.seq_module.engines.values())
+			and all(not module.exeucting_commands for module in self.modules.values())
+		)
+
+	def _execute_event_driven(self, progress_start):
+		last_progress_day = None
+		last_progress_orbit = None
+		while True:
+			for module in self.modules.values():
+				module.simulate_step()
+			last_progress_day, last_progress_orbit = self._log_progress(
+				last_progress_day, last_progress_orbit
+			)
+			if self._simulation_is_idle():
+				break
+			next_time = self._next_event_time()
+			if next_time is None:
+				raise RuntimeError('Event-driven simulation has no next event while active')
+			if self.end_time is not None and next_time >= self.end_time:
+				self.current_time = self.end_time
+				break
+			if next_time < self.current_time:
+				raise RuntimeError(
+					f'Event-driven simulation scheduled an event in the past: {next_time}'
+				)
+			self.current_time = next_time
+
+		self.eha_module.close_out_channels()
+		logger.info(
+			f'Event-driven simulation complete: elapsed_seconds={monotonic() - progress_start:.3f} '
+			f'commands={len(self.command_history)} evrs={len(self.evrs)} '
+			f'channels={len(self.channels)}'
+		)
+
+	def execute(self, entry_point, begin_time, end_time=None, execution_mode='tick'):
 		"""
 		Executes the main simulation loop.
 
@@ -408,6 +509,9 @@ class SeqSimulation:
 		:param end_time: Forced end time in 'YYYY-DOYTHH:MM:SS' format
 		:type end_time: str, optional
 		"""
+		if execution_mode not in {'tick', 'event'}:
+			raise ValueError(f'Unknown simulation execution mode: {execution_mode}')
+		self.execution_mode = execution_mode
 		self.entry_point = entry_point
 		self.command_history = []
 		self.event_history = []
@@ -416,19 +520,38 @@ class SeqSimulation:
 		self.end_time = datetime.strptime(end_time, '%Y-%jT%H:%M:%S') if end_time is not None else None
 		self.init_modules()
 		self.cached_eha_container = None
+		progress_start = monotonic()
+		last_progress_day = None
+		last_progress_orbit = None
+		logger.info(
+			f'Simulation started: entry_point={entry_point} '
+			f'begin={self.begin_time.isoformat()} '
+			f'end={self.end_time.isoformat() if self.end_time else "until idle"}'
+		)
 		#TO DO: Seed self.seq_engines with already-running sequences
 		#TO DO: Start with entry_point of None as we would if we
 		#were daisy chaining
 
 		self.seq_module.load_sequence(entry_point)
+		if execution_mode == 'event':
+			self._execute_event_driven(progress_start)
+			return
 
 		while 1: #TO DO: make this when it runs out of commands or hits end time
 			modules = sorted([m for m in self.modules.values()], key=lambda m: m.PRIORITY)
 			for module in modules:
 				module.simulate_step()
 			self.current_time += timedelta(seconds=self.TIME_STEP_S)
+			last_progress_day, last_progress_orbit = self._log_progress(
+				last_progress_day, last_progress_orbit
+			)
 			if all([e['status'] == 'IDLE' for e in self.seq_module.engines.values()]): break
 			if self.end_time is not None and self.current_time >= self.end_time: break
 
 		self.eha_module.close_out_channels()
+		logger.info(
+			f'Simulation complete: elapsed_seconds={monotonic() - progress_start:.3f} '
+			f'commands={len(self.command_history)} evrs={len(self.evrs)} '
+			f'channels={len(self.channels)}'
+		)
 

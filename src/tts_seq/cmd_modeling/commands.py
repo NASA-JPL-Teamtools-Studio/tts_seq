@@ -93,6 +93,10 @@ class CommandStep:
 		"""
 		pass
 
+	def next_wakeup_time(self):
+		"""Return the next time this step needs to be evaluated."""
+		return self.sim.current_time
+
 class SetState(CommandStep):
 	"""
 	Instantly sets a modeled value to a specific state.
@@ -147,25 +151,50 @@ class LinearToGoal(CommandStep):
 		self.goal_label = goal_label
 		self.actual_label = actual_label
 		self.rate_per_s = rate_per_s
+		self.start_time = None
+		self.start_value = None
+		self.end_time = None
+		self.last_evaluation_time = None
 
-	def simulate(self):		
-		""" 
-		simulation logic to step towards a goal. If the value is at the goal, step
-		compeltes. If it is less than one time step away, it jumps to the goal and
-		completes. Otherwise, it takes one time step towards the goal.
-		"""
-
+	def next_wakeup_time(self):
 		goal_value = getattr(self.module, self.goal_label)
 		actual_value = self.sim.modeled_values[self.actual_label]
 		if goal_value == actual_value:
+			return self.sim.current_time
+		if self.start_time is None:
+			self.start_time = self.sim.current_time
+			self.start_value = actual_value
+		if self.end_time is None:
+			duration_s = abs(goal_value - self.start_value) / self.rate_per_s
+			self.end_time = self.start_time + timedelta(seconds=duration_s)
+		return self.end_time
+
+	def simulate(self):
+		"""Advance the value analytically to the current simulation time."""
+		goal_value = getattr(self.module, self.goal_label)
+		actual_value = self.sim.modeled_values[self.actual_label]
+		if self.start_time is None:
+			self.start_time = self.sim.current_time
+			self.start_value = actual_value
+		if goal_value == self.start_value:
 			self.complete = True
-		elif abs(goal_value - actual_value) < self.rate_per_s*self.sim.TIME_STEP_S:
+			return
+		if self.end_time is None:
+			self.next_wakeup_time()
+		evaluation_time = self.sim.current_time
+		if getattr(self.sim, 'execution_mode', 'tick') != 'event':
+			if self.last_evaluation_time is None:
+				evaluation_time = self.start_time + timedelta(seconds=self.sim.TIME_STEP_S)
+			elif evaluation_time <= self.last_evaluation_time:
+				evaluation_time = self.last_evaluation_time + timedelta(seconds=self.sim.TIME_STEP_S)
+			self.last_evaluation_time = evaluation_time
+		elapsed_s = (evaluation_time - self.start_time).total_seconds()
+		duration_s = (self.end_time - self.start_time).total_seconds()
+		progress = min(1.0, max(0.0, elapsed_s / duration_s))
+		self.sim.modeled_values[self.actual_label] = self.start_value + (goal_value - self.start_value) * progress
+		if evaluation_time >= self.end_time:
 			self.sim.modeled_values[self.actual_label] = goal_value
 			self.complete = True
-		elif goal_value > actual_value:
-			self.sim.modeled_values[self.actual_label] += self.rate_per_s*self.sim.TIME_STEP_S
-		else:
-			self.sim.modeled_values[self.actual_label] -= self.rate_per_s*self.sim.TIME_STEP_S
 
 class EmitEvr(CommandStep):
 	"""
@@ -224,6 +253,9 @@ class Wait(CommandStep):
 	"""
 	A time-based delay step that blocks the command execution for a period.
 	"""
+	def next_wakeup_time(self):
+		return self.wait_until_time
+
 	def simulate(self):
 		""" simulation wait until a time """
 		if self.sim.current_time >= self.wait_until_time:

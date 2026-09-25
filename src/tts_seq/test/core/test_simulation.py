@@ -65,6 +65,21 @@ class TestSeqSimulation:
         assert container[0]['message'] == 'Hello World'
         assert container[0]['level'] == 'FATAL'
 
+    def test_resample_telemetry_interpolates_requested_numeric_channels(self, simulation):
+        start = datetime(2026, 1, 1, 12, 0, 0)
+        end = start + pd.Timedelta(seconds=10)
+        simulation.channels = {
+            start: {'I_CAL_DOOR_POS': 0},
+            end: {'I_CAL_DOOR_POS': 100},
+        }
+
+        result = simulation.resample_telemetry(
+            [start + pd.Timedelta(seconds=5)],
+            linear_channels={'I_CAL_DOOR_POS'},
+        )
+
+        assert result[start + pd.Timedelta(seconds=5)]['I_CAL_DOOR_POS'] == 50
+
     def test_dtat_dataframe_structure(self, simulation):
         """Tests that the DTAT dataframe has the expected columns."""
         mock_eha = MagicMock()

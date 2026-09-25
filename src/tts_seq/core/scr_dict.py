@@ -98,6 +98,7 @@ class ScrSeqDict(SeqDict):
         else:
             lines = parameterized_rts_path
 
+        previous_absolute_seconds = 0
         for line in lines:
             line = line.strip()
             if line == '': continue
@@ -107,9 +108,10 @@ class ScrSeqDict(SeqDict):
             if linesplit[1] == '-1': continue
             if int(linesplit[0]) != self.config[f'{file_type.lower()}_no']: continue
             
-            absolute_seconds = linesplit[1] #not used, but created for completeness
-            relative_seconds = linesplit[2]
-            timestr = datetime.strftime(datetime(year=2000, month=1, day=1) + timedelta(seconds=int(linesplit[2])), '%H:%M:%S')
+            absolute_seconds = int(linesplit[1])
+            relative_seconds = absolute_seconds - previous_absolute_seconds
+            previous_absolute_seconds = absolute_seconds
+            timestr = datetime.strftime(datetime(year=2000, month=1, day=1) + timedelta(seconds=relative_seconds), '%H:%M:%S')
             stem = re.split(r'\s+|,', linesplit[3].strip())[0]
             args = re.split(r'\s+|,', linesplit[3].strip())[1:]
             description = ' '.join(linesplit[4:])

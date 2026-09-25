@@ -63,9 +63,9 @@ def test_parameterized_rts_parsing(mock_seq_dict_base):
     """Verifies tab-delimited RTS/Macro table parsing and time conversion."""
     # Format: ID \t ABS_SEC \t REL_SEC \t CMD_STRING \t DESCRIPTION
     rts_content_list = [
-        "10\t0\t60\tVALVE_OPEN 1\tOpening the valve",
-        "11\t0\t120\tVALVE_CLOSE\tWrong RTS ID",
-        "10\t0\t3600\tHEATER_OFF\tOne hour later"
+        "10\t60\t60\tVALVE_OPEN 1\tOpening the valve",
+        "11\t120\t60\tVALVE_CLOSE\tWrong RTS ID",
+        "10\t3600\t3540\tHEATER_OFF\tOne hour later"
     ]
     # Join into a single string to simulate file content
     rts_file_content = "\n".join(rts_content_list)
@@ -88,9 +88,27 @@ def test_parameterized_rts_parsing(mock_seq_dict_base):
         assert step1['time']['tag'] == "00:01:00"
         assert step1['time']['type'] == "COMMAND_RELATIVE"
         
-        # Verify second step (3600 seconds relative)
+        # Verify second step (3540 seconds after the first absolute offset)
         step2 = parsed_data['steps'][1]
-        assert step2['time']['tag'] == "01:00:00"
+        assert step2['time']['tag'] == "00:59:00"
+
+def test_parameterized_parser_preserves_same_absolute_start_time(mock_seq_dict_base):
+    """Commands sharing an absolute offset must execute at the same time."""
+    rts_content_list = [
+        "10\t251\t10\tCOMMAND_A\tfirst command",
+        "10\t251\t2\tCOMMAND_B\tsecond command at the same start time",
+    ]
+    file_path = pathlib.Path('rts_table.txt')
+    config = {'scr_type': 'RTS', 'rts_no': 10}
+
+    with patch('builtins.open', mock_open(read_data='\n'.join(rts_content_list))):
+        reader = ScrSeqDict(file_path, config)
+        parsed_data = reader.parameterized_file_to_seqjson_style_dict(
+            rts_content_list, 'RTS'
+        )
+
+    assert parsed_data['steps'][0]['time']['tag'] == '00:04:11'
+    assert parsed_data['steps'][1]['time']['tag'] == '00:00:00'
 
 # --- Initialization Tests ---
 

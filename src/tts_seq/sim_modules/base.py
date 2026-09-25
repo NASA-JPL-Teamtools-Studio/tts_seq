@@ -43,6 +43,16 @@ class Module:
 		self.exeucting_commands.append(command_cls(self, command, sequence_engine_id=sequence_engine_id))
 		pass
 
+	def next_wakeup_time(self):
+		"""Return the earliest time an executing command needs evaluation."""
+		next_times = []
+		for executing_command in self.exeucting_commands:
+			for step in executing_command.cmd_steps:
+				if not step.complete:
+					next_times.append(step.next_wakeup_time())
+					break
+		return min(next_times) if next_times else None
+
 	def simulate_step(self):		
 		"""
 		Propagates the state of all currently executing commands by one time-step.
