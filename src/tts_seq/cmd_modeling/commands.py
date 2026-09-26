@@ -113,7 +113,15 @@ class SetState(CommandStep):
 
 	def simulate(self):
 		""" simulation logic to set a state """
+		previous_value = self.sim.modeled_values.get(self.label)
 		self.sim.modeled_values[self.label] = self.modeled_value
+		if previous_value != self.modeled_value:
+			self.sim.state_history.append({
+				'time': self.sim.current_time,
+				'state': self.label,
+				'previous': previous_value,
+				'value': self.modeled_value,
+			})
 		self.complete = True
 
 

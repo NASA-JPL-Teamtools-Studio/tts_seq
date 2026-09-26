@@ -67,6 +67,7 @@ class SeqSimulation:
 		self.initial_conditions = initial_conditions
 		self.command_history = []
 		self.event_history = []
+		self.state_history = []
 		self.modules = {}
 		self.channels = {}
 		self.latest_chanvals = {}
@@ -515,6 +516,7 @@ class SeqSimulation:
 		self.entry_point = entry_point
 		self.command_history = []
 		self.event_history = []
+		self.state_history = []
 		self.begin_time = datetime.strptime(begin_time, '%Y-%jT%H:%M:%S')
 		self.current_time = datetime.strptime(begin_time, '%Y-%jT%H:%M:%S')
 		self.end_time = datetime.strptime(end_time, '%Y-%jT%H:%M:%S') if end_time is not None else None

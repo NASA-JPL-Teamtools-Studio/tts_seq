@@ -20,6 +20,7 @@ def mock_sim():
     sim.TIME_STEP_S = 1
     sim.modeled_values = {}
     sim.event_history = []
+    sim.state_history = []
     # Mock modules
     sim.cmd_module = MagicMock()
     sim.seq_module = MagicMock()
@@ -33,6 +34,19 @@ def mock_module(mock_sim):
     return module
 
 # --- Command Tests ---
+
+def test_set_state_records_transition(mock_module, mock_sim):
+    step = SetState(mock_module, 'INST_MODE', 'STANDBY')
+
+    step.simulate()
+
+    assert mock_sim.state_history == [{
+        'time': mock_sim.current_time,
+        'state': 'INST_MODE',
+        'previous': None,
+        'value': 'STANDBY',
+    }]
+
 
 def test_command_initialization(mock_module, mock_sim):
     seq_step = MagicMock()
