@@ -47,6 +47,16 @@ class SeqModule(Module):
 			if self.engines[ii]['status'] == 'IDLE': return ii
 		return None
 
+	def _record_diagnostic(self, code, sequence, message):
+		if not hasattr(self.sim, 'diagnostics') or self.sim.diagnostics is None:
+			self.sim.diagnostics = []
+		self.sim.diagnostics.append({
+			'code': code,
+			'severity': 'FATAL',
+			'sequence': sequence,
+			'message': message,
+		})
+
 	def load_sequence(self, seq_name, uuid_lineage=''):
 		"""
 		Assigns a sequence from the simulation collection to an idle engine and starts execution.
@@ -60,7 +70,30 @@ class SeqModule(Module):
 		:param uuid_lineage: Ancestry string for tracking nested sequence calls.
 		:type uuid_lineage: str
 		"""
-		sequence = deepcopy(self.sim.seq_collection.get_seq(seq_name))
+		try:
+			sequence_template = self.sim.seq_collection.get_seq(seq_name)
+		except Exception as error:
+			self._record_diagnostic(
+				'SEQUENCE_NOT_FOUND',
+				seq_name,
+				f'Unable to load nested sequence "{seq_name}": {error}',
+			)
+			return
+
+		ancestor_names = {
+			self.seq_uuid[uuid].lower()
+			for uuid in uuid_lineage.split('/')
+			if uuid and uuid in self.seq_uuid
+		}
+		if str(seq_name).lower() in ancestor_names:
+			self._record_diagnostic(
+				'SEQUENCE_RECURSION',
+				seq_name,
+				f'Recursive nested sequence load rejected for "{seq_name}".',
+			)
+			return
+
+		sequence = deepcopy(sequence_template)
 		sequence.strip_comments()
 		seq_engine_id = self.next_idle_engine
 		

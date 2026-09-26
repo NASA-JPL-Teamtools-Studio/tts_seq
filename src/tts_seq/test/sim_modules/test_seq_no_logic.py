@@ -10,6 +10,7 @@ def mock_sim():
     sim.current_time = datetime(2026, 1, 1, 12, 0, 0)
     sim.seq_collection = MagicMock()
     sim.cmd_module = MagicMock()
+    sim.diagnostics = []
     return sim
 
 @pytest.fixture
@@ -46,6 +47,36 @@ def test_load_sequence_no_engines(seq_module, mock_sim):
         mock_emit.assert_called_with(
             'SEQSVC_EVR_NO_AVAILABLE_ENGINES', 'WARNING_HI', ANY
         )
+
+def test_load_sequence_records_missing_sequence_diagnostic(seq_module, mock_sim):
+    mock_sim.seq_collection.get_seq.side_effect = Exception('missing sequence')
+
+    seq_module.load_sequence('rts_missing')
+
+    assert mock_sim.diagnostics == [{
+        'code': 'SEQUENCE_NOT_FOUND',
+        'severity': 'FATAL',
+        'sequence': 'rts_missing',
+        'message': 'Unable to load nested sequence "rts_missing": missing sequence',
+    }]
+
+
+def test_load_sequence_rejects_recursive_lineage(seq_module, mock_sim):
+    sequence = MagicMock()
+    sequence.id = 'rts_recursive'
+    seq_module.seq_uuid['parent'] = 'rts_recursive'
+    mock_sim.seq_collection.get_seq.return_value = sequence
+
+    seq_module.load_sequence('rts_recursive', uuid_lineage='/parent')
+
+    assert mock_sim.diagnostics == [{
+        'code': 'SEQUENCE_RECURSION',
+        'severity': 'FATAL',
+        'sequence': 'rts_recursive',
+        'message': 'Recursive nested sequence load rejected for "rts_recursive".',
+    }]
+    assert seq_module.next_idle_engine == 0
+
 
 def test_simulate_step_dispatches_command(seq_module, mock_sim):
     """Tests that a command is dispatched when its execution time is reached."""
