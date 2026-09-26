@@ -79,6 +79,7 @@ class SeqModule(Module):
 			'seqdict': sequence,
 			'step_index': 0,
 			'next_step_time': sequence.resolve_time(0, self.sim.current_time),
+			'waiting_for_command': False,
 			'cco_active': False,
 			'uuid': str(uuid),
 			'provenance': f'{uuid_lineage}/{str(uuid)}'
@@ -99,6 +100,7 @@ class SeqModule(Module):
 				'seqdict': None,
 				'step_index': None,
 				'next_step_time': None,
+				'waiting_for_command': False,
 				'cco_active': False,
 				'uuid': None,
 				'provenance': None
@@ -136,6 +138,8 @@ class SeqModule(Module):
 			if next_step.time.timetype.name in ['ABSOLUTE', 'COMMAND_RELATIVE']:
 				self.engines[engine_id]['next_step_time'] = self.engines[engine_id]['seqdict'].resolve_time(
 					self.engines[engine_id]['step_index'], self.sim.current_time)
+			elif next_step.time.timetype.name == 'COMMAND_COMPLETE':
+				self.engines[engine_id]['next_step_time'] = self.sim.current_time
 			else:
 				raise NotImplementedError(f'{next_step.time.timetype.name} behavior not implemented for advance_engine()')
 		
@@ -146,6 +150,13 @@ class SeqModule(Module):
 		Hook for updating telemetry or state variables related to sequence execution.
 		"""
 		pass
+
+	def _command_is_executing(self, seq_engine_id):
+		for module in self.sim.modules.values():
+			for command in getattr(module, 'exeucting_commands', []):
+				if command.sequence_engine_id == seq_engine_id and not command.complete:
+					return True
+		return False
 
 	def simulate_step(self):
 		"""
@@ -160,18 +171,26 @@ class SeqModule(Module):
 		"""
 		super().simulate_step()
 		for ii, engine in self.engines.items():
-			if self.engines[ii]['status'] == 'IDLE':
+			if engine['status'] == 'IDLE':
 				continue
-			elif engine['next_step_time'] <= self.sim.current_time:
-				# Dispatch the command to the Command Module
-				cmd = engine['seqdict'].steps[engine['step_index']]
-				self.sim.cmd_module.execute_command(cmd, engine['seqdict'].id, sequence_engine_id=ii)
-				
-				cmd_type = engine['seqdict'].steps[engine['step_index']].time.timetype.name
+			if engine.get('waiting_for_command', False):
+				if self._command_is_executing(ii):
+					continue
+				engine['waiting_for_command'] = False
+				self.advance_engine(ii)
+				if engine['status'] == 'IDLE':
+					continue
+			if engine['next_step_time'] is None or engine['next_step_time'] > self.sim.current_time:
+				continue
 
-				if cmd_type == 'COMMAND_COMPLETION':
-					raise NotImplementedError(f'{cmd_type} not implemented!')
-				elif cmd_type in ['ABSOLUTE', 'COMMAND_RELATIVE']:
-					self.advance_engine(ii)
-				else:
-					raise NotImplementedError(f'{cmd_type} logic not implemented.')
+			cmd = engine['seqdict'].steps[engine['step_index']]
+			self.sim.cmd_module.execute_command(cmd, engine['seqdict'].id, sequence_engine_id=ii)
+			cmd_type = cmd.time.timetype.name
+
+			if cmd_type == 'COMMAND_COMPLETE':
+				engine['waiting_for_command'] = True
+				engine['next_step_time'] = None
+			elif cmd_type in ['ABSOLUTE', 'COMMAND_RELATIVE']:
+				self.advance_engine(ii)
+			else:
+				raise NotImplementedError(f'{cmd_type} logic not implemented.')

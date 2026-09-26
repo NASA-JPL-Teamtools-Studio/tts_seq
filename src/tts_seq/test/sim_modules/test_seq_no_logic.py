@@ -69,3 +69,39 @@ def test_simulate_step_dispatches_command(seq_module, mock_sim):
     mock_sim.cmd_module.execute_command.assert_called_once()
     # Verify engine attempted to advance (and in this case, cleared as it was the only step)
     assert seq_module.engines[0]['status'] == 'IDLE'
+
+
+def test_command_completion_blocks_until_command_finishes(seq_module, mock_sim):
+    first_step = MagicMock()
+    first_step.time.timetype.name = 'COMMAND_COMPLETE'
+    second_step = MagicMock()
+    second_step.time.timetype.name = 'COMMAND_COMPLETE'
+    mock_seq = MagicMock()
+    mock_seq.steps = [first_step, second_step]
+    mock_seq.resolve_time.return_value = mock_sim.current_time
+    pending_command = MagicMock(sequence_engine_id=0, complete=False)
+    mock_sim.modules = {'cmd': mock_sim.cmd_module}
+    mock_sim.cmd_module.exeucting_commands = []
+
+    def dispatch(*args, **kwargs):
+        mock_sim.cmd_module.exeucting_commands.append(pending_command)
+
+    mock_sim.cmd_module.execute_command.side_effect = dispatch
+    seq_module.engines[0] = {
+        'status': 'ACTIVE',
+        'seqdict': mock_seq,
+        'step_index': 0,
+        'next_step_time': mock_sim.current_time,
+        'waiting_for_command': False,
+    }
+
+    seq_module.simulate_step()
+    seq_module.simulate_step()
+    assert mock_sim.cmd_module.execute_command.call_count == 1
+    assert seq_module.engines[0]['waiting_for_command'] is True
+
+    mock_sim.cmd_module.exeucting_commands.clear()
+    seq_module.simulate_step()
+
+    assert mock_sim.cmd_module.execute_command.call_count == 2
+    assert seq_module.engines[0]['step_index'] == 1
