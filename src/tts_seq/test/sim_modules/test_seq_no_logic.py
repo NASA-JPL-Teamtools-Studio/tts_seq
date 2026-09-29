@@ -23,6 +23,63 @@ def test_initialization(seq_module):
     assert len(seq_module.engines) == 8
     assert seq_module.engines[0]['status'] == 'IDLE'
 
+
+def test_stop_sequence_matches_active_name_case_insensitively(seq_module):
+    seq_module.engines[2]['status'] = 'ACTIVE'
+    seq_module.engines[2]['seqdict'] = MagicMock(id='TargetSequence')
+    seq_module.engines[5]['status'] = 'ACTIVE'
+    seq_module.engines[5]['seqdict'] = MagicMock(id='OtherSequence')
+
+    assert seq_module.is_sequence_active('targetsequence') is True
+    assert seq_module.is_sequence_active('othersequence') is True
+
+    with patch.object(seq_module, 'emit_evr') as mock_emit:
+        stopped = seq_module.stop_sequence('targetsequence')
+
+    assert stopped == [2]
+    assert seq_module.is_sequence_active('targetsequence') is False
+    assert seq_module.is_sequence_active('othersequence') is True
+    assert seq_module.engines[2]['status'] == 'IDLE'
+    assert seq_module.engines[5]['status'] == 'ACTIVE'
+    assert seq_module.engines[5]['seqdict'].id == 'OtherSequence'
+    mock_emit.assert_called_once_with(
+        'SEQSVC_EVR_ENGINE_UNLOAD',
+        'ACTIVITY_HI',
+        'Unloading TargetSequence from sequence engine 2',
+    )
+
+
+def test_stop_sequence_emits_failure_when_name_is_not_active(seq_module):
+    seq_module.engines[3]['status'] = 'ACTIVE'
+    seq_module.engines[3]['seqdict'] = MagicMock(id='RunningSequence')
+    engine_before = seq_module.engines[3].copy()
+
+    with patch.object(seq_module, 'emit_evr') as mock_emit:
+        stopped = seq_module.stop_sequence('MissingSequence')
+
+    assert stopped == []
+    assert seq_module.engines[3] == engine_before
+    mock_emit.assert_called_once_with(
+        'SEQSVC_EVR_SEQUENCE_NOT_ACTIVE',
+        'WARNING_HI',
+        'Sequence MissingSequence is not active and cannot be stopped.',
+    )
+
+
+def test_stop_sequence_clears_all_matching_instances_in_engine_order(seq_module):
+    for engine_id in (1, 4):
+        seq_module.engines[engine_id]['status'] = 'ACTIVE'
+        seq_module.engines[engine_id]['seqdict'] = MagicMock(id='DuplicateSequence')
+
+    with patch.object(seq_module, 'emit_evr') as mock_emit:
+        stopped = seq_module.stop_sequence('DUPLICATESEQUENCE')
+
+    assert stopped == [1, 4]
+    assert seq_module.engines[1]['status'] == 'IDLE'
+    assert seq_module.engines[4]['status'] == 'IDLE'
+    assert mock_emit.call_count == 2
+
+
 def test_load_sequence_success(seq_module, mock_sim):
     """Tests that a sequence is correctly loaded into an idle engine."""
     mock_seq = MagicMock()
@@ -47,6 +104,59 @@ def test_load_sequence_no_engines(seq_module, mock_sim):
         mock_emit.assert_called_with(
             'SEQSVC_EVR_NO_AVAILABLE_ENGINES', 'WARNING_HI', ANY
         )
+
+
+def test_load_sequence_uses_requested_engine(seq_module, mock_sim):
+    sequence = MagicMock(id='REQUESTED_SEQ')
+    sequence.resolve_time.return_value = mock_sim.current_time
+    mock_sim.seq_collection.get_seq.return_value = sequence
+
+    seq_module.load_sequence('REQUESTED_SEQ', seq_engine_id=3)
+
+    assert seq_module.engines[3]['status'] == 'ACTIVE'
+    assert seq_module.engines[3]['seqdict'].id == 'REQUESTED_SEQ'
+    assert seq_module.engines[0]['status'] == 'IDLE'
+
+
+def test_load_sequence_requested_occupied_engine_does_not_mutate_state(seq_module, mock_sim):
+    sequence = MagicMock(id='NEW_SEQ')
+    mock_sim.seq_collection.get_seq.return_value = sequence
+    previous = seq_module.engines[2].copy()
+    seq_module.engines[2]['status'] = 'ACTIVE'
+    seq_module.engines[2]['seqdict'] = MagicMock(id='OLD_SEQ')
+    previous = seq_module.engines[2].copy()
+
+    with patch.object(seq_module, 'emit_evr') as mock_emit:
+        seq_module.load_sequence('NEW_SEQ', seq_engine_id=2)
+
+    assert seq_module.engines[2] == previous
+    mock_emit.assert_called_once_with('SEQSVC_EVR_ENGINE_NOT_AVAILABLE', 'WARNING_HI', ANY)
+
+
+def test_load_sequence_invalid_requested_engine_does_not_mutate_state(seq_module, mock_sim):
+    sequence = MagicMock(id='NEW_SEQ')
+    mock_sim.seq_collection.get_seq.return_value = sequence
+    engines_before = {engine_id: engine.copy() for engine_id, engine in seq_module.engines.items()}
+
+    with patch.object(seq_module, 'emit_evr') as mock_emit:
+        seq_module.load_sequence('NEW_SEQ', seq_engine_id=seq_module.NO_SEQ_ENGINES)
+
+    assert seq_module.engines == engines_before
+    mock_emit.assert_called_once_with('SEQSVC_EVR_ENGINE_NOT_AVAILABLE', 'WARNING_HI', ANY)
+
+
+def test_load_sequence_emit_evrs_is_stored_on_engine_and_activation_is_not_suppressed(seq_module, mock_sim):
+    sequence = MagicMock(id='QUIET_SEQ')
+    sequence.resolve_time.return_value = mock_sim.current_time
+    mock_sim.seq_collection.get_seq.return_value = sequence
+
+    with patch.object(seq_module, 'emit_evr') as mock_emit:
+        seq_module.load_sequence('QUIET_SEQ', emit_evrs=False)
+
+    assert seq_module.engines[0]['emit_evrs'] is False
+    mock_emit.assert_called_once_with(
+        'SEQSVC_EVR_SEQUENCE_ACTIVATED', 'ACTIVITY_LO', ANY
+    )
 
 def test_load_sequence_records_missing_sequence_diagnostic(seq_module, mock_sim):
     mock_sim.seq_collection.get_seq.side_effect = Exception('missing sequence')

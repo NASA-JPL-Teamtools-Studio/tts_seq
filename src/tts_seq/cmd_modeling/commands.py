@@ -25,6 +25,8 @@ class Command:
 		self.module = module
 		self.sim = module.sim
 		self.complete = False
+		engine = getattr(self.sim.seq_module, 'engines', {}).get(sequence_engine_id, {}) if sequence_engine_id is not None else {}
+		self.emit_evrs = engine.get('emit_evrs', True)
 		
 		# Announce that the command has been accepted for modeling
 		self.sim.cmd_module.announce_dispatch_success(
@@ -61,6 +63,8 @@ class Command:
 		"""
 		self.complete = True
 		if self.sequence_engine_id is not None:
+			if not self.emit_evrs:
+				return
 			if success:
 				self.sim.seq_module.emit_evr('SEQSVC_EVR_CMD_COMPLETED_SUCCESS', 'COMMAND', f'Command {self.seq_step.stem} completed successfully in module {self.module.NAME}')
 			else:

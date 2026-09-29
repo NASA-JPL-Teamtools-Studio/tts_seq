@@ -83,6 +83,18 @@ def test_finish_command_failure_immediate(mock_module, mock_sim):
         'CMDSVC_EVR_CMD_COMPLETED_FAILURE', 'COMMAND', ANY
     )
 
+
+def test_finish_command_suppresses_quiet_sequence_completion_after_engine_clear(mock_module, mock_sim):
+    seq_step = MagicMock(stem="CMD_C")
+    mock_sim.seq_module.engines = {4: {'emit_evrs': False}}
+
+    cmd = MockCommand(mock_module, seq_step, sequence_engine_id=4)
+    mock_sim.seq_module.engines[4] = {'status': 'IDLE', 'emit_evrs': True}
+    cmd.finish_command()
+
+    assert cmd.complete is True
+    mock_sim.seq_module.emit_evr.assert_not_called()
+
 # --- CommandStep Tests ---
 
 def test_set_state(mock_module, mock_sim):

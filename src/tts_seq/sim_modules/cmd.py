@@ -101,7 +101,10 @@ class CmdModule(Module):
 		if sequence_engine_id is None:
 			self.sim.cmd_module.emit_evr('CMDSVC_EVR_VC1_CMD_DISPATCHED', 'COMMAND', f'Command {stem} started successfully in module {module_name}')		
 		else:
-			seq_name = self.sim.seq_module.engines[sequence_engine_id]['seqdict'].id
+			seq_engine = self.sim.seq_module.engines.get(sequence_engine_id, {})
+			if not seq_engine.get('emit_evrs', True):
+				return
+			seq_name = seq_engine['seqdict'].id
 			self.sim.cmd_module.emit_evr('CMDSVC_EVR_SEQ_CMD_DISPATCHED', 'COMMAND', f'Command {stem} started successfully from sequence {seq_name} in module {module_name} in sequence engine {sequence_engine_id}')
 
 
@@ -159,8 +162,10 @@ class CmdModule(Module):
 				self.emit_evr('CCO_SET_FOR_SEQ_RESTRCITED', 'DIAGNOSTIC', f'Sequenced command {command.stem} in engine {sequence_engine_id} is restricted in {current_mode} mode and CCO is successfully set.')
 
 		# Dispatch to target module for modeling
-		dispatch_module = self.get_module_from_xml_element(cmd_artifact)		
-		self.emit_evr(self.SEQ_CMD_DISPATCH_EVR_NAME, 'COMMAND', f'Dispatching command {command.stem} from {parent} to module {dispatch_module}.')
+		dispatch_module = self.get_module_from_xml_element(cmd_artifact)
+		seq_engine = self.sim.seq_module.engines.get(sequence_engine_id, {}) if sequence_engine_id is not None else {}
+		if sequence_engine_id is None or seq_engine.get('emit_evrs', True):
+			self.emit_evr(self.SEQ_CMD_DISPATCH_EVR_NAME, 'COMMAND', f'Dispatching command {command.stem} from {parent} to module {dispatch_module}.')
 		
 		if dispatch_module in self.sim.modules.keys():
 			try:

@@ -57,7 +57,7 @@ class SeqModule(Module):
 			'message': message,
 		})
 
-	def load_sequence(self, seq_name, uuid_lineage=''):
+	def load_sequence(self, seq_name, uuid_lineage='', seq_engine_id=None, emit_evrs=True):
 		"""
 		Assigns a sequence from the simulation collection to an idle engine and starts execution.
 
@@ -69,7 +69,19 @@ class SeqModule(Module):
 		:type seq_name: str
 		:param uuid_lineage: Ancestry string for tracking nested sequence calls.
 		:type uuid_lineage: str
+		:param seq_engine_id: Specific engine to use, or None to allocate the next idle engine.
+		:type seq_engine_id: int, optional
+		:param emit_evrs: Whether command dispatch and completion EVRs should be emitted.
+		:type emit_evrs: bool
 		"""
+		if seq_engine_id is not None and (
+			seq_engine_id not in self.engines
+			or self.engines[seq_engine_id]['status'] != 'IDLE'
+		):
+			self.emit_evr('SEQSVC_EVR_ENGINE_NOT_AVAILABLE', 'WARNING_HI',
+						  f'Sequence engine {seq_engine_id} is not available. {seq_name} will not run.')
+			return
+
 		try:
 			sequence_template = self.sim.seq_collection.get_seq(seq_name)
 		except Exception as error:
@@ -95,14 +107,13 @@ class SeqModule(Module):
 
 		sequence = deepcopy(sequence_template)
 		sequence.strip_comments()
-		seq_engine_id = self.next_idle_engine
-		
 		if seq_engine_id is None:
-			self.emit_evr('SEQSVC_EVR_NO_AVAILABLE_ENGINES', 'WARNING_HI', 
-						  f'No available seq engines. {seq_name} will not run.')
-			return
-
-		self.emit_evr('SEQSVC_EVR_SEQUENCE_ACTIVATED', 'ACTIVITY_LO', 
+			seq_engine_id = self.next_idle_engine
+			if seq_engine_id is None:
+				self.emit_evr('SEQSVC_EVR_NO_AVAILABLE_ENGINES', 'WARNING_HI',
+							  f'No available seq engines. {seq_name} will not run.')
+				return
+		self.emit_evr('SEQSVC_EVR_SEQUENCE_ACTIVATED', 'ACTIVITY_LO',
 					  f'Sequence {sequence.id} is now active in sequence engine number {seq_engine_id}')
 
 		uuid = str(uuid4())
@@ -115,7 +126,8 @@ class SeqModule(Module):
 			'waiting_for_command': False,
 			'cco_active': False,
 			'uuid': str(uuid),
-			'provenance': f'{uuid_lineage}/{str(uuid)}'
+			'provenance': f'{uuid_lineage}/{str(uuid)}',
+			'emit_evrs': emit_evrs
 		}
 
 		self.update_sequence_observables(seq_engine_id)
@@ -136,8 +148,39 @@ class SeqModule(Module):
 				'waiting_for_command': False,
 				'cco_active': False,
 				'uuid': None,
-				'provenance': None
+				'provenance': None,
+				'emit_evrs': True
 				}
+
+	def is_sequence_active(self, seq_name):
+		"""Return whether an active engine is running the named sequence."""
+		sequence_name = str(seq_name).lower()
+		return any(
+			engine['status'] == 'ACTIVE'
+			and engine['seqdict'] is not None
+			and str(engine['seqdict'].id).lower() == sequence_name
+			for engine in self.engines.values()
+		)
+
+	def stop_sequence(self, seq_name, uuid_lineage=''):
+		"""Stop all active instances of a sequence and return their engine IDs."""
+		sequence_name = str(seq_name).lower()
+		engine_ids = [
+			engine_id for engine_id, engine in self.engines.items()
+			if engine['status'] == 'ACTIVE'
+			and engine['seqdict'] is not None
+			and str(engine['seqdict'].id).lower() == sequence_name
+		]
+		if not engine_ids:
+			self.emit_evr(
+				'SEQSVC_EVR_SEQUENCE_NOT_ACTIVE',
+				'WARNING_HI',
+				f'Sequence {seq_name} is not active and cannot be stopped.',
+			)
+			return []
+		for engine_id in engine_ids:
+			self.clear_engine(engine_id)
+		return engine_ids
 
 	def clear_engine(self, seq_engine_id):	
 		"""
