@@ -15,6 +15,7 @@ from tts_seq.sim_modules.seq_no_logic import SeqModule #TO DO: update this with 
 from tts_seq.sim_modules.cmd import CmdModule
 from tts_seq.sim_modules.eha import EhaModule
 from tts_seq.sim_modules.evr import EvrModule
+from tts_seq.sim_modules.realtime import RealtimeCommandModule
 from tts_html_utils.core.compiler import HtmlCompiler
 from tts_html_utils.core.components.structure import PaneContainer
 from tts_html_utils.core.components.misc import Div, Script
@@ -66,10 +67,13 @@ class SeqSimulation:
 		self.seq_collection = seq_collection
 		self.initial_conditions = initial_conditions
 		self.command_history = []
+		self.realtime_command_history = []
 		self.event_history = []
 		self.state_history = []
 		self.diagnostics = []
 		self.modules = {}
+		self.realtime_module = RealtimeCommandModule(self)
+		self.modules[self.realtime_module.NAME] = self.realtime_module
 		self.channels = {}
 		self.latest_chanvals = {}
 		self.modeled_values = {}
@@ -99,6 +103,18 @@ class SeqSimulation:
 		"""
 		for module in self.module_map:
 			self.modules[module['cls'].NAME] = module['cls'](self, **module['params'])
+
+	def schedule_realtime_command(self, command):
+		"""Schedule a command that is not owned by an onboard sequence."""
+		self.realtime_module.schedule(command)
+
+	def dispatch_realtime_command(self, command):
+		"""Record a realtime command dispatched at its scheduled time.
+
+		Adaptations can override this hook to route the command into a
+		mission-specific command module.
+		"""
+		self.realtime_command_history.append(command)
 
 	def _find_module_by_class(self, cls, name=None):
 		"""
@@ -465,6 +481,7 @@ class SeqSimulation:
 		return (
 			all(engine['status'] == 'IDLE' for engine in self.seq_module.engines.values())
 			and all(not module.exeucting_commands for module in self.modules.values())
+			and not self.realtime_module.has_pending_commands
 		)
 
 	def _execute_event_driven(self, progress_start):
@@ -516,6 +533,7 @@ class SeqSimulation:
 		self.execution_mode = execution_mode
 		self.entry_point = entry_point
 		self.command_history = []
+		self.realtime_command_history = []
 		self.event_history = []
 		self.state_history = []
 		self.diagnostics = []

@@ -1,10 +1,11 @@
 import pytest
 from unittest.mock import MagicMock, patch, PropertyMock
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 
 # Adjust this import path based on your project structure
+from tts_seq.core.realtime import RealtimeCommand
 from tts_seq.core.simulation import SeqSimulation
 
 @pytest.fixture
@@ -112,3 +113,26 @@ class TestSeqSimulation:
             
             assert mock_mod.simulate_step.called
             mock_seq.load_sequence.assert_called_with('test.seq')
+
+    def test_event_execution_dispatches_realtime_command_at_scheduled_time(self, simulation):
+        start = datetime(2026, 1, 3, 12, 0, 0)
+        command = RealtimeCommand(
+            time=start + timedelta(seconds=5),
+            stem="REALTIME_COMMAND",
+            arguments=("value",),
+            source="forward-link.fwdlnk.seq:1",
+            order=1,
+        )
+        simulation.schedule_realtime_command(command)
+        mock_seq = MagicMock()
+        mock_seq.engines = {0: {'status': 'IDLE'}}
+
+        with patch.object(simulation, '_find_module_by_class', return_value=mock_seq):
+            simulation.execute(
+                entry_point='test.seq',
+                begin_time='2026-003T12:00:00',
+                end_time='2026-003T12:00:10',
+                execution_mode='event',
+            )
+
+        assert simulation.realtime_command_history == [command]
