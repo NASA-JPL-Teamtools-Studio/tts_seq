@@ -42,6 +42,24 @@ def simulation(mock_sim_dependencies, tmp_path):
         )
         return sim
 
+
+def _configure_idle_sequence_simulation(simulation, event_log):
+    from tts_seq.sim_modules.eha import EhaModule
+    from tts_seq.sim_modules.seq_no_logic import SeqModule
+
+    class IdleSeqModule(SeqModule):
+        def load_sequence(self, sequence_name):
+            return None
+
+    simulation.module_map = [
+        {"cls": IdleSeqModule, "params": {}},
+        {"cls": EhaModule, "params": {}},
+    ]
+    simulation.dispatch_realtime_command = lambda command: event_log.append(
+        simulation.current_time
+    )
+
+
 class TestSeqSimulation:
 
     def test_init_paths(self, simulation):
@@ -132,30 +150,36 @@ class TestSeqSimulation:
             order=1,
         )
 
+        events = []
+
         class RecordingSeqModule(SeqModule):
             PRIORITY = 100
 
-            def __init__(self, sim, target_time):
+            def __init__(self, sim, target_time, event_log):
                 super(RecordingSeqModule, self).__init__(sim)
                 self.engines[0]["status"] = "ACTIVE"
                 self.engines[0]["next_step_time"] = target_time
                 self.target_time = target_time
+                self.event_log = event_log
 
             def load_sequence(self, sequence_name):
                 return None
 
             def simulate_step(self):
                 if self.sim.current_time >= self.target_time:
-                    self.sim.event_history.append(("onboard", self.sim.current_time))
+                    self.event_log.append(("onboard", self.sim.current_time))
                     self.engines[0]["status"] = "IDLE"
                     self.engines[0]["next_step_time"] = None
 
         simulation.module_map = [
-            {"cls": RecordingSeqModule, "params": {"target_time": target}},
+            {
+                "cls": RecordingSeqModule,
+                "params": {"target_time": target, "event_log": events},
+            },
             {"cls": EhaModule, "params": {}},
         ]
         simulation.schedule_realtime_command(command)
-        simulation.dispatch_realtime_command = lambda value: simulation.event_history.append(
+        simulation.dispatch_realtime_command = lambda value: events.append(
             ("realtime", simulation.current_time)
         )
 
@@ -166,8 +190,45 @@ class TestSeqSimulation:
             execution_mode="event",
         )
 
-        assert simulation.event_history == [
+        assert events == [
             ("realtime", target),
             ("onboard", target),
         ]
-        assert simulation.realtime_module.dispatched_commands == [command]
+
+    def test_tick_execution_dispatches_realtime_command_while_sequence_engines_are_idle(
+        self, simulation
+    ):
+        start = datetime(2026, 1, 3, 12, 0, 0)
+        target = start + timedelta(seconds=2)
+        events = []
+        _configure_idle_sequence_simulation(simulation, events)
+        simulation.schedule_realtime_command(
+            RealtimeCommand(time=target, stem="REALTIME_COMMAND")
+        )
+
+        simulation.execute(
+            entry_point="test.seq",
+            begin_time="2026-003T12:00:00",
+            end_time="2026-003T12:00:02",
+            execution_mode="tick",
+        )
+
+        assert events == [target]
+
+    def test_event_execution_dispatches_command_at_end_time(self, simulation):
+        start = datetime(2026, 1, 3, 12, 0, 0)
+        target = start + timedelta(seconds=5)
+        events = []
+        _configure_idle_sequence_simulation(simulation, events)
+        simulation.schedule_realtime_command(
+            RealtimeCommand(time=target, stem="REALTIME_COMMAND")
+        )
+
+        simulation.execute(
+            entry_point="test.seq",
+            begin_time="2026-003T12:00:00",
+            end_time="2026-003T12:00:05",
+            execution_mode="event",
+        )
+
+        assert events == [target]

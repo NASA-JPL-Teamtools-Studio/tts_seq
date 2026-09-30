@@ -12,7 +12,12 @@ _QueuedRealtimeCommand = namedtuple(
 
 
 class RealtimeCommandModule(Module):
-    """Dispatch scheduled realtime commands through the simulation clock."""
+    """Dispatch scheduled realtime commands through the simulation clock.
+
+    Realtime commands run before onboard modules at equal timestamps. This
+    gives relay delivery a stable precedence while preserving deterministic
+    ordering among all realtime commands.
+    """
 
     NAME = "realtime"
     PRIORITY = 0
@@ -20,8 +25,7 @@ class RealtimeCommandModule(Module):
     def __init__(self, *args, **kwargs):
         super(RealtimeCommandModule, self).__init__(*args, **kwargs)
         self._pending_commands = []
-        self._next_order = 0
-        self.dispatched_commands = []
+        self._next_insertion_order = 0
 
     def schedule(self, command):
         """Schedule a :class:`RealtimeCommand` for event-driven execution."""
@@ -29,9 +33,9 @@ class RealtimeCommandModule(Module):
             raise TypeError("realtime module accepts RealtimeCommand values")
         self._pending_commands.append(_QueuedRealtimeCommand(
             command=command,
-            insertion_order=self._next_order,
+            insertion_order=self._next_insertion_order,
         ))
-        self._next_order += 1
+        self._next_insertion_order += 1
 
     @property
     def has_pending_commands(self):
@@ -65,6 +69,4 @@ class RealtimeCommandModule(Module):
             if item.insertion_order not in due_queue_ids
         ]
         for queued_command in due:
-            command = queued_command.command
-            self.dispatched_commands.append(command)
-            self.sim.dispatch_realtime_command(command)
+            self.sim.dispatch_realtime_command(queued_command.command)

@@ -495,7 +495,7 @@ class SeqSimulation:
 			next_time = self._next_event_time()
 			if next_time is None:
 				raise RuntimeError('Event-driven simulation has no next event while active')
-			if self.end_time is not None and next_time >= self.end_time:
+			if self.end_time is not None and next_time > self.end_time:
 				self.current_time = self.end_time
 				break
 			if next_time < self.current_time:
@@ -563,8 +563,12 @@ class SeqSimulation:
 			last_progress_day, last_progress_orbit = self._log_progress(
 				last_progress_day, last_progress_orbit
 			)
-			if all([e['status'] == 'IDLE' for e in self.seq_module.engines.values()]): break
-			if self.end_time is not None and self.current_time >= self.end_time: break
+			if (
+				all([e['status'] == 'IDLE' for e in self.seq_module.engines.values()])
+				and not self.realtime_module.has_pending_commands
+			):
+				break
+			if self.end_time is not None and self.current_time > self.end_time: break
 
 		self.eha_module.close_out_channels()
 		logger.info(
