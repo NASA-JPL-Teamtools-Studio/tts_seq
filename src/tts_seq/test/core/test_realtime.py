@@ -24,5 +24,12 @@ def test_realtime_command_preserves_schedule_and_provenance():
     assert command.source == "FWD_LINK_2026_215_01.fwdlnk.seq:7"
     assert command.metadata == {"activity": "FWD_LINK_2026_215_01"}
     assert command.order == 3
-    assert command.sequence is None
-    assert command.engine is None
+
+
+def test_realtime_command_rejects_onboard_identity_fields():
+    with pytest.raises(TypeError):
+        RealtimeCommand(
+            time=datetime(2026, 8, 3, 10, 0, 1),
+            stem="REALTIME_COMMAND",
+            sequence="ONBOARD_SEQUENCE",
+        )

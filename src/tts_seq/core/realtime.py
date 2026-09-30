@@ -12,8 +12,6 @@ _RealtimeCommand = namedtuple(
         "source",
         "metadata",
         "order",
-        "sequence",
-        "engine",
     ),
 )
 
@@ -31,8 +29,6 @@ class RealtimeCommand(_RealtimeCommand):
         source="",
         metadata=None,
         order=0,
-        sequence=None,
-        engine=None,
     ):
         return super(RealtimeCommand, cls).__new__(
             cls,
@@ -42,6 +38,4 @@ class RealtimeCommand(_RealtimeCommand):
             source,
             dict(metadata or {}),
             order,
-            sequence,
-            engine,
         )

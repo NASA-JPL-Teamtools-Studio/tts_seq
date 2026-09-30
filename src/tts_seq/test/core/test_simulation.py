@@ -8,6 +8,10 @@ import pandas as pd
 from tts_seq.core.realtime import RealtimeCommand
 from tts_seq.core.simulation import SeqSimulation
 
+
+pytestmark = pytest.mark.unreviewed_ai
+
+
 @pytest.fixture
 def mock_sim_dependencies():
     """Provides mocked XML trees and dictionary paths to avoid file I/O."""
@@ -114,25 +118,56 @@ class TestSeqSimulation:
             assert mock_mod.simulate_step.called
             mock_seq.load_sequence.assert_called_with('test.seq')
 
-    def test_event_execution_dispatches_realtime_command_at_scheduled_time(self, simulation):
+    def test_event_execution_orders_realtime_before_onboard_wakeup(self, simulation):
+        from tts_seq.sim_modules.eha import EhaModule
+        from tts_seq.sim_modules.seq_no_logic import SeqModule
+
         start = datetime(2026, 1, 3, 12, 0, 0)
+        target = start + timedelta(seconds=5)
         command = RealtimeCommand(
-            time=start + timedelta(seconds=5),
+            time=target,
             stem="REALTIME_COMMAND",
             arguments=("value",),
             source="forward-link.fwdlnk.seq:1",
             order=1,
         )
+
+        class RecordingSeqModule(SeqModule):
+            PRIORITY = 100
+
+            def __init__(self, sim, target_time):
+                super(RecordingSeqModule, self).__init__(sim)
+                self.engines[0]["status"] = "ACTIVE"
+                self.engines[0]["next_step_time"] = target_time
+                self.target_time = target_time
+
+            def load_sequence(self, sequence_name):
+                return None
+
+            def simulate_step(self):
+                if self.sim.current_time >= self.target_time:
+                    self.sim.event_history.append(("onboard", self.sim.current_time))
+                    self.engines[0]["status"] = "IDLE"
+                    self.engines[0]["next_step_time"] = None
+
+        simulation.module_map = [
+            {"cls": RecordingSeqModule, "params": {"target_time": target}},
+            {"cls": EhaModule, "params": {}},
+        ]
         simulation.schedule_realtime_command(command)
-        mock_seq = MagicMock()
-        mock_seq.engines = {0: {'status': 'IDLE'}}
+        simulation.dispatch_realtime_command = lambda value: simulation.event_history.append(
+            ("realtime", simulation.current_time)
+        )
 
-        with patch.object(simulation, '_find_module_by_class', return_value=mock_seq):
-            simulation.execute(
-                entry_point='test.seq',
-                begin_time='2026-003T12:00:00',
-                end_time='2026-003T12:00:10',
-                execution_mode='event',
-            )
+        simulation.execute(
+            entry_point="test.seq",
+            begin_time="2026-003T12:00:00",
+            end_time="2026-003T12:00:10",
+            execution_mode="event",
+        )
 
-        assert simulation.realtime_command_history == [command]
+        assert simulation.event_history == [
+            ("realtime", target),
+            ("onboard", target),
+        ]
+        assert simulation.realtime_module.dispatched_commands == [command]

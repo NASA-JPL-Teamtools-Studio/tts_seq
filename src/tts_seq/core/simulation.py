@@ -67,7 +67,6 @@ class SeqSimulation:
 		self.seq_collection = seq_collection
 		self.initial_conditions = initial_conditions
 		self.command_history = []
-		self.realtime_command_history = []
 		self.event_history = []
 		self.state_history = []
 		self.diagnostics = []
@@ -109,12 +108,8 @@ class SeqSimulation:
 		self.realtime_module.schedule(command)
 
 	def dispatch_realtime_command(self, command):
-		"""Record a realtime command dispatched at its scheduled time.
-
-		Adaptations can override this hook to route the command into a
-		mission-specific command module.
-		"""
-		self.realtime_command_history.append(command)
+		"""Hook for adaptations to handle a dispatched realtime command."""
+		return None
 
 	def _find_module_by_class(self, cls, name=None):
 		"""
@@ -488,7 +483,9 @@ class SeqSimulation:
 		last_progress_day = None
 		last_progress_orbit = None
 		while True:
-			for module in self.modules.values():
+			for module in sorted(
+				self.modules.values(), key=lambda module: module.PRIORITY
+			):
 				module.simulate_step()
 			last_progress_day, last_progress_orbit = self._log_progress(
 				last_progress_day, last_progress_orbit
@@ -533,7 +530,6 @@ class SeqSimulation:
 		self.execution_mode = execution_mode
 		self.entry_point = entry_point
 		self.command_history = []
-		self.realtime_command_history = []
 		self.event_history = []
 		self.state_history = []
 		self.diagnostics = []
