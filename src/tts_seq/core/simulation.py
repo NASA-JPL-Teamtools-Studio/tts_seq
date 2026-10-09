@@ -63,7 +63,7 @@ class SeqSimulation:
 		'evr': 'Evr.xml',
 	}
 
-	def __init__(self, seq_collection, initial_conditions, dictionary_set_path, sim_dictionary_set_path=None, **kwargs):
+	def __init__(self, seq_collection, initial_conditions, dictionary_set_path=None, sim_dictionary_set_path=None, dictionaries=None, sim_dictionaries=None, **kwargs):
 		self.seq_collection = seq_collection
 		self.initial_conditions = initial_conditions
 		self.command_history = []
@@ -80,15 +80,35 @@ class SeqSimulation:
 		self.evrs = []
 
 		#TO DO: Clean up this comprehension monstrosity
-		self.new_dictionary_interface = {d: c(dictionary_set_path.joinpath(self.EXPECTED_DICTIONARIES[d])) for d, c in self.DICTIONARY_INTERFACE_CLASSES.items()}
+		self.new_dictionary_interface = {}
+		if dictionary_set_path:
+			self.new_dictionary_interface = {d: c(dictionary_set_path.joinpath(self.EXPECTED_DICTIONARIES[d])) for d, c in self.DICTIONARY_INTERFACE_CLASSES.items()}
 
-		self.dictionaries = {k: etree.parse(dictionary_set_path.joinpath(v)) for k, v in self.EXPECTED_DICTIONARIES.items()}
-		self.dictionary_paths = {k: dictionary_set_path.joinpath(v) for k, v in self.EXPECTED_DICTIONARIES.items()}
+		if dictionaries is not None:
+			self.dictionaries = dictionaries
+			self.dictionary_paths = {}
+		elif dictionary_set_path is not None:
+			self.dictionaries = {k: etree.parse(dictionary_set_path.joinpath(v)) for k, v in self.EXPECTED_DICTIONARIES.items()}
+			self.dictionary_paths = {k: dictionary_set_path.joinpath(v) for k, v in self.EXPECTED_DICTIONARIES.items()}
+		else:
+			self.dictionaries = {}
+			self.dictionary_paths = {}
 
-		if sim_dictionary_set_path is None:
+		if sim_dictionaries is not None:
+			self.sim_dictionaries = sim_dictionaries
+			self.sim_dictionary_paths = {}
+		elif sim_dictionary_set_path is not None:
+			self.sim_dictionaries = {k: etree.parse(sim_dictionary_set_path.joinpath(v)) for k, v in self.EXPECTED_SIM_DICTIONARIES.items()}
+			self.sim_dictionary_paths = {k: sim_dictionary_set_path.joinpath(v) for k, v in self.EXPECTED_SIM_DICTIONARIES.items()}
+		elif dictionary_set_path is not None:
+			# Fallback logic for sim_dictionary_set_path
 			sim_dictionary_set_path = dictionary_set_path.parent.parent.joinpath('sim_dictionaries').joinpath(dictionary_set_path.name)
-		self.sim_dictionaries = {k: etree.parse(sim_dictionary_set_path.joinpath(v)) for k, v in self.EXPECTED_SIM_DICTIONARIES.items()}
-		self.sim_dictionary_paths = {k: sim_dictionary_set_path.joinpath(v) for k, v in self.EXPECTED_SIM_DICTIONARIES.items()}
+			self.sim_dictionaries = {k: etree.parse(sim_dictionary_set_path.joinpath(v)) for k, v in self.EXPECTED_SIM_DICTIONARIES.items()}
+			self.sim_dictionary_paths = {k: sim_dictionary_set_path.joinpath(v) for k, v in self.EXPECTED_SIM_DICTIONARIES.items()}
+		else:
+			self.sim_dictionaries = {}
+			self.sim_dictionary_paths = {}
+
 		self.cached_eha_container = None
 
 	def init_modules(self): 
@@ -160,7 +180,7 @@ class SeqSimulation:
 		"""
 		return self._find_module_by_class(EvrModule)
 
-	@property 
+	@property
 	def evr_container(self):
 		"""
 		Wraps the raw simulation event history into a standardized EvrContainer.
@@ -173,23 +193,23 @@ class SeqSimulation:
 			'recordType': 'evr', 
 			'sessionId': 0,
 			'sessionHost': 'SIM',
-			'name': e[2], 
-			'module': e[1],
-			'level': e[3],
+			'name': e['name'], 
+			'module': e['module'],
+			'level': e['level'],
 			'eventId': 0,
 			'vcid': 0,
 			'dssId':  0,
 			'fromSse': False,
 			'realtime': False,
 			'sclk': 0.0, 
-			'scet': e[0], 
-			'ert': e[0],
+			'scet': e['scet'], 
+			'ert': e['scet'],
 			'rct': None, 
 			'lst': None, 
-			'message': e[4],
+			'message': e['message'],
 			'metadataKeywordList': '',
 			'metadataValuesList': '',
-			'metadata': {'CategorySequenceId': e[6], 'SequenceId': e[5], 'TaskName': None},
+			'metadata': {'CategorySequenceId': e['sequence_index'], 'SequenceId': e['sequence_index'], 'TaskName': None},
 			} for e in self.evrs
 		]
 

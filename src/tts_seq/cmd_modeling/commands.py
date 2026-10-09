@@ -25,6 +25,7 @@ class Command:
 		self.module = module
 		self.sim = module.sim
 		self.complete = False
+		self.execution_index = None
 		engine = getattr(self.sim.seq_module, 'engines', {}).get(sequence_engine_id, {}) if sequence_engine_id is not None else {}
 		self.emit_evrs = engine.get('emit_evrs', True)
 		
@@ -62,6 +63,10 @@ class Command:
 		:type success: bool
 		"""
 		self.complete = True
+		if self.execution_index is not None and hasattr(self.sim, 'command_history'):
+			self.sim.command_history[self.execution_index]['effect'] = self.result[0]
+			self.sim.command_history[self.execution_index]['success'] = self.result[1]
+
 		if self.sequence_engine_id is not None:
 			if not self.emit_evrs:
 				return
@@ -142,7 +147,12 @@ class FcnCall(CommandStep):
 	"""
 	def __init__(self, module, fcn, args=[], kwargs={}):
 		super().__init__(module)
-		fcn(*args, **kwargs)
+		self.fcn = fcn
+		self.args = args
+		self.kwargs = kwargs
+
+	def simulate(self):
+		self.fcn(*self.args, **self.kwargs)
 		self.complete = True
 
 class LinearToGoal(CommandStep):

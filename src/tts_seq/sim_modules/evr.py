@@ -15,9 +15,6 @@ class EvrModule(Module):
 	production EVR dictionary and simulation-specific dictionaries to ensure 
 	telemetry validity.
 
-	**Note that the current implementation is very minimal! Some of the things
-	these docs say this module does are actually a bit more aspirational**
-
 	:param sim: Pointer to the parent simulation instance.
 	:type sim: SeqSimulation
 	"""
@@ -28,15 +25,14 @@ class EvrModule(Module):
 		self.index = -1 #this increments before it gets used below and we want it to start at 0
 		self.level_index = {}
 
-	def save_evr(self, module, name, level, message):
+	def save_evr(self, module, name, level, message, provenance=None, metadata=None, index=None, time=None, event=None, force=False):
 		"""
 		Validates and records an Event Record into the simulation history.
 
 		This method checks if the event name exists in the primary 'evr' 
 		dictionary or the 'sim_evr' dictionary. If the event is not found, 
 		a warning is logged, though the simulation continues. The event is 
-		then appended to the simulation's master history list with the 
-		current simulation timestamp.
+		then appended to the simulation's master history list as a dictionary.
 
 		:param module: The name of the module that issued the EVR.
 		:type module: str
@@ -46,10 +42,30 @@ class EvrModule(Module):
 		:type level: str
 		:param message: The descriptive log message associated with the event.
 		:type message: str
+		:param provenance: Source of the EVR (e.g. file path).
+		:type provenance: str, optional
+		:param metadata: Additional metadata for the EVR.
+		:type metadata: dict, optional
+		:param index: Sequence index associated with the EVR.
+		:type index: int, optional
+		:param time: Timestamp of the event.
+		:type time: datetime, optional
+		:param event: The event object providing context.
+		:type event: SequenceEvent, optional
 		"""
+		# Global toggle for emitting EVRs
+		if not force and not self.sim.initial_conditions.get('emit_evrs', True):
+			return
+
 		# Check production EVR dictionary
-		evr_elements = self.sim.dictionaries['evr'].xpath(f'evrs/evr[@name="{name}"]')
-		
+		# Support both XML (xpath) and simple dict lookups
+		evr_dict = self.sim.dictionaries.get('evr', {})
+		is_known = False
+		if hasattr(evr_dict, 'xpath'):
+			is_known = len(evr_dict.xpath(f'evrs/evr[@name="{name}"]')) > 0
+		elif isinstance(evr_dict, dict):
+			is_known = name in evr_dict
+
 		if level in self.level_index: 
 			self.level_index[level] += 1
 		else:
@@ -58,17 +74,37 @@ class EvrModule(Module):
 		self.index += 1 
 
 		# Check simulation-specific EVR dictionary if available
-		if 'evr' in self.sim.sim_dictionaries.keys():
-			sim_evr_elements = self.sim.sim_dictionaries['evr'].xpath(f'evrs/evr[@name="{name}"]')
+		sim_evr_dict = self.sim.sim_dictionaries.get('evr', {})
+		if hasattr(sim_evr_dict, 'xpath'):
+			sim_known = len(sim_evr_dict.xpath(f'evrs/evr[@name="{name}"]')) > 0
+		elif isinstance(sim_evr_dict, dict):
+			sim_known = name in sim_evr_dict
 		else:
-			sim_evr_elements = []
+			sim_known = False
 
 		# Warn if the EVR is 'rogue' (not defined in any dictionary)
-		if len(evr_elements + sim_evr_elements) == 0:
+		if not is_known and not sim_known:
 			logger.warning(
 				f'EVR "{name}" issued in module "{module}" does not exist in EVR or '
 				f'SIM EVR dictionary. Simulation will proceed, but it won\'t be ingested into Chillax'
 			)
 		
-		# Record the event with the simulation time-tag
-		self.sim.evrs.append((self.sim.current_time, module, name, level, message, self.index, self.level_index[level]))
+		# Record the event as a dictionary for consistency across missions
+		# Resolve context from event if provided
+		prov = provenance or (event.provenance if event else 'simulation')
+		meta = metadata or (dict(event.metadata) if event else {})
+		t = time or (event.time if event else self.sim.current_time)
+
+		evr_record = {
+			'scet': t,
+			'module': module,
+			'name': name,
+			'level': level,
+			'message': message,
+			'provenance': prov,
+			'metadata': meta,
+			'sequence_index': index if index is not None else self.index,
+			'level_index': self.level_index[level],
+		}
+		self.sim.evrs.append(evr_record)
+
