@@ -37,11 +37,22 @@ class Module:
 		:type command_cls: Type[BaseCommand]
 		:param command: The raw sequence command object.
 		:type command: SeqStep
-		:param sequence_engine_id: ID of the sequence engine that issued the command.
+		:param sequence_engine_id: ID of the calling sequence engine that issued the command.
 		:type sequence_engine_id: str, optional
 		"""
-		self.exeucting_commands.append(command_cls(self, command, sequence_engine_id=sequence_engine_id))
-		pass
+		cmd = command_cls(self, command, sequence_engine_id=sequence_engine_id)
+		self.exeucting_commands.append(cmd)
+		return cmd
+
+	def next_wakeup_time(self):
+		"""Return the earliest time an executing command needs evaluation."""
+		next_times = []
+		for executing_command in self.exeucting_commands:
+			for step in executing_command.cmd_steps:
+				if not step.complete:
+					next_times.append(step.next_wakeup_time())
+					break
+		return min(next_times) if next_times else None
 
 	def simulate_step(self):		
 		"""
@@ -70,7 +81,7 @@ class Module:
 		# Prune the list to only include commands that still have work to do
 		self.exeucting_commands = [ec for ec in self.exeucting_commands if not ec.complete]
 
-	def emit_evr(self, name, level, message):
+	def emit_evr(self, name, level, message, event=None):
 		"""
 		Helper method to issue an Event Record (EVR) from this module.
 
@@ -82,5 +93,7 @@ class Module:
 		:type level: str
 		:param message: Human-readable log message.
 		:type message: str
+		:param event: The event object providing context.
+		:type event: SequenceEvent, optional
 		"""
-		self.sim.evr_module.save_evr(self.NAME, name, level, message)
+		self.sim.evr_module.save_evr(self.NAME, name, level, message, event=event)

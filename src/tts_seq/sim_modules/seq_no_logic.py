@@ -47,7 +47,17 @@ class SeqModule(Module):
 			if self.engines[ii]['status'] == 'IDLE': return ii
 		return None
 
-	def load_sequence(self, seq_name, uuid_lineage=''):
+	def _record_diagnostic(self, code, sequence, message):
+		if not hasattr(self.sim, 'diagnostics') or self.sim.diagnostics is None:
+			self.sim.diagnostics = []
+		self.sim.diagnostics.append({
+			'code': code,
+			'severity': 'FATAL',
+			'sequence': sequence,
+			'message': message,
+		})
+
+	def load_sequence(self, seq_name, uuid_lineage='', seq_engine_id=None, emit_evrs=True):
 		"""
 		Assigns a sequence from the simulation collection to an idle engine and starts execution.
 
@@ -59,17 +69,51 @@ class SeqModule(Module):
 		:type seq_name: str
 		:param uuid_lineage: Ancestry string for tracking nested sequence calls.
 		:type uuid_lineage: str
+		:param seq_engine_id: Specific engine to use, or None to allocate the next idle engine.
+		:type seq_engine_id: int, optional
+		:param emit_evrs: Whether command dispatch and completion EVRs should be emitted.
+		:type emit_evrs: bool
 		"""
-		sequence = deepcopy(self.sim.seq_collection.get_seq(seq_name))
-		sequence.strip_comments()
-		seq_engine_id = self.next_idle_engine
-		
-		if seq_engine_id is None:
-			self.emit_evr('SEQSVC_EVR_NO_AVAILABLE_ENGINES', 'WARNING_HI', 
-						  f'No available seq engines. {seq_name} will not run.')
+		if seq_engine_id is not None and (
+			seq_engine_id not in self.engines
+			or self.engines[seq_engine_id]['status'] != 'IDLE'
+		):
+			self.emit_evr('SEQSVC_EVR_ENGINE_NOT_AVAILABLE', 'WARNING_HI',
+						  f'Sequence engine {seq_engine_id} is not available. {seq_name} will not run.')
 			return
 
-		self.emit_evr('SEQSVC_EVR_SEQUENCE_ACTIVATED', 'ACTIVITY_LO', 
+		try:
+			sequence_template = self.sim.seq_collection.get_seq(seq_name)
+		except Exception as error:
+			self._record_diagnostic(
+				'SEQUENCE_NOT_FOUND',
+				seq_name,
+				f'Unable to load nested sequence "{seq_name}": {error}',
+			)
+			return
+
+		ancestor_names = {
+			self.seq_uuid[uuid].lower()
+			for uuid in uuid_lineage.split('/')
+			if uuid and uuid in self.seq_uuid
+		}
+		if str(seq_name).lower() in ancestor_names:
+			self._record_diagnostic(
+				'SEQUENCE_RECURSION',
+				seq_name,
+				f'Recursive nested sequence load rejected for "{seq_name}".',
+			)
+			return
+
+		sequence = deepcopy(sequence_template)
+		sequence.strip_comments()
+		if seq_engine_id is None:
+			seq_engine_id = self.next_idle_engine
+			if seq_engine_id is None:
+				self.emit_evr('SEQSVC_EVR_NO_AVAILABLE_ENGINES', 'WARNING_HI',
+							  f'No available seq engines. {seq_name} will not run.')
+				return
+		self.emit_evr('SEQSVC_EVR_SEQUENCE_ACTIVATED', 'ACTIVITY_LO',
 					  f'Sequence {sequence.id} is now active in sequence engine number {seq_engine_id}')
 
 		uuid = str(uuid4())
@@ -79,9 +123,11 @@ class SeqModule(Module):
 			'seqdict': sequence,
 			'step_index': 0,
 			'next_step_time': sequence.resolve_time(0, self.sim.current_time),
+			'waiting_for_command': False,
 			'cco_active': False,
 			'uuid': str(uuid),
-			'provenance': f'{uuid_lineage}/{str(uuid)}'
+			'provenance': f'{uuid_lineage}/{str(uuid)}',
+			'emit_evrs': emit_evrs
 		}
 
 		self.update_sequence_observables(seq_engine_id)
@@ -99,10 +145,42 @@ class SeqModule(Module):
 				'seqdict': None,
 				'step_index': None,
 				'next_step_time': None,
+				'waiting_for_command': False,
 				'cco_active': False,
 				'uuid': None,
-				'provenance': None
+				'provenance': None,
+				'emit_evrs': True
 				}
+
+	def is_sequence_active(self, seq_name):
+		"""Return whether an active engine is running the named sequence."""
+		sequence_name = str(seq_name).lower()
+		return any(
+			engine['status'] == 'ACTIVE'
+			and engine['seqdict'] is not None
+			and str(engine['seqdict'].id).lower() == sequence_name
+			for engine in self.engines.values()
+		)
+
+	def stop_sequence(self, seq_name, uuid_lineage=''):
+		"""Stop all active instances of a sequence and return their engine IDs."""
+		sequence_name = str(seq_name).lower()
+		engine_ids = [
+			engine_id for engine_id, engine in self.engines.items()
+			if engine['status'] == 'ACTIVE'
+			and engine['seqdict'] is not None
+			and str(engine['seqdict'].id).lower() == sequence_name
+		]
+		if not engine_ids:
+			self.emit_evr(
+				'SEQSVC_EVR_SEQUENCE_NOT_ACTIVE',
+				'WARNING_HI',
+				f'Sequence {seq_name} is not active and cannot be stopped.',
+			)
+			return []
+		for engine_id in engine_ids:
+			self.clear_engine(engine_id)
+		return engine_ids
 
 	def clear_engine(self, seq_engine_id):	
 		"""
@@ -136,6 +214,8 @@ class SeqModule(Module):
 			if next_step.time.timetype.name in ['ABSOLUTE', 'COMMAND_RELATIVE']:
 				self.engines[engine_id]['next_step_time'] = self.engines[engine_id]['seqdict'].resolve_time(
 					self.engines[engine_id]['step_index'], self.sim.current_time)
+			elif next_step.time.timetype.name == 'COMMAND_COMPLETE':
+				self.engines[engine_id]['next_step_time'] = self.sim.current_time
 			else:
 				raise NotImplementedError(f'{next_step.time.timetype.name} behavior not implemented for advance_engine()')
 		
@@ -146,6 +226,13 @@ class SeqModule(Module):
 		Hook for updating telemetry or state variables related to sequence execution.
 		"""
 		pass
+
+	def _command_is_executing(self, seq_engine_id):
+		for module in self.sim.modules.values():
+			for command in getattr(module, 'exeucting_commands', []):
+				if command.sequence_engine_id == seq_engine_id and not command.complete:
+					return True
+		return False
 
 	def simulate_step(self):
 		"""
@@ -160,18 +247,26 @@ class SeqModule(Module):
 		"""
 		super().simulate_step()
 		for ii, engine in self.engines.items():
-			if self.engines[ii]['status'] == 'IDLE':
+			if engine['status'] == 'IDLE':
 				continue
-			elif engine['next_step_time'] <= self.sim.current_time:
-				# Dispatch the command to the Command Module
-				cmd = engine['seqdict'].steps[engine['step_index']]
-				self.sim.cmd_module.execute_command(cmd, engine['seqdict'].id, sequence_engine_id=ii)
-				
-				cmd_type = engine['seqdict'].steps[engine['step_index']].time.timetype.name
+			if engine.get('waiting_for_command', False):
+				if self._command_is_executing(ii):
+					continue
+				engine['waiting_for_command'] = False
+				self.advance_engine(ii)
+				if engine['status'] == 'IDLE':
+					continue
+			if engine['next_step_time'] is None or engine['next_step_time'] > self.sim.current_time:
+				continue
 
-				if cmd_type == 'COMMAND_COMPLETION':
-					raise NotImplementedError(f'{cmd_type} not implemented!')
-				elif cmd_type in ['ABSOLUTE', 'COMMAND_RELATIVE']:
-					self.advance_engine(ii)
-				else:
-					raise NotImplementedError(f'{cmd_type} logic not implemented.')
+			cmd = engine['seqdict'].steps[engine['step_index']]
+			self.sim.cmd_module.execute_command(cmd, engine['seqdict'].id, sequence_engine_id=ii)
+			cmd_type = cmd.time.timetype.name
+
+			if cmd_type == 'COMMAND_COMPLETE':
+				engine['waiting_for_command'] = True
+				engine['next_step_time'] = None
+			elif cmd_type in ['ABSOLUTE', 'COMMAND_RELATIVE']:
+				self.advance_engine(ii)
+			else:
+				raise NotImplementedError(f'{cmd_type} logic not implemented.')

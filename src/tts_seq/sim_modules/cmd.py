@@ -18,12 +18,10 @@ class CmdModule(Module):
 	:type sim: SeqSimulation
 	"""
 	NAME = 'cmd'
-	FSW_CMD_XPATH = './/fsw_command'
-	FSW_CMD_STEM_LABEL = 'stem'
-	FSW_CMD_MODULE_XPATH = 'categories/module/text()'
 	CCO_STEM = 'CMD_CONSTRAINT_OVERRIDE'
 	MODE_CHANNEL_NAME = 'MODE_CURRENT_MODE'
 	SEQ_CMD_DISPATCH_EVR_NAME = 'CMDSVC_EVR_SEQ_CMD_DISPATCH'
+	ROUTING_MAP = {}
 
 	def __init__(self, *args, **kwargs):
 		"""
@@ -51,17 +49,6 @@ class CmdModule(Module):
 				self.add_command_step(EmitEvr, ['CMDSVC_EVR_SEQ_CMD_CONSTRAINT_SET', 'ACTIVITY_LO', f'Command Constraint Override set for next command in sequence engine #{self.sequence_engine_id}.'])
 				self.sim.seq_module.engines[self.sequence_engine_id]['cco_active'] = True
 
-	def get_module_from_xml_element(self, element):
-		"""
-		Extracts the target handling module name from the Command Dictionary XML.
-
-		:param element: The XML element for the command definition.
-		:type element: lxml.etree._Element
-		:return: The name of the simulation module responsible for this command.
-		:rtype: str
-		"""
-		return element.xpath(self.FSW_CMD_MODULE_XPATH)[0]
-
 	def cmd_class_name(self, stem):
 		"""
 		Determines the modeling class name from a command stem.
@@ -76,16 +63,14 @@ class CmdModule(Module):
 		"""
 		return stem.upper()
 
-	def cmd_stem_dict_representation(self, stem):
+	def pre_dispatch_hook(self, command, lookup, sequence_engine_id=None):
 		"""
-		Formats the command stem for lookup in the Command Dictionary.
-
-		:param stem: The raw command stem.
-		:type stem: str
-		:return: The stem formatted for dictionary XPath matching.
-		:rtype: str
+		Mission-specific hook called before command dispatch.
+		Can be used for policy checks or specialized logging.
+		
+		:return: True to continue dispatch, False to abort.
 		"""
-		return stem.upper()
+		return True
 
 	def announce_dispatch_success(self, stem, module_name, sequence_engine_id=None):
 		"""
@@ -101,7 +86,10 @@ class CmdModule(Module):
 		if sequence_engine_id is None:
 			self.sim.cmd_module.emit_evr('CMDSVC_EVR_VC1_CMD_DISPATCHED', 'COMMAND', f'Command {stem} started successfully in module {module_name}')		
 		else:
-			seq_name = self.sim.seq_module.engines[sequence_engine_id]['seqdict'].id
+			seq_engine = self.sim.seq_module.engines.get(sequence_engine_id, {})
+			if not seq_engine.get('emit_evrs', True):
+				return
+			seq_name = seq_engine['seqdict'].id
 			self.sim.cmd_module.emit_evr('CMDSVC_EVR_SEQ_CMD_DISPATCHED', 'COMMAND', f'Command {stem} started successfully from sequence {seq_name} in module {module_name} in sequence engine {sequence_engine_id}')
 
 
@@ -110,14 +98,6 @@ class CmdModule(Module):
 		The core command processing logic. Validates constraints and routes 
 		the command to modeling.
 
-		The process involves:
-		1. Archiving command provenance and history.
-		2. Locating the command in the mission dictionary via XPath.
-		3. Checking 'spacecraft_restricted_modes' against the current modeled mode.
-		4. Validating and consuming CCO (Constraint Override) flags.
-		5. Dynamically instantiating the command's modeling class in the target module.
-		6. Resetting CCO state for the next command.
-
 		:param command: The sequence step/command to execute.
 		:type command: SeqStep
 		:param parent: ID of the calling sequence or source.
@@ -125,55 +105,67 @@ class CmdModule(Module):
 		:param sequence_engine_id: Index of the sequence engine slot.
 		:type sequence_engine_id: int, optional
 		"""
-		provenance = self.sim.seq_module.engines[sequence_engine_id]['provenance'] if sequence_engine_id is not None else ''
-		seq_uuid = self.sim.seq_module.engines[sequence_engine_id]['uuid'] if sequence_engine_id is not None else ''
-		self.sim.command_history.append((self.sim.current_time, command, sequence_engine_id, seq_uuid, provenance))
-
-		cmd_artifact = self.sim.dictionaries['command'].xpath(f'{self.FSW_CMD_XPATH}[@{self.FSW_CMD_STEM_LABEL}="{self.cmd_stem_dict_representation(command.stem)}"]')
-		if len(cmd_artifact) == 0:
+		# Generic Lookup (works for XML or Python dicts)
+		lookup = self.sim.dictionaries['command'].lookup(command.stem)
+		if lookup is None:
 			self.emit_evr('SIM_ERROR_CMD_NOT_IN_DICTIONARY', 'SIM_ERROR', f'No command with stem {command.stem} found in dictionary. Parent is {parent}')
-			return
-		elif len(cmd_artifact) >1:
-			self.emit_evr('SIM_ERROR_MULTIPLE_CMD_IN_DICTIONARY', 'SIM_ERROR', f'More than one command with stem {command.stem} found in dictionary. Parent is {parent}')
-			return
-		else:
-			cmd_artifact = cmd_artifact[0]
-
-		restricted_modes = [rm.text for rm in cmd_artifact.xpath('spacecraft_restricted_modes')]
-		current_mode = self.sim.modeled_values[self.MODE_CHANNEL_NAME]
+			return "unknown command", False, None, None
+    
+		# Pre-dispatch hook for mission policies
+		if not self.pre_dispatch_hook(command, lookup, sequence_engine_id):
+			return "policy rejection", False, None, None
 
 		# Constraint Checking Logic
+		restricted_modes = lookup.get('spacecraft_restricted_modes', [])
+		current_mode = self.sim.modeled_values[self.MODE_CHANNEL_NAME]
+
 		if current_mode in restricted_modes:
-			# Check immediate command override
 			if sequence_engine_id is None and self.cco_active is False:
 				self.emit_evr('CCO_NOT_SET_FOR_IMM_RESTRCITED', 'WARNING_HI', f'Immediate command {command.stem} is restricted in {current_mode} mode and CCO is not set. Rejecting command.')
-				return
+				return "restricted", False, None, None
 			elif sequence_engine_id is None:
 				self.emit_evr('CCO_SET_FOR_IMM_RESTRCITED', 'DIAGNOSTIC', f'Immediate command {command.stem} is restricted in {current_mode} mode and CCO is successfully set.')
 			
-			# Check sequenced command override
 			if sequence_engine_id is not None and self.sim.seq_module.engines[sequence_engine_id]['cco_active'] is False:
 				self.emit_evr('CCO_NOT_SET_FOR_SEQ_RESTRCITED', 'WARNING_HI', f'Sequenced command {command.stem} in engine {sequence_engine_id} is restricted in {current_mode} mode and CCO is not set. Rejecting command.')
-				return
+				return "restricted", False, None, None
 			elif sequence_engine_id is not None:
 				self.emit_evr('CCO_SET_FOR_SEQ_RESTRCITED', 'DIAGNOSTIC', f'Sequenced command {command.stem} in engine {sequence_engine_id} is restricted in {current_mode} mode and CCO is successfully set.')
 
-		# Dispatch to target module for modeling
-		dispatch_module = self.get_module_from_xml_element(cmd_artifact)		
-		self.emit_evr(self.SEQ_CMD_DISPATCH_EVR_NAME, 'COMMAND', f'Dispatching command {command.stem} from {parent} to module {dispatch_module}.')
+		# Route to specific handler or target module
+		target_module_name = lookup.get('module')
+		print(f"DEBUG: Routing {command.stem} to {target_module_name}")
 		
-		if dispatch_module in self.sim.modules.keys():
+		# Check the routing map first (e.g. route sequence lifecycle commands to seq_module)
+		routing_target = self.ROUTING_MAP.get(command.stem.upper())
+		handler_module = self.sim.modules.get(routing_target) if routing_target else self.sim.modules.get(target_module_name)
+		print(f"DEBUG: Handler module for {command.stem} is {handler_module}")
+		
+		seq_engine = self.sim.seq_module.engines.get(sequence_engine_id, {}) if sequence_engine_id is not None else {}
+		if sequence_engine_id is None or seq_engine.get('emit_evrs', True):
+			self.emit_evr(self.SEQ_CMD_DISPATCH_EVR_NAME, 'COMMAND', f'Dispatching command {command.stem} from {parent} to module {target_module_name}.')
+		
+		if handler_module:
 			try:
-				cmd_cls = getattr(self.sim.modules[dispatch_module], self.cmd_class_name(command.stem))
+				cmd_cls = getattr(handler_module, self.cmd_class_name(command.stem))
+				# If the module is the CmdModule itself or a special handler, it might just execute
+				if hasattr(handler_module, 'dispatch_sequence_command') and command.stem.upper() in self.ROUTING_MAP:
+					res = handler_module.dispatch_sequence_command(command)
+					return res if isinstance(res, tuple) and len(res) == 4 else (*res, None) if isinstance(res, tuple) else (res, True, target_module_name, None)
+				
+				# Standard routing: add to module queue
+				cmd = handler_module.add_command(cmd_cls, command, sequence_engine_id=sequence_engine_id)
+				return f"queued {command.stem}", True, target_module_name, cmd
 			except AttributeError:
-				self.emit_evr('SIM_ERROR_NO_CMD_MODEL', 'SIM_ERROR', f'No modeling for the command "{command.stem}" in the "{dispatch_module}" module.')
-				return
-			self.sim.modules[dispatch_module].add_command(cmd_cls, command, sequence_engine_id=sequence_engine_id)
+				self.emit_evr('SIM_ERROR_NO_CMD_MODEL', 'SIM_ERROR', f'No modeling for the command "{command.stem}" in the "{target_module_name}" module.')
+				return "unmodeled command", False, target_module_name, None
 		else:
-			self.emit_evr('SIM_ERROR_MODULE_NOT_DEFINED', 'SIM_ERROR', f'Command "{command.stem}" is in the "{dispatch_module}" module, which is not defined in the simulation.')
+			self.emit_evr('SIM_ERROR_MODULE_NOT_DEFINED', 'SIM_ERROR', f'Command "{command.stem}" is in the "{target_module_name}" module, which is not defined in the simulation.')
+			return "module not defined", False, target_module_name, None
 
-		# Auto-reset CCO logic: only reset if this command wasn't the CCO itself
-		if command.stem == self.CCO_STEM: return 
+		# Auto-reset CCO logic
+		if command.stem == self.CCO_STEM: 
+			return "CCO reset", True, target_module_name, None
 
 		if sequence_engine_id is None and self.cco_active:
 			self.emit_evr('CCO_RESET', 'DIAGNOSTIC', f'Resetting immediate CCO flag.')
@@ -181,3 +173,5 @@ class CmdModule(Module):
 		elif sequence_engine_id is not None and self.sim.seq_module.engines[sequence_engine_id]['cco_active']:
 			self.emit_evr('CCO_RESET', 'DIAGNOSTIC', f'Resetting CCO flag for sequence engine #{sequence_engine_id}.')
 			self.sim.seq_module.engines[sequence_engine_id]['cco_active'] = False
+
+		return "dispatched", True, target_module_name, None

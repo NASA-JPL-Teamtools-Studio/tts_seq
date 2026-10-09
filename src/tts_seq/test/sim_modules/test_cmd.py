@@ -30,6 +30,15 @@ def cmd_module(mock_sim):
     """Provides an instance of the CmdModule."""
     return CmdModule(sim=mock_sim)
 
+def test_sequenced_dispatch_success_is_suppressed_for_quiet_engine(cmd_module, mock_sim):
+    mock_sim.seq_module.engines[0]['emit_evrs'] = False
+
+    with patch.object(cmd_module, 'emit_evr') as mock_emit:
+        cmd_module.announce_dispatch_success('POWER_ON', 'power', sequence_engine_id=0)
+
+    mock_emit.assert_not_called()
+
+
 def test_execute_command_success(cmd_module, mock_sim):
     """Tests successful command dispatch when no restrictions exist."""
     # Setup mock command step

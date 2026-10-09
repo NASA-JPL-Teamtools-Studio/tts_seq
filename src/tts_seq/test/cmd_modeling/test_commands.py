@@ -20,6 +20,7 @@ def mock_sim():
     sim.TIME_STEP_S = 1
     sim.modeled_values = {}
     sim.event_history = []
+    sim.state_history = []
     # Mock modules
     sim.cmd_module = MagicMock()
     sim.seq_module = MagicMock()
@@ -33,6 +34,19 @@ def mock_module(mock_sim):
     return module
 
 # --- Command Tests ---
+
+def test_set_state_records_transition(mock_module, mock_sim):
+    step = SetState(mock_module, 'INST_MODE', 'STANDBY')
+
+    step.simulate()
+
+    assert mock_sim.state_history == [{
+        'time': mock_sim.current_time,
+        'state': 'INST_MODE',
+        'previous': None,
+        'value': 'STANDBY',
+    }]
+
 
 def test_command_initialization(mock_module, mock_sim):
     seq_step = MagicMock()
@@ -68,6 +82,18 @@ def test_finish_command_failure_immediate(mock_module, mock_sim):
     mock_sim.cmd_module.emit_evr.assert_called_with(
         'CMDSVC_EVR_CMD_COMPLETED_FAILURE', 'COMMAND', ANY
     )
+
+
+def test_finish_command_suppresses_quiet_sequence_completion_after_engine_clear(mock_module, mock_sim):
+    seq_step = MagicMock(stem="CMD_C")
+    mock_sim.seq_module.engines = {4: {'emit_evrs': False}}
+
+    cmd = MockCommand(mock_module, seq_step, sequence_engine_id=4)
+    mock_sim.seq_module.engines[4] = {'status': 'IDLE', 'emit_evrs': True}
+    cmd.finish_command()
+
+    assert cmd.complete is True
+    mock_sim.seq_module.emit_evr.assert_not_called()
 
 # --- CommandStep Tests ---
 
@@ -141,6 +167,26 @@ def test_abs_wait(mock_module, mock_sim):
     mock_sim.current_time = target_time
     step.simulate()
     assert step.complete is True
+
+def test_wait_exposes_completion_time(mock_module, mock_sim):
+    step = RelWait(mock_module, 5)
+
+    assert step.next_wakeup_time() == mock_sim.current_time + timedelta(seconds=5)
+
+
+def test_linear_to_goal_exposes_analytic_completion_time(mock_module, mock_sim):
+    mock_module.target_temp = 10.0
+    mock_sim.modeled_values['actual_temp'] = 0.0
+    mock_sim.execution_mode = 'event'
+    step = LinearToGoal(mock_module, 'target_temp', 'actual_temp', 2.0)
+
+    assert step.next_wakeup_time() == mock_sim.current_time + timedelta(seconds=5)
+
+    mock_sim.current_time += timedelta(seconds=5)
+    step.simulate()
+    assert mock_sim.modeled_values['actual_temp'] == 10.0
+    assert step.complete is True
+
 
 def test_rel_wait(mock_module, mock_sim):
     step = RelWait(mock_module, 5) # 5 second wait
