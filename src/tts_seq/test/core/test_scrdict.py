@@ -57,6 +57,26 @@ def test_ats_scr_parsing(mock_seq_dict_base):
             assert steps_list[0]['time']['type'] == "ABSOLUTE"
             assert steps_list[0]['args'][0]['value'] == "1"
 
+
+def test_ats_parser_accepts_time_alias_and_inherits_missing_time(mock_seq_dict_base):
+    ats_content = (
+        "script MyATS()\n"
+        "begin\n"
+        "POWER_ON 1 $TIME_TAG=24/001:12:00:00\n"
+        "POWER_OFF 1\n"
+        "end\n"
+    )
+    file_path = pathlib.Path("time_alias.scr")
+    with patch("pathlib.Path.open", mock_open(read_data=ats_content)):
+        with patch("pathlib.Path.read_text", return_value=ats_content):
+            ScrSeqDict(file_path, {'scr_type': 'ATS'})
+
+    steps = mock_seq_dict_base.call_args[0][0]
+    assert [step['time']['tag'] for step in steps if step['type'] == 'command'] == [
+        '24/001:12:00:00',
+        '24/001:12:00:00',
+    ]
+
 # --- Tests for RTS/Macro (Parameterized) Parsing ---
 
 def test_parameterized_rts_parsing(mock_seq_dict_base):

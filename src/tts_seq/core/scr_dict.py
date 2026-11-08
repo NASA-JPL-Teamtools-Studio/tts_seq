@@ -152,6 +152,7 @@ class ScrSeqDict(SeqDict):
         """
         
         dict_data = {'id': file_path.stem, 'metadata':{}, 'steps':[]}
+        last_time_tag = None
         with file_path.open('r', encoding='utf-8') as scr_file:
             for line in scr_file.read().split('\n'):
                 # Handle comments and empty lines
@@ -175,7 +176,19 @@ class ScrSeqDict(SeqDict):
                     # Split command from metadata (e.g., $TIME)
                     cmd_metadata_split = line.split(' $')
                     cmd = cmd_metadata_split[0]
-                    cmd_metadata = {x.split('=')[0]: x.split('=')[1] for x in cmd_metadata_split[1:]}
+                    cmd_metadata = {
+                        x.split('=', 1)[0].upper(): x.split('=', 1)[1]
+                        for x in cmd_metadata_split[1:]
+                        if '=' in x
+                    }
+                    time_tag = cmd_metadata.get('TIME') or cmd_metadata.get('TIME_TAG')
+                    if time_tag is None:
+                        time_tag = last_time_tag
+                    if time_tag is None:
+                        raise ValueError(
+                            f'Command has no TIME or TIME_TAG label in {file_path}: {line}'
+                        )
+                    last_time_tag = time_tag
                     
                     # Parse stem and arguments
                     stem = re.split(r'\s|,', cmd)[0]
@@ -185,7 +198,7 @@ class ScrSeqDict(SeqDict):
                         'args': [], 
                         'stem': stem, 
                         'time': {
-                            'tag': cmd_metadata['TIME'],
+                            'tag': time_tag,
                             'type': 'ABSOLUTE'
                         },
                         'type': 'command',
