@@ -168,7 +168,24 @@ class ScrSeqDict(SeqDict):
                 # Skip block delimiters and special markers
                 elif line in ['begin', 'end'] or line.startswith('%'):
                     pass
-                
+
+                # Some legacy ATS files wrap the final argument onto a
+                # continuation line beginning with a comma.
+                elif line.lstrip().startswith(',') and dict_data['steps']:
+                    previous_step = dict_data['steps'][-1]
+                    if previous_step.get('type') != 'command':
+                        raise ValueError(
+                            f'Argument continuation has no command in {file_path}: {line}'
+                        )
+                    continuation = line.split('$', 1)[0].lstrip(',').strip()
+                    continuation_args = re.split(r'[\s,]+', continuation)
+                    for arg in filter(None, continuation_args):
+                        previous_step['args'].append({
+                            'name': f'arg_{len(previous_step["args"])}',
+                            'type': 'STRING',
+                            'value': arg,
+                        })
+
                 # Process command steps
                 else:
                     description = self.extract_unquoted_comment_with_leading_ws(line)
