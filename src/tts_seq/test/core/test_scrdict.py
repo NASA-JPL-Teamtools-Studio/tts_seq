@@ -77,6 +77,24 @@ def test_ats_parser_accepts_time_alias_and_inherits_missing_time(mock_seq_dict_b
         '24/001:12:00:00',
     ]
 
+
+def test_ats_parser_drops_empty_arguments_from_comma_spacing(mock_seq_dict_base):
+    ats_content = (
+        "script MyATS()\n"
+        "begin\n"
+        "@rem:lamp_cmd 2, 330 $TIME=24/001:12:00:00\n"
+        "end\n"
+    )
+    with patch("pathlib.Path.open", mock_open(read_data=ats_content)):
+        with patch("pathlib.Path.read_text", return_value=ats_content):
+            ScrSeqDict(pathlib.Path("lamp.scr"), {'scr_type': 'ATS'})
+
+    step = next(
+        step for step in mock_seq_dict_base.call_args[0][0]
+        if step['type'] == 'command'
+    )
+    assert [argument['value'] for argument in step['args']] == ['2', '330']
+
 # --- Tests for RTS/Macro (Parameterized) Parsing ---
 
 def test_parameterized_rts_parsing(mock_seq_dict_base):

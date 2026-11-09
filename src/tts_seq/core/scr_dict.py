@@ -112,8 +112,9 @@ class ScrSeqDict(SeqDict):
             relative_seconds = absolute_seconds - previous_absolute_seconds
             previous_absolute_seconds = absolute_seconds
             timestr = datetime.strftime(datetime(year=2000, month=1, day=1) + timedelta(seconds=relative_seconds), '%H:%M:%S')
-            stem = re.split(r'\s+|,', linesplit[3].strip())[0]
-            args = re.split(r'\s+|,', linesplit[3].strip())[1:]
+            tokens = re.split(r'[\s,]+', linesplit[3].strip())
+            stem = tokens[0]
+            args = tokens[1:]
             description = ' '.join(linesplit[4:])
 
             step = {
@@ -191,8 +192,9 @@ class ScrSeqDict(SeqDict):
                     last_time_tag = time_tag
                     
                     # Parse stem and arguments
-                    stem = re.split(r'\s|,', cmd)[0]
-                    args = re.split(r'\s|,', cmd)[1:]
+                    tokens = re.split(r'[\s,]+', cmd.strip())
+                    stem = tokens[0]
+                    args = tokens[1:]
                     
                     step = {
                         'args': [], 
