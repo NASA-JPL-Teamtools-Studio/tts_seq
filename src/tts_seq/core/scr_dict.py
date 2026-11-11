@@ -154,8 +154,13 @@ class ScrSeqDict(SeqDict):
         
         dict_data = {'id': file_path.stem, 'metadata':{}, 'steps':[]}
         last_time_tag = None
+        pending_wrapped_comment = False
         with file_path.open('r', encoding='utf-8') as scr_file:
             for line in scr_file.read().split('\n'):
+                if pending_wrapped_comment:
+                    pending_wrapped_comment = False
+                    if not line.lstrip().startswith(('@', ',')):
+                        continue
                 # Handle comments and empty lines
                 if line.startswith(';') or line == '':
                     step = {'type': 'note','text': line[1:]}
@@ -189,6 +194,7 @@ class ScrSeqDict(SeqDict):
                 # Process command steps
                 else:
                     description = self.extract_unquoted_comment_with_leading_ws(line)
+                    pending_wrapped_comment = description.rstrip().endswith(';;')
                     line = line.replace(description, '').strip()
                     
                     # Split command from metadata (e.g., $TIME)

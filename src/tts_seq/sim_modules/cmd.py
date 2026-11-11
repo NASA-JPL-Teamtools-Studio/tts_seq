@@ -1,4 +1,3 @@
-import pdb
 from copy import deepcopy
 from datetime import datetime, timedelta
 
@@ -72,6 +71,21 @@ class CmdModule(Module):
 		"""
 		return True
 
+	def record_command(self, command, sequence_engine_id=None):
+		self.sim.command_history.append((self.sim.current_time, command))
+
+	def _reset_cco(self, sequence_engine_id):
+		if sequence_engine_id is None and self.cco_active:
+			self.emit_evr('CCO_RESET', 'DIAGNOSTIC', 'Resetting immediate CCO flag.')
+			self.cco_active = False
+		elif sequence_engine_id is not None and self.sim.seq_module.engines[sequence_engine_id]['cco_active']:
+			self.emit_evr(
+				'CCO_RESET',
+				'DIAGNOSTIC',
+				f'Resetting CCO flag for sequence engine #{sequence_engine_id}.',
+			)
+			self.sim.seq_module.engines[sequence_engine_id]['cco_active'] = False
+
 	def announce_dispatch_success(self, stem, module_name, sequence_engine_id=None):
 		"""
 		Emits an EVR confirming that a command has been successfully dispatched.
@@ -105,8 +119,51 @@ class CmdModule(Module):
 		:param sequence_engine_id: Index of the sequence engine slot.
 		:type sequence_engine_id: int, optional
 		"""
-		# Generic Lookup (works for XML or Python dicts)
-		lookup = self.sim.dictionaries['command'].lookup(command.stem)
+		self.record_command(command, sequence_engine_id)
+		# Prefer mission dictionary interfaces when a simulation provides them.
+		# Older simulations continue to use XML-backed dictionaries.
+		dictionary_interfaces = getattr(self.sim, 'new_dictionary_interface', {})
+		if isinstance(dictionary_interfaces, dict) and 'command' in dictionary_interfaces:
+			command_dictionary = dictionary_interfaces['command']
+		else:
+			command_dictionary = self.sim.dictionaries['command']
+		if hasattr(command_dictionary, 'xpath'):
+			matches = command_dictionary.xpath(
+				f'//fsw_command[@stem="{command.stem.lower()}"]'
+				f' | //hw_command[@stem="{command.stem.lower()}"]'
+			)
+			if matches:
+				command_definition = matches[0]
+				restricted_modes = [
+					mode.text for mode in command_definition.xpath(
+						'restricted_modes/*/@mode | restricted_modes/*/text()'
+					)
+					if getattr(mode, 'text', mode)
+				]
+				module_values = command_definition.xpath('categories/module/text()')
+				lookup = {
+					'module': module_values[0] if module_values else '',
+					'spacecraft_restricted_modes': restricted_modes,
+				}
+			else:
+				lookup = None
+		else:
+			lookup_method = getattr(command_dictionary, 'lookup', None)
+			if callable(lookup_method):
+				lookup = lookup_method(command.stem)
+			else:
+				try:
+					command_definition = command_dictionary[command.stem]
+				except KeyError:
+					command_definition = None
+				lookup = (
+					{
+						'module': getattr(command_definition, 'module', '').lower(),
+						'spacecraft_restricted_modes': [],
+					}
+					if command_definition is not None
+					else None
+				)
 		if lookup is None:
 			self.emit_evr('SIM_ERROR_CMD_NOT_IN_DICTIONARY', 'SIM_ERROR', f'No command with stem {command.stem} found in dictionary. Parent is {parent}')
 			return "unknown command", False, None, None
@@ -134,12 +191,9 @@ class CmdModule(Module):
 
 		# Route to specific handler or target module
 		target_module_name = lookup.get('module')
-		print(f"DEBUG: Routing {command.stem} to {target_module_name}")
-		
 		# Check the routing map first (e.g. route sequence lifecycle commands to seq_module)
 		routing_target = self.ROUTING_MAP.get(command.stem.upper())
 		handler_module = self.sim.modules.get(routing_target) if routing_target else self.sim.modules.get(target_module_name)
-		print(f"DEBUG: Handler module for {command.stem} is {handler_module}")
 		
 		seq_engine = self.sim.seq_module.engines.get(sequence_engine_id, {}) if sequence_engine_id is not None else {}
 		if sequence_engine_id is None or seq_engine.get('emit_evrs', True):
@@ -151,10 +205,12 @@ class CmdModule(Module):
 				# If the module is the CmdModule itself or a special handler, it might just execute
 				if hasattr(handler_module, 'dispatch_sequence_command') and command.stem.upper() in self.ROUTING_MAP:
 					res = handler_module.dispatch_sequence_command(command)
+					self._reset_cco(sequence_engine_id)
 					return res if isinstance(res, tuple) and len(res) == 4 else (*res, None) if isinstance(res, tuple) else (res, True, target_module_name, None)
 				
 				# Standard routing: add to module queue
 				cmd = handler_module.add_command(cmd_cls, command, sequence_engine_id=sequence_engine_id)
+				self._reset_cco(sequence_engine_id)
 				return f"queued {command.stem}", True, target_module_name, cmd
 			except AttributeError:
 				self.emit_evr('SIM_ERROR_NO_CMD_MODEL', 'SIM_ERROR', f'No modeling for the command "{command.stem}" in the "{target_module_name}" module.')
@@ -167,11 +223,6 @@ class CmdModule(Module):
 		if command.stem == self.CCO_STEM: 
 			return "CCO reset", True, target_module_name, None
 
-		if sequence_engine_id is None and self.cco_active:
-			self.emit_evr('CCO_RESET', 'DIAGNOSTIC', f'Resetting immediate CCO flag.')
-			self.cco_active = False
-		elif sequence_engine_id is not None and self.sim.seq_module.engines[sequence_engine_id]['cco_active']:
-			self.emit_evr('CCO_RESET', 'DIAGNOSTIC', f'Resetting CCO flag for sequence engine #{sequence_engine_id}.')
-			self.sim.seq_module.engines[sequence_engine_id]['cco_active'] = False
+		self._reset_cco(sequence_engine_id)
 
 		return "dispatched", True, target_module_name, None
