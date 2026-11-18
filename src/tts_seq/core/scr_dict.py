@@ -112,8 +112,9 @@ class ScrSeqDict(SeqDict):
             relative_seconds = absolute_seconds - previous_absolute_seconds
             previous_absolute_seconds = absolute_seconds
             timestr = datetime.strftime(datetime(year=2000, month=1, day=1) + timedelta(seconds=relative_seconds), '%H:%M:%S')
-            stem = re.split(r'\s+|,', linesplit[3].strip())[0]
-            args = re.split(r'\s+|,', linesplit[3].strip())[1:]
+            tokens = re.split(r'[\s,]+', linesplit[3].strip())
+            stem = tokens[0]
+            args = tokens[1:]
             description = ' '.join(linesplit[4:])
 
             step = {
@@ -152,8 +153,14 @@ class ScrSeqDict(SeqDict):
         """
         
         dict_data = {'id': file_path.stem, 'metadata':{}, 'steps':[]}
+        last_time_tag = None
+        pending_wrapped_comment = False
         with file_path.open('r', encoding='utf-8') as scr_file:
             for line in scr_file.read().split('\n'):
+                if pending_wrapped_comment:
+                    pending_wrapped_comment = False
+                    if not line.lstrip().startswith(('@', ',')):
+                        continue
                 # Handle comments and empty lines
                 if line.startswith(';') or line == '':
                     step = {'type': 'note','text': line[1:]}
@@ -166,26 +173,57 @@ class ScrSeqDict(SeqDict):
                 # Skip block delimiters and special markers
                 elif line in ['begin', 'end'] or line.startswith('%'):
                     pass
-                
+
+                # Some legacy ATS files wrap the final argument onto a
+                # continuation line beginning with a comma.
+                elif line.lstrip().startswith(',') and dict_data['steps']:
+                    previous_step = dict_data['steps'][-1]
+                    if previous_step.get('type') != 'command':
+                        raise ValueError(
+                            f'Argument continuation has no command in {file_path}: {line}'
+                        )
+                    continuation = line.split('$', 1)[0].lstrip(',').strip()
+                    continuation_args = re.split(r'[\s,]+', continuation)
+                    for arg in filter(None, continuation_args):
+                        previous_step['args'].append({
+                            'name': f'arg_{len(previous_step["args"])}',
+                            'type': 'STRING',
+                            'value': arg,
+                        })
+
                 # Process command steps
                 else:
                     description = self.extract_unquoted_comment_with_leading_ws(line)
+                    pending_wrapped_comment = description.rstrip().endswith(';;')
                     line = line.replace(description, '').strip()
                     
                     # Split command from metadata (e.g., $TIME)
                     cmd_metadata_split = line.split(' $')
                     cmd = cmd_metadata_split[0]
-                    cmd_metadata = {x.split('=')[0]: x.split('=')[1] for x in cmd_metadata_split[1:]}
+                    cmd_metadata = {
+                        x.split('=', 1)[0].upper(): x.split('=', 1)[1]
+                        for x in cmd_metadata_split[1:]
+                        if '=' in x
+                    }
+                    time_tag = cmd_metadata.get('TIME') or cmd_metadata.get('TIME_TAG')
+                    if time_tag is None:
+                        time_tag = last_time_tag
+                    if time_tag is None:
+                        raise ValueError(
+                            f'Command has no TIME or TIME_TAG label in {file_path}: {line}'
+                        )
+                    last_time_tag = time_tag
                     
                     # Parse stem and arguments
-                    stem = re.split(r'\s|,', cmd)[0]
-                    args = re.split(r'\s|,', cmd)[1:]
+                    tokens = re.split(r'[\s,]+', cmd.strip())
+                    stem = tokens[0]
+                    args = tokens[1:]
                     
                     step = {
                         'args': [], 
                         'stem': stem, 
                         'time': {
-                            'tag': cmd_metadata['TIME'],
+                            'tag': time_tag,
                             'type': 'ABSOLUTE'
                         },
                         'type': 'command',
